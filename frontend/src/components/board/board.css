@@ -1,0 +1,128 @@
+#board {
+    background-image: url(wood_background.png);
+    border: 2px solid black;
+    box-shadow: yellow;
+    /* border-radius: 8px; */
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 1100;
+    display: block;
+    margin: 0;
+    opacity: 1;
+    background-color: white;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 4px;
+    padding-right: 30px;
+}
+
+.tooltip-text {
+    font-size: small;
+    margin: 0;
+    margin-left: 2px;
+    margin-bottom: 2px;
+    padding: 0;
+}
+
+#close-tooltip {
+    top: 0px;
+    right: 0px;
+}
+
+.movebutton {
+    padding: 0;
+    margin: 1px 2px;
+    width:100%;
+    max-width: 30px;
+    max-height: 30px;
+}
+
+.tt-not-visible {
+    opacity: 0;
+}
+
+.player-name {
+    font-size: 20px;
+    pointer-events: none;
+}
+
+.player-box {
+    stroke: grey;
+    stroke-width: 2px;
+    fill: white;
+    fill-opacity: 0.5;
+}
+
+.player-box.active {
+    fill: forestgreen;
+    fill-opacity: 0.3;
+    font-size: 15px;
+}
+
+.step {
+    stroke: black;
+    stroke-width: 3px;
+    fill-opacity: 0;
+}
+
+.step:hover {
+    stroke-width: 5px;
+    cursor: pointer;
+}
+
+.occupied {
+    fill-opacity: 1;
+}
+
+.occupied-red{
+    stroke: black;
+    fill:red;
+}
+
+.occupied-blue {
+    stroke: black;
+    fill:blue;
+}
+
+.occupied-green {
+    stroke: black;
+    fill: green;
+}
+
+.occupied-yellow {
+    stroke: black;
+    fill: yellow; 
+}
+
+.out {
+    fill: none;
+    stroke-width: 4px;
+}
+
+.out-red {
+    stroke: red;
+}
+
+.out-blue {
+    stroke: blue;
+}
+
+.out-green {
+    stroke: green;
+}
+
+.out-yellow {
+    stroke: yellow;
+}
+
+.card-number {
+    font-size: 40px;
+}
+
+.card-path {
+    stroke: black;
+    stroke-width: 3px;
+    fill: whitesmoke;
+}

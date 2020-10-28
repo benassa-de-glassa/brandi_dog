@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' type='text/css' media='screen' href='board.css'>
+    <title>Document</title>
+</head>
+<body>
+    <svg id="board">
+        <!-- build the board components clock-wise, but the steps are
+             counted counter-clockwise!! -->
+
+        <!-- top horizontal five -->
+        <circle id="step-8" class="step" cx=38.6% cy=22.6% r=12 />
+        <circle id="step-7" class="step" cx=44.3% cy=22.6% r=12 />
+        <circle id="step-6" class="step" cx=50% cy=22.6% r=12 />
+        <circle id="step-5" class="step" cx=55.7% cy=22.6% r=12 />
+        <circle id="step-4" class="step" cx=61.4% cy=22.6% r=12 />
+
+        <!-- top right ascending  outwards -->
+        <circle id="step-3" class="step" cx=65.4% cy=18.6% r=12 />
+        <circle id="step-2" class="step" cx=69.4% cy=14.6% r=12 />
+        <circle id="step-1" class="step" cx=73.4% cy=10.6% r=12 />
+        <circle id="step-0" class="step" cx=77.4% cy=6.6% r=12 />
+
+        <circle class="step out out-red" cx=77.4% cy=6.6% r=18 /> 
+
+        <!-- top right descending outwards -->
+        <circle id="step-63" class="step" cx=81.4% cy=10.6% r=12 />
+        <circle id="step-62" class="step" cx=85.4% cy=14.6% r=12 />
+        <circle id="step-61" class="step" cx=89.4% cy=18.6% r=12 />
+        <circle id="step-60" class="step" cx=93.4% cy=22.6% r=12 />
+
+        <!-- right descending towards middle -->
+        <circle id="step-59" class="step" cx=89.4% cy=26.6% r=12 />
+        <circle id="step-58" class="step" cx=85.4% cy=30.6% r=12 />
+        <circle id="step-57" class="step" cx=81.4% cy=34.6% r=12 />
+
+        <!-- right vertical five-->
+        <circle id="step-56" class="step" cx=77.4% cy=38.6% r=12 />
+        <circle id="step-55" class="step" cx=77.4% cy=44.3% r=12 />
+        <circle id="step-54" class="step" cx=77.4% cy=50% r=12 />
+        <circle id="step-53" class="step" cx=77.4% cy=55.7% r=12 />
+        <circle id="step-52" class="step" cx=77.4% cy=61.4% r=12 />
+
+        <!-- right bottom descending outwards -->
+        <circle id="step-51" class="step" cx=81.4% cy=65.4% r=12 />
+        <circle id="step-50" class="step" cx=85.4% cy=69.4% r=12 />
+        <circle id="step-49" class="step" cx=89.4% cy=73.4% r=12 />
+        <circle id="step-48" class="step" cx=93.4% cy=77.4% r=12 />
+
+        <circle class="step out out-yellow" cx=93.4% cy=77.4% r=18 />
+
+        <!-- right bottom descending towards middle -->
+        <circle id="step-47" class="step" cx=89.4% cy=81.4% r=12 />
+        <circle id="step-46" class="step" cx=85.4% cy=85.4% r=12 />
+        <circle id="step-45" class="step" cx=81.4% cy=89.4% r=12 />
+        <circle id="step-44" class="step" cx=77.4% cy=93.4% r=12 />
+
+        <!-- right bottom ascending towards middle -->
+        <circle id="step-43" class="step" cx=73.4% cy=89.4% r=12 />
+        <circle id="step-42" class="step" cx=69.4% cy=85.4% r=12 />
+        <circle id="step-41" class="step" cx=65.4% cy=81.4% r=12 />
+
+        <!-- bottom horizontal five -->
+        <circle id="step-40" class="step" cx=61.4% cy=77.4% r=12 />
+        <circle id="step-39" class="step" cx=55.7% cy=77.4% r=12 />
+        <circle id="step-38" class="step" cx=50% cy=77.4% r=12 />
+        <circle id="step-37" class="step" cx=44.3% cy=77.4% r=12 />
+        <circle id="step-36" class="step" cx=38.6% cy=77.4% r=12 />
+
+        <!-- bottom left descending outwards -->
+        <circle id="step-35" class="step" cx=34.6% cy=81.4% r=12 />
+        <circle id="step-34" class="step" cx=30.6% cy=85.4% r=12 />
+        <circle id="step-33" class="step" cx=26.6% cy=89.4% r=12 />
+        <circle id="step-32" class="step" cx=22.6% cy=93.4% r=12 />
+
+        <circle class="step out out-green" cx=22.6% cy=93.4% r=18 />
+
+        <!-- bottom left ascending outwards -->
+        <circle id="step-31" class="step" cx=18.6% cy=89.4% r=12 />
+        <circle id="step-30" class="step" cx=14.6% cy=85.4% r=12 />
+        <circle id="step-29" class="step" cx=10.6% cy=81.4% r=12 />
+        <circle id="step-28" class="step" cx=6.6% cy=77.4% r=12 />
+
+        <!-- bottom left ascending towards middle -->
+        <circle id="step-27" class="step" cx=10.6% cy=73.4% r=12 />
+        <circle id="step-26" class="step" cx=14.6% cy=69.4% r=12 />
+        <circle id="step-25" class="step" cx=18.6% cy=65.4% r=12 />
+
+        <!-- left vertical five-->
+        <circle id="step-24" class="step" cx=22.6% cy=61.4% r=12 />
+        <circle id="step-23" class="step" cx=22.6% cy=55.7% r=12 />
+        <circle id="step-22" class="step" cx=22.6% cy=50% r=12 />
+        <circle id="step-21" class="step" cx=22.6% cy=44.3% r=12 />
+        <circle id="step-20" class="step" cx=22.6% cy=38.6% r=12 />
+
+        <!-- top left ascending outwards -->
+        <circle id="step-19" class="step" cx=18.6% cy=34.6% r=12 />
+        <circle id="step-18" class="step" cx=14.6% cy=30.6% r=12 />
+        <circle id="step-17" class="step" cx=10.6% cy=26.6% r=12 />
+        <circle id="step-16" class="step" cx=6.6% cy=22.6% r=12 />
+
+        <circle class="step out out-blue" cx=6.6% cy=22.6% r=18 />
+
+        <!-- top left ascending towards middle -->
+        <circle id="step-15"class="step" cx=10.6% cy=18.6% r=12 />
+        <circle id="step-14"class="step" cx=14.6% cy=14.6% r=12 />
+        <circle id="step-13"class="step" cx=18.6% cy=10.6% r=12 />
+        <circle id="step-12"class="step" cx=22.6% cy=6.6% r=12 />
+        
+        <!-- top left descending towards middle -->
+        <circle id="step-11" class="step" cx=26.6% cy=10.6% r=12 />
+        <circle id="step-10" class="step" cx=30.6% cy=14.6% r=12 />
+        <circle id="step-9" class="step" cx=34.6% cy=18.6% r=12 />
+
+        <!-- red home base -->
+        <circle id="red-home-0" class="step" cx=69.4% cy=6.6% r=12 />
+        <circle id="red-home-1" class="step" cx=63.7% cy=6.6% r=12 />
+        <circle id="red-home-2" class="step" cx=58% cy=6.6% r=12 />
+        <circle id="red-home-3" class="step" cx=52.3% cy=6.6% r=12 />
+        <circle class="step out out-red" cx=69.4% cy=6.6% r=18 />
+        <circle class="step out out-red" cx=63.7% cy=6.6% r=18 />
+        <circle class="step out out-red" cx=58% cy=6.6% r=18 />
+        <circle class="step out out-red" cx=52.3% cy=6.6% r=18 />
+
+        <!-- red house -->
+        <circle id="red-house-0" class="step" cx=77.4% cy=14.6% r=12 />
+        <circle id="red-house-1" class="step" cx=77.4% cy=20.3% r=12 />
+        <circle id="red-house-2" class="step" cx=73.4% cy=24.3% r=12 />
+        <circle id="red-house-3" class="step" cx=69.4% cy=28.3% r=12 />
+        <circle class="step out out-red" cx=77.4% cy=14.6% r=18 />
+        <circle class="step out out-red" cx=77.4% cy=20.3% r=18 />
+        <circle class="step out out-red" cx=73.4% cy=24.3% r=18 />
+        <circle class="step out out-red" cx=69.4% cy=28.3% r=18 />
+
+        <!-- yellow home base -->
+        <circle id="yellow-home-0" class="step" cx=93.4% cy=69.4% r=12 />
+        <circle id="yellow-home-1" class="step" cx=93.4% cy=63.7% r=12 />
+        <circle id="yellow-home-2" class="step" cx=93.4% cy=58% r=12 />
+        <circle id="yellow-home-3" class="step" cx=93.4% cy=52.3% r=12 />
+        <circle class="step out out-yellow" cx=93.4% cy=69.4% r=18 />
+        <circle class="step out out-yellow" cx=93.4% cy=63.7% r=18 />
+        <circle class="step out out-yellow" cx=93.4% cy=58% r=18 />
+        <circle class="step out out-yellow" cx=93.4% cy=52.3% r=18 />
+
+        <!-- yellow house -->
+        <circle id="yellow-house-0" class="step" cx=85.4% cy=77.3% r=12 />
+        <circle id="yellow-house-1" class="step" cx=79.7% cy=77.3% r=12 />
+        <circle id="yellow-house-2" class="step" cx=75.7% cy=73.3% r=12 />
+        <circle id="yellow-house-3" class="step" cx=71.7% cy=69.3% r=12 />
+        <circle class="step out out-yellow" cx=85.4% cy=77.3% r=18 />
+        <circle class="step out out-yellow" cx=79.7% cy=77.3% r=18 />
+        <circle class="step out out-yellow" cx=75.7% cy=73.3% r=18 />
+        <circle class="step out out-yellow" cx=71.7% cy=69.3% r=18 />
+
+        <!-- green home base -->
+        <circle id="green-home-0" class="step" cx=30.6% cy=93.4% r=12 />
+        <circle id="green-home-1" class="step" cx=36.3% cy=93.4% r=12 />
+        <circle id="green-home-2" class="step" cx=42% cy=93.4% r=12 />
+        <circle id="green-home-3" class="step" cx=47.7% cy=93.4% r=12 />
+        <circle class="step out out-green" cx=30.6% cy=93.4% r=18 />
+        <circle class="step out out-green" cx=36.3% cy=93.4% r=18 />
+        <circle class="step out out-green" cx=42% cy=93.4% r=18 />
+        <circle class="step out out-green" cx=47.7% cy=93.4% r=18 />
+
+        <!-- green house -->
+        <circle id="green-house-0" class="step" cx=22.6% cy=85.4% r=12 />
+        <circle id="green-house-1" class="step" cx=22.6% cy=79.7% r=12 />
+        <circle id="green-house-2" class="step" cx=26.6% cy=75.7% r=12 />
+        <circle id="green-house-3" class="step" cx=30.6% cy=71.7% r=12 />
+        <circle class="step out out-green" cx=22.6% cy=85.4% r=18 />
+        <circle class="step out out-green" cx=22.6% cy=79.7% r=18 />
+        <circle class="step out out-green" cx=26.6% cy=75.7% r=18 />
+        <circle class="step out out-green" cx=30.6% cy=71.7% r=18 />
+
+        <!-- blue home base -->
+        <circle id="blue-home-0" class="step" cx=6.6% cy=30.6% r=12 />
+        <circle id="blue-home-1" class="step" cx=6.6% cy=36.3% r=12 />
+        <circle id="blue-home-2" class="step" cx=6.6% cy=42% r=12 />
+        <circle id="blue-home-3" class="step" cx=6.6% cy=47.7% r=12 />
+        <circle class="step out out-blue" cx=6.6% cy=30.6% r=18 />
+        <circle class="step out out-blue" cx=6.6% cy=36.3% r=18 />
+        <circle class="step out out-blue" cx=6.6% cy=42% r=18 />
+        <circle class="step out out-blue" cx=6.6% cy=47.7% r=18 />
+
+        <!-- blue house -->
+        <circle id="blue-house-0" class="step" cx=14.6% cy=22.6% r=12 />
+        <circle id="blue-house-1" class="step" cx=20.3% cy=22.6% r=12 />
+        <circle id="blue-house-2" class="step" cx=24.3% cy=26.6% r=12 />
+        <circle id="blue-house-3" class="step" cx=28.3% cy=30.6% r=12 />
+        <circle class="step out out-blue" cx=14.6% cy=22.6% r=18 />
+        <circle class="step out out-blue" cx=20.3% cy=22.6% r=18 />
+        <circle class="step out out-blue" cx=24.3% cy=26.6% r=18 />
+        <circle class="step out out-blue" cx=28.3% cy=30.6% r=18 />
+    </svg>
+</body>
+</html>

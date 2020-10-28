@@ -7,7 +7,7 @@ import Controls from '../controls/Controls'
 import { socket } from '../../socket'
 import { postData } from '../../paths'
 
-import {possibleActions} from '../../config'
+import { possibleActions } from '../../config'
 
 class Game extends Component {
     constructor(props) {
@@ -26,8 +26,7 @@ class Game extends Component {
 
             // updated by front-end
             switchingSeats: false,
-            selectedCardIndex: null,
-            selectedAction: null,
+            selectedCardIndex: null,    // card that is selected by the user
             selectedMarble: null,
             tooltipActions: [],
             marbleToSwitch: null,
@@ -75,12 +74,11 @@ class Game extends Component {
         // reset the state on the front-end specific keys
         this.setState({
             selectedCardIndex: null,
-            selectedAction: null,
             selectedMarble: null,
             tooltipActions: [],
             marbleToSwitch: null,
             cardSwapConfirmed: false,
-            jokerCard: 'A',     
+            jokerCard: 'A',
             remainingStepsOf7: 7,
             errorMessage: '',
         })
@@ -113,7 +111,8 @@ class Game extends Component {
     handleNewPlayerState(data) {
         this.setState({
             cards: data.hand,
-            marbles: data.marbles
+            marbles: data.marbles,
+            remainingStepsOf7: data.steps_of_seven
         })
     }
 
@@ -139,7 +138,7 @@ class Game extends Component {
 
     cardClicked(index) {
         // deselect selected step & reset error message
-        this.setState({ 
+        this.setState({
             selectedMarble: null,
             errorMessage: ''
         })
@@ -165,11 +164,11 @@ class Game extends Component {
         const selectedCard = this.state.cards[index]
         console.debug('try to swap', selectedCard)
         const relURL = 'games/' + this.props.gameID + '/swap_cards '
-        const response = await postData(relURL, {uid: selectedCard.uid} )
+        const response = await postData(relURL, { uid: selectedCard.uid })
         const responseJson = await response.json()
         console.log(responseJson)
         if (response.status === 200) {
-            this.setState({ 
+            this.setState({
                 cardSwapConfirmed: true,
                 cardBeingSwapped: index
             })
@@ -195,9 +194,9 @@ class Game extends Component {
         if (this.state.selectedCardIndex !== null) {
             let selectedCard = this.state.cards[this.state.selectedCardIndex]
 
-            if (!selectedCard) { 
+            if (!selectedCard) {
                 console.error('Selected card is', selectedCard)
-                return 
+                return
             }
             // define variables that are overwritten in case a joker is played
             let selectedCardValue = selectedCard.value
@@ -217,8 +216,13 @@ class Game extends Component {
             // remove the 0 from the options to see if a tooltip is needed
             // this is the case for the cards '4', 'A', and '7'
             let playableActions = selectedCardActions.filter(action => action !== 0)
+
+            // if the card is a 7 only show the remaining steps as playable (e.g. [71, 72, 73] if 4 steps were already completed)
+            if (selectedCardValue === '7' && this.state.remainingStepsOf7 !== -1) {
+                playableActions = playableActions.filter(action => action <= 70+this.state.remainingStepsOf7)
+            }
             console.log(playableActions)
-            
+
             if (selectedCardValue === 'Ja') {
                 let myColor = this.state.marbles[0].color
                 if (this.state.marbleToSwitch === null) {
@@ -244,7 +248,6 @@ class Game extends Component {
                 // clicked on a marble on the field while a card with only one 
                 // possible action
                 this.performAction(marble, selectedCard, playableActions[0])
-                // this.setState({ selectedAction: selectedCardActions[0] })
             } else {
                 // clicked on a marble on the field for which multiple actions
                 // are possible
@@ -253,23 +256,12 @@ class Game extends Component {
                     selectedMarble: marble
                 })
             }
-        } 
+        }
     }
 
     tooltipClicked(action) {
         let selectedCard = this.state.cards[this.state.selectedCardIndex]
-        let successCallback
-        selectedCard.value === '7'
-            ? successCallback = () => {
-                this.setState(prevState => {
-                    return { remainingStepsOf7: prevState.remainingStepsOf7 - action }
-                }, () => { // callback after state is updated
-                    if (this.state.remainingStepsOf7 === 0) {
-                        this.setState({ remainingStepsOf7: 7 })
-                    }
-                })
-            }
-            : successCallback = () => { }
+        let successCallback = () => {}
 
         this.performAction(
             this.state.selectedMarble,
@@ -296,11 +288,12 @@ class Game extends Component {
         const responseJson = await response.json()
         if (response.status === 200) {
             success()
-            this.setState({
-                selectedCardIndex: null,
-                selectedAction: null,
-                tooltipActions: [],
-            })
+            this.setState({ tooltipActions: [] })
+
+            // don't deselect the selected card if there are still sevens to be played
+            if (this.state.remainingStepsOf7 === -1) {
+                this.setState({ selectedCardIndex: null })
+            }
         } else {
             error(responseJson.detail)
             this.setState({ errorMessage: responseJson.detail })
@@ -384,7 +377,7 @@ class Game extends Component {
                         cardBeingSwapped={this.state.cardBeingSwapped}
                         errorMessage={this.state.errorMessage}
                     />
-                    <Chat 
+                    <Chat
                         player={this.props.player}
                         gameID={this.props.gameID} />
                 </div>

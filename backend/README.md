@@ -1,4 +1,4 @@
-# brandi-dog_backend
+## brandi-dog_backend
 
 Boomer Dog Online!
 
@@ -7,7 +7,19 @@ Check coverage with:
  - coverage report -m
  
 
-The backend is structured into 3 main parts: 
+The backend/app is structured into 3 main parts: 
 1. api, it handles the incoming / outgoing requests and holds the game instances
 2. game_logic, it contains various classes which are used to play the actual game
 3. models, typing for the requests so that frontend knows what it is working with
+
+
+details for 1. ...
+# details for 2. :
+
+field.py: This File holds several classes which describe the field.
+ - The code concept of these are that a field consits of several nodes with the knowledge of their successor (`Node.next`) and the predecessor (`Node.prev`) is. They further know about who they are themselves (`Node.curr`), but this might not be really necessary and might get removed in the future.
+ - The node class is extended by the GameNode class. This class additionally has the knowledge of its position, and whether or not a Marble is currently placed on it. This feature too might not be necessary as the marble holds information on it current node.
+ 
+ - The `GameNodeClass` is extended by the `EntryExitNode` class, or as Lara would call it "Himmelspförtli", as the name suggests it acts as the entry and exit node for the marbles in the game, i.e. a marble enters the round through this node and exits towards the goal nodes through this  node. It has the additional `EntryExitNode.exit`  attribute pointing at the goal nodes.
+ 
+ - Finally at the beginning of a game a `Field` class object is initialized, it creates all required nodes and connects them by setting the `*.next`, `*.prev` and `*.exit` attributes of each node. The field class stores references to the entry and exit nodes of each player by their id. This might get simplified in future to store the entry and exit node of each player not by their id, but their position.

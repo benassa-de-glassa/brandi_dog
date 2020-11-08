@@ -34,14 +34,6 @@ router = APIRouter()
 # dictionary of game_id: game instance
 games = {}
 
-# class SocketBrandi(Brandi):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.connected_sockets = []
-
-#     def log_connected_sockets():
-#         logging.info(self.connected_sockets)
-
 """
 socket events
 """
@@ -296,19 +288,19 @@ def get_cards(game_id: str, player: User = Depends(get_current_user)):
 
 
 @router.post('/games/{game_id}/swap_cards', tags=["game action"])
-async def swap_card(game_id: str,  card: CardBase, player: User = Depends(get_current_user)):
+async def swap_card(game_id: str,  card: CardBase, user: User = Depends(get_current_user)):
     """
     make the card swap before starting the round
     """
-    if player.uid not in games[game_id].players:
+    if user.uid not in games[game_id].players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {player.uid} not in Game.")
+                            detail=f"Player {user.uid} not in Game.")
 
-    if card.uid not in games[game_id].players[player.uid].hand.cards:
+    if card.uid not in games[game_id].players[user.uid].hand.cards:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Card {card.uid} not in {player.username}'s hand.")
+                            detail=f"Card {card.uid} not in {user.username}'s hand.")
 
-    res = games[game_id].swap_card(player, card)
+    res = games[game_id].swap_card(user, card)
     if res["requestValid"] and res["taskFinished"]:
         for uid in games[game_id].order:
             await sio_emit_player_state(game_id, uid)
@@ -318,15 +310,15 @@ async def swap_card(game_id: str,  card: CardBase, player: User = Depends(get_cu
 
 
 @router.post('/games/{game_id}/fold', tags=["game action"])
-async def fold_round(game_id: str, player: User = Depends(get_current_user)):
+async def fold_round(game_id: str, user: User = Depends(get_current_user)):
     """
     make the card swap before starting the round
     """
-    if player.uid not in games[game_id].players:
+    if user.uid not in games[game_id].players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {player.uid} not in Game.")
+                            detail=f"Player {user.uid} not in Game.")
 
-    res = games[game_id].event_player_fold(player)
+    res = games[game_id].event_player_fold(user)
 
     if res['requestValid']:
         await sio_emit_game_state(game_id)
@@ -336,7 +328,7 @@ async def fold_round(game_id: str, player: User = Depends(get_current_user)):
 
 
 @router.post('/games/{game_id}/action', tags=["game action"])
-async def perform_action(game_id: str, action: Action, player: User = Depends(get_current_user)):
+async def perform_action(game_id: str, action: Action, user: User = Depends(get_current_user)):
     """
 
     """
@@ -345,19 +337,19 @@ async def perform_action(game_id: str, action: Action, player: User = Depends(ge
     if not game:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"Game {game_id} does not exist (anymore).")
-    if player.uid not in game.players:
+    if user.uid not in game.players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {player.uid} not in Game.")
+                            detail=f"Player {user.uid} not in Game.")
 
-    if action.card.uid not in games[game_id].players[player.uid].hand.cards:
+    if action.card.uid not in games[game_id].players[user.uid].hand.cards:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Card {action.card.uid} not in {player.username}'s hand.")
+                            detail=f"Card {action.card.uid} not in {user.username}'s hand.")
 
-    res = games[game_id].event_move_marble(player, action)
+    res = games[game_id].event_move_marble(user, action)
 
     if res['requestValid']:
         await sio_emit_game_state(game_id)
-        await sio_emit_player_state(game_id, player.uid)
+        await sio_emit_player_state(game_id, user.uid)
     else:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST, detail=res["note"])

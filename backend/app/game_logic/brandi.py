@@ -1,13 +1,11 @@
 from typing import Dict, List
 
-import random
 from itertools import count, filterfalse
 
 import logging
-import json
 
 from app.game_logic.deck import Deck
-from app.game_logic.field import Field, GameNode
+from app.game_logic.field import Field
 from app.game_logic.player import Player
 from app.game_logic.marble import Marble
 from app.game_logic.card import Card
@@ -250,18 +248,9 @@ class Brandi:
         self.round_turn += 1
 
         # update the players order
-        self.active_player_index = 0  # self.round_turn % PLAYER_COUNT
-        player_list = sorted(self.players.values(),
-                             key=lambda player: player.position)
-        for _ in range(self.round_turn % PLAYER_COUNT):
-            player_list.append(
-                player_list.pop(0)
-            )  # shift the array so that the next player starts
-        self.players_in_order_for_current_round = player_list
-
-        # reset the has folded attribute
-        for player in self.players_in_order_for_current_round:
-            self.players[player.uid].has_folded = False
+        self.active_player_index = self.round_turn % PLAYER_COUNT
+        for uid in self.order:
+            self.players[uid].has_folded = False
 
         return {"requestValid": True, "note": "Round is started."}
 
@@ -277,12 +266,17 @@ class Brandi:
                 "note": f"The game is not in the correct state to deal cards.",
             }
 
-        for player in self.players_in_order_for_current_round:
+        # shift the order to start dealing cards to the correct player
+        shifted_order = self.order
+        for _ in range(self.round_turn):
+            shifted_order.append(shifted_order.pop(0))
+
+        for uid in shifted_order:
             for _ in range(self.round_cards[self.round_turn % len(self.round_cards)]):
                 if self.deck.deck_size() == 0:
                     self.deck.reshuffle_cards(self.discarded_cards)
                     self.discarded_cards = []
-                self.players[player.uid].set_card(self.deck.give_card())
+                self.players[uid].set_card(self.deck.give_card())
 
         self.round_state = 2
 
@@ -331,14 +325,12 @@ class Brandi:
         increment the active player index until a player is found who has not yet folded
         """
 
-        victory_dict: Dict[int, bool]
+        victory_dict: Dict[int, bool] = {}
         for i in enumerate(PLAYER_COUNT // 2):
             team_member_1 = self.get_player_by_position(i)
             team_member_2 = self.get_player_by_position(i + PLAYER_COUNT // 2)
-            victory_dict[i] = (
-                team_member_1.has_finished_marbles()
+            victory_dict[i] = team_member_1.has_finished_marbles() \
                 and team_member_2.has_finished_marbles()
-            )
 
         for team_number, victory in victory_dict.items():
             if victory is True:
@@ -353,9 +345,7 @@ class Brandi:
             self.active_player_index + 1) % PLAYER_COUNT
 
         skipped_player_count: int = 0
-        while self.players[
-            self.players_in_order_for_current_round[self.active_player_index].uid
-        ].has_finished_cards():
+        while self.players[self.order[self.active_player_index]].has_finished_cards():
             self.active_player_index = (
                 self.active_player_index + 1) % PLAYER_COUNT
             # if all players have been skipped then the round has finished and a new round starts
@@ -399,9 +389,7 @@ class Brandi:
 
     def event_move_marble(self, user: User, action: Action):
 
-        current_player = self.players_in_order_for_current_round[
-            self.active_player_index
-        ]
+        current_player = self.order[self.active_player_index]
 
         if self.round_state != 4:
             return {

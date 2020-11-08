@@ -7,7 +7,6 @@ from starlette.exceptions import HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
 from app.models.user import Player, UserBase
-from app.game_logic.user import User
 
 router = APIRouter()
 
@@ -26,11 +25,11 @@ def create_new_player(player: UserBase):
     player_id = ''.join(random.choice(string.ascii_uppercase)
                         for i in range(4))
     while player_id in users:
-        # generate new game ids until a new id is found
+        # generate new player ids until a new id is found
         player_id = ''.join(random.choice(string.ascii_uppercase)
                             for i in range(4))
 
-    users[player_id] = User(player.name, player_id)
+    users[player_id] = Player(player.name, player_id)
 
     return users[player_id].to_json()
 

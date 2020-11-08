@@ -90,7 +90,8 @@ class Brandi:
         # keep track of whos players turn it is to make a move
         self.active_player_index: int = 0
 
-        self.round_cards: List[int] = [6, 5, 4, 3, 2]  # number of cards dealt at the
+        # number of cards dealt at the beginning of a round
+        self.round_cards: List[int] = [6, 5, 4, 3, 2]
         # beginning of each round
         self.round_turn = 0  # count which turn is reached
 
@@ -121,7 +122,8 @@ class Brandi:
             player.position for player in self.players.values()
         ]
         # assign the lowest non taken position
-        position: int = next(filterfalse(set(player_positions).__contains__, count(0)))
+        position: int = next(filterfalse(
+            set(player_positions).__contains__, count(0)))
         self.players[user.uid] = Player(user.uid, user.username, position)
 
         return {
@@ -150,14 +152,18 @@ class Brandi:
             "note": f"Player {user.username} succesfully removed from game",
         }
 
-    def change_postion(self, user: User, position: int):
+    def calculate_order(self) -> None:
+        self.order = [self.get_player_by_position(
+            position).uid for position in range(PLAYER_COUNT)]
+
+    def change_position(self, user: User, position: int):
         """
         allow for the teams to be chosen by the players before the game has
         started
 
         Parameters:
 
-        player_ids (list): List of player_ids, players with index 0 and 2 play
+        position int: List of player_ids, players with index 0 and 2 play
             together
         """
 
@@ -178,7 +184,7 @@ class Brandi:
                 "note": f"Please select a position between 0 and {PLAYER_COUNT - 1}",
             }
 
-        player_requesting_new_position = self.players.get(user.uid)
+        player_requesting_new_position: Player = self.players.get(user.uid)
         if player_requesting_new_position == None:
             return {
                 "requestValid": False,
@@ -186,11 +192,7 @@ class Brandi:
             }
 
         # search if a player already is in that position, in which case we need to swap both
-        player_to_be_swapped: Player = None
-        for player in self.players.values():
-            if player.position == position:
-                player_to_be_swapped = player
-                break
+        player_to_be_swapped: Player = self.get_player_by_position(position)
 
         if player_to_be_swapped is not None:
             self.players[player_to_be_swapped.uid].set_position(
@@ -198,6 +200,7 @@ class Brandi:
             )
         self.players[player_requesting_new_position.uid].set_position(position)
 
+        self.calculate_order()
         return {
             "requestValid": True,
             "note": f"Successfully moved player {user.username} to postion {position}",
@@ -216,7 +219,7 @@ class Brandi:
             return {"requestValid": False, "note": "Game has already started."}
 
         # create a new field instance for the game
-        self.field = Field(PLAYER_COUNT)  # field of players
+        self.field: Field = Field(PLAYER_COUNT)  # field of players
 
         self.assign_starting_positions()
 
@@ -231,7 +234,7 @@ class Brandi:
         for player_id in self.players.keys():
             self.players[player_id].set_starting_node(self.field)
 
-        self.order = [self.get_player_by_position(position).uid for position in range(PLAYER_COUNT)]
+        self.calculate_order()
 
     def start_round(self):
         """
@@ -248,7 +251,8 @@ class Brandi:
 
         # update the players order
         self.active_player_index = 0  # self.round_turn % PLAYER_COUNT
-        player_list = sorted(self.players.values(), key=lambda player: player.position)
+        player_list = sorted(self.players.values(),
+                             key=lambda player: player.position)
         for _ in range(self.round_turn % PLAYER_COUNT):
             player_list.append(
                 player_list.pop(0)
@@ -345,13 +349,15 @@ class Brandi:
                     "gameOver": True,
                 }
 
-        self.active_player_index = (self.active_player_index + 1) % PLAYER_COUNT
+        self.active_player_index = (
+            self.active_player_index + 1) % PLAYER_COUNT
 
         skipped_player_count: int = 0
         while self.players[
             self.players_in_order_for_current_round[self.active_player_index].uid
         ].has_finished_cards():
-            self.active_player_index = (self.active_player_index + 1) % PLAYER_COUNT
+            self.active_player_index = (
+                self.active_player_index + 1) % PLAYER_COUNT
             # if all players have been skipped then the round has finished and a new round starts
             if skipped_player_count == PLAYER_COUNT:
                 self.round_state = 5
@@ -436,7 +442,8 @@ class Brandi:
             team_member: Player = self.get_player_by_position(
                 (current_player.position + PLAYER_COUNT // 2) % PLAYER_COUNT
             )
-            marble: Marble = self.players[team_member.uid].marbles.get(action.mid)
+            marble: Marble = self.players[team_member.uid].marbles.get(
+                action.mid)
 
         if not marble:
             return {
@@ -467,7 +474,8 @@ class Brandi:
                 marble.blocking = True  # make the marble blocking other marbles
 
                 self.increment_active_player_index()
-                self.top_card = self.players[user.uid].hand.play_card(action.card)
+                self.top_card = self.players[user.uid].hand.play_card(
+                    action.card)
 
                 self.discarded_cards.append(self.top_card)
                 return {
@@ -627,7 +635,8 @@ class Brandi:
                     "requestValid": False,
                     "note": f"Marble {action.mid_2} is blocking.",
                 }
-            self.players[user.uid].marbles[action.mid].set_new_position(marble_2_node)
+            self.players[user.uid].marbles[action.mid].set_new_position(
+                marble_2_node)
             self.players[action.pid_2].marbles[action.mid_2].set_new_position(
                 marble_1_node
             )
@@ -732,7 +741,8 @@ class Brandi:
             if self.players[user.uid].steps_of_seven_remaining == 0:
                 self.increment_active_player_index()
 
-                self.top_card = self.players[user.uid].hand.play_card(action.card)
+                self.top_card = self.players[user.uid].hand.play_card(
+                    action.card)
                 self.players[user.uid].steps_of_seven_remaining = -1
 
                 self.discarded_cards.append(self.top_card)

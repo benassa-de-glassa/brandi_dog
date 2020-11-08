@@ -21,7 +21,7 @@ from app import models
 # TODO: ???
 from app.models.token import Token # no idea why this is required ???
 
-from app.game_logic.user import User
+from app.models.user import User
 from app.database import crud, db_models
 from app.database.database import SessionLocal, engine
 

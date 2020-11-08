@@ -326,7 +326,6 @@ class Brandi:
         """
         increment the active player index until a player is found who has not yet folded
         """
-        skipped_player_count: int = 0
 
         victory_dict: Dict[int, bool]
         for i in enumerate(PLAYER_COUNT // 2):
@@ -348,6 +347,7 @@ class Brandi:
 
         self.active_player_index = (self.active_player_index + 1) % PLAYER_COUNT
 
+        skipped_player_count: int = 0
         while self.players[
             self.players_in_order_for_current_round[self.active_player_index].uid
         ].has_finished_cards():

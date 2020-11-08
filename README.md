@@ -4,7 +4,7 @@ combined front and backend repo for brandidog
 you need:
  - python >= 3.7
  - node ~ v12
- - node ~ v6
+ - npm ~ v6
  
 for development:
  - start the backend server with: `python start_server.py`, it runs locally on port 8000

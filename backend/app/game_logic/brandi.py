@@ -502,16 +502,17 @@ class Brandi:
                     # make a copy of the pointer to check whether or not the home fields are blocking
                     pnt_copy = pnt.curr
                     pnt_copy = pnt_copy.exit
-                    if pnt_copy is None:
-                        return {
-                            "requestValid": False,
-                            "note": "Its a feature not a bug.",
-                        }
+
                     # check the remaining steps in goal for blockage
                     # one less step as the pointer has moved one through pnt_copy.exit
                     for _ in range(i, action.action - 1):
                         flag_home_is_blocking = pnt_copy.is_blocking()
                         pnt_copy = pnt_copy.next
+                        if pnt_copy is None:
+                            return {
+                                "requestValid": False,
+                                "note": f"You cannot enter your goal without going to far.",
+                            }
 
                     # if the the pointer was not blocked on its way in the home, then it is a valid action
                     if not flag_home_is_blocking:
@@ -524,11 +525,6 @@ class Brandi:
                 else:
                     pnt = pnt.next
                 # check whether a marble is blocking along the way
-                if pnt is None:
-                    return {
-                        "requestValid": False,
-                        "note": f"You cannot enter your goal without going to far.",
-                    }
                 if pnt.is_blocking():
                     return {
                         "requestValid": False,
@@ -687,6 +683,12 @@ class Brandi:
                     for _ in range(i, steps - 1):
                         flag_home_is_blocking = pnt_copy.is_blocking()
                         pnt_copy = pnt_copy.next
+                        if pnt_copy is None:
+                            # pnt can only be None when the last node of the home fields has been reached
+                            return {
+                                "requestValid": False,
+                                "note": f"You cannot enter your goal without going to far.",
+                            }
 
                     # if the the pointer was not blocked on its way in the home, then it is a valid action
                     if not flag_home_is_blocking:
@@ -699,12 +701,6 @@ class Brandi:
                 else:
                     pnt = pnt.next
 
-                # pnt can only be None when the last node of the home fields has been reached
-                if pnt is None:
-                    return {
-                        "requestValid": False,
-                        "note": f"You cannot enter your goal without going to far.",
-                    }
                 # check whether a marble is blocking along the way
                 if pnt.is_blocking():
                     return {

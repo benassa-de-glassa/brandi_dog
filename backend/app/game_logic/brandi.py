@@ -5,7 +5,7 @@ from itertools import count, filterfalse
 import logging
 
 from app.game_logic.deck import Deck
-from app.game_logic.field import Field
+from app.game_logic.field import Field, GameNode
 from app.game_logic.player import Player
 from app.game_logic.marble import Marble
 from app.game_logic.card import Card
@@ -124,15 +124,17 @@ class Brandi:
             set(player_positions).__contains__, count(0)))
         self.players[user.uid] = Player(user.uid, user.username, position)
 
+        self.calculate_order()
         return {
             "requestValid": True,
             "note": f"Player {user.username} succesfully joined the game.",
         }
 
-    def remove_player(self, user: User):
+    def remove_player(self, user_id):
         """
         remove a player from the game
         """
+        user: Player = self.players.get(user_id)
         if not user.uid in self.players:
             return {
                 "requestValid": False,
@@ -152,7 +154,7 @@ class Brandi:
 
     def calculate_order(self) -> None:
         self.order = [self.get_player_by_position(
-            position).uid for position in range(PLAYER_COUNT)]
+            position).uid for position in range(len(self.players.keys()))]
 
     def change_position(self, user: User, position: int):
         """
@@ -220,7 +222,6 @@ class Brandi:
         self.field: Field = Field(PLAYER_COUNT)  # field of players
 
         self.assign_starting_positions()
-
         self.start_round()
         return {"requestValid": True, "note": "Game is started."}
 
@@ -245,13 +246,13 @@ class Brandi:
         self.game_state = 2
         self.round_state = 1
         self.deal_cards()
-        self.round_turn += 1
 
         # update the players order
         self.active_player_index = self.round_turn % PLAYER_COUNT
         for uid in self.order:
             self.players[uid].has_folded = False
 
+        self.round_turn += 1
         return {"requestValid": True, "note": "Round is started."}
 
     def deal_cards(self):
@@ -267,7 +268,7 @@ class Brandi:
             }
 
         # shift the order to start dealing cards to the correct player
-        shifted_order = self.order
+        shifted_order: List[str] = self.order.copy()
         for _ in range(self.round_turn):
             shifted_order.append(shifted_order.pop(0))
 
@@ -326,7 +327,7 @@ class Brandi:
         """
 
         victory_dict: Dict[int, bool] = {}
-        for i in enumerate(PLAYER_COUNT // 2):
+        for i in range(PLAYER_COUNT // 2):
             team_member_1 = self.get_player_by_position(i)
             team_member_2 = self.get_player_by_position(i + PLAYER_COUNT // 2)
             victory_dict[i] = team_member_1.has_finished_marbles() \
@@ -389,7 +390,7 @@ class Brandi:
 
     def event_move_marble(self, user: User, action: Action):
 
-        current_player = self.order[self.active_player_index]
+        current_player: Player = self.players[self.order[self.active_player_index]]
 
         if self.round_state != 4:
             return {
@@ -439,7 +440,7 @@ class Brandi:
                 "note": "Marble does not seem to belong to you.",
             }
 
-        pnt = marble.curr
+        pnt: GameNode = marble.currentNode
 
         #  get out of the start
         if action.action == 0:
@@ -448,18 +449,18 @@ class Brandi:
             # check that the marble goes to an entry node
             # and
             # check whether the entrynode is blocked
-            elif marble.next.is_blocking():
+            elif marble.starting_node.is_blocking():
                 return {"requestValid": False, "note": "Blocked by a marble."}
             # marble is allowed to move
             else:
                 # check whether there already is a marble
-                if marble.next.has_marble():
+                if marble.starting_node.has_marble():
                     # kick the exiting marble
-                    marble.next.marble.reset_to_starting_position()
+                    marble.starting_node.marble.reset_to_starting_position()
 
                 # move the marble to the entry node
-                marble.set_new_position(marble.next)
-                marble.blocking = True  # make the marble blocking other marbles
+                marble.set_new_position(marble.starting_node)
+                marble.is_blocking = True  # make the marble blocking other marbles
 
                 self.increment_active_player_index()
                 self.top_card = self.players[user.uid].hand.play_card(
@@ -468,7 +469,7 @@ class Brandi:
                 self.discarded_cards.append(self.top_card)
                 return {
                     "requestValid": True,
-                    "note": f"Marble {action.mid} moved to {marble.curr.position}.",
+                    "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
                 }
         # normal actions
         elif action.action in [
@@ -484,7 +485,7 @@ class Brandi:
             11,
             12,
             13,
-        ]:  # and action.card.value not in ['7', 'Jo']:
+        ]:
             # try to move action.action nodes ahead
 
             # use pnt variable to check the path along the action of the marble i.e. whether it
@@ -496,7 +497,7 @@ class Brandi:
             for i in range(action.action):
 
                 # check whether pnt is looking at the own exit node and if it can enter
-                if marble.can_enter_goal and pnt.get_entry_node() == user.uid:
+                if marble.can_enter_goal and pnt.get_is_entry_node_for_player_at_position(current_player.position):
                     flag_home_is_blocking = False
                     # make a copy of the pointer to check whether or not the home fields are blocking
                     pnt_copy = pnt.curr
@@ -541,7 +542,7 @@ class Brandi:
             # performing any motion with a marble on the field removes the blocking capability
             # however entering the goals makes the marble blocking again
             # if the pointers position is >= 1000 then the marble is at home and therefor blocking
-            marble.blocking = False + (pnt.position >= 1000)
+            marble.is_blocking = False + (pnt.position >= 1000)
             marble.can_enter_goal = True
             marble.set_new_position(pnt)
             self.increment_active_player_index()
@@ -550,7 +551,7 @@ class Brandi:
 
             return {
                 "requestValid": True,
-                "note": f"Marble {action.mid} moved to {marble.curr.position}.",
+                "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
             }
 
         elif action.action == -4:  # go backwards 4
@@ -558,7 +559,7 @@ class Brandi:
 
             # use pnt variable to check the path along the action of the marble i.e. whether it
             # is blocked or it may enter its goal
-            pnt = marble.curr
+            pnt = marble.currentNode
             for i in range(abs(action.action)):
                 pnt = pnt.prev
                 # check whether a marble is blocking along the way
@@ -579,7 +580,7 @@ class Brandi:
 
             # performing any motion with a marble on the field removes the blocking capability
             # it also allows the marble to enter the goal
-            marble.blocking = False
+            marble.is_blocking = False
             marble.can_enter_goal = True
 
             # move the marble to the entry node
@@ -591,7 +592,7 @@ class Brandi:
 
             return {
                 "requestValid": True,
-                "note": f"Marble {action.mid} moved to {marble.curr.position}.",
+                "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
             }
 
         elif action.action == "switch":
@@ -610,8 +611,8 @@ class Brandi:
                     "note": f"You can not swap two of your own marbles.",
                 }
 
-            marble_1_node = self.players[user.uid].marbles[action.mid].curr
-            marble_2_node = self.players[action.pid_2].marbles[action.mid_2].curr
+            marble_1_node = self.players[user.uid].marbles[action.mid].currentNode
+            marble_2_node = self.players[action.pid_2].marbles[action.mid_2].currentNode
 
             if marble_1_node.curr.is_blocking():
                 return {
@@ -675,7 +676,7 @@ class Brandi:
 
             for i in range(steps):
                 # check whether pnt is looking at the own exit node and if it can enter
-                if marble.can_enter_goal and pnt.get_entry_node() == user.uid:
+                if marble.can_enter_goal and pnt.get_is_entry_node_for_player_at_position(current_player.position):
                     flag_home_is_blocking = False
                     # make a copy of the pointer to check whether or not the home fields are blocking
                     pnt_copy = pnt.curr
@@ -721,7 +722,7 @@ class Brandi:
             # performing any motion with a marble on the field removes the blocking capability
             # however entering the goals makes the marble blocking again
             # if the marble position is >= 1000 then the marble is at home and therefore blocking
-            marble.blocking = False + (pnt.position >= 1000)
+            marble.is_blocking = False + (pnt.position >= 1000)
             marble.can_enter_goal = True
             marble.set_new_position(pnt)
             self.players[user.uid].steps_of_seven_remaining -= steps
@@ -737,7 +738,7 @@ class Brandi:
 
             return {
                 "requestValid": True,
-                "note": f"Marble {action.mid} moved to {marble.curr.position}.",
+                "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
             }
 
     """
@@ -758,7 +759,7 @@ class Brandi:
         """
         print(marble)
         if action == 0:
-            pnt = marble.curr
+            pnt = marble.currentNode
             if pnt is not None:
                 return False
             if pnt.next.is_blocking():
@@ -766,7 +767,7 @@ class Brandi:
             return True
         elif action in [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]:
             # check you are not in the starting position
-            pnt = marble.curr
+            pnt = marble.currentNode
             if pnt is None:
                 return False
 
@@ -782,7 +783,7 @@ class Brandi:
                     return False
             return True
         elif action == "switch":
-            pnt = marble.curr
+            pnt = marble.currentNode
             if pnt is None:
                 return False
             if pnt.is_blocking():
@@ -797,12 +798,8 @@ class Brandi:
             logging.info("marble = " + str(marble))
             assert isinstance(marble, list)
             total_distance_to_blockade = 0
-            for (
-                m
-            ) in (
-                marble
-            ):  # for all the players marbles check how far they can be moved to the next blocking marble
-                pnt = m.curr
+            for m in marble:  # for all the players marbles check how far they can be moved to the next blocking marble
+                pnt = m.currentNode
                 # move until the current marble m is blocked
                 while (
                     pnt is not None

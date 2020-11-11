@@ -1,6 +1,10 @@
+from typing import Dict, List
+
 from app.game_logic.marble import Marble
 
 NODES_BETWEEN_PLAYERS = 16
+
+
 class Node(object):
     def __init__(self):
         self._next: Node = None
@@ -33,11 +37,16 @@ class Node(object):
     def curr(self):
         return self._curr
 
+
 class GameNode(Node):
     def __init__(self, position: int):
         super().__init__()
-        self.position: int = position
+        self._position: int = position
         self._marble = None
+
+    @property
+    def position(self):
+        return self._position
 
     @property
     def marble(self):
@@ -53,13 +62,14 @@ class GameNode(Node):
         self._marble = None
 
     def is_blocking(self) -> bool:
-        """
-        A game node cannot be blocking 
-        This is a convinience function
-        """
         if self.has_marble():
             return self._marble.is_blocking
         return False
+
+    def get_is_entry_node_for_player_at_position(self, player_position: int) -> bool:
+        return self.position % NODES_BETWEEN_PLAYERS == 0 \
+            and self.position // NODES_BETWEEN_PLAYERS == player_position
+
 
 class Field:
     """
@@ -71,31 +81,32 @@ class Field:
 
         players: list of player uids
         """
-        self.entry_nodes: dict = {}  # store the entry nodes for each of the players
+        # store the entry nodes for each of the players
+        self.entry_nodes: Dict[int, GameNode] = {}
 
-        nodes: list = []
-        for i in range(player_count): 
-            new_entry_node = GameNode(i)
+        nodes: List = []
+        for i in range(player_count):
+            new_entry_node: GameNode = GameNode(i * NODES_BETWEEN_PLAYERS)
 
-            self.entry_nodes[i] = new_entry_node
             nodes.append(new_entry_node)
 
             exit_nodes = []
             for j in range(4):
                 # goal nodes are designated by a position larger then 1000
-                new_node = GameNode(1000 + 10 * i + j)
-                exit_nodes.append(new_node)
+                goal_node = GameNode(1000 + 10 * i + j)
+                exit_nodes.append(goal_node)
 
             new_entry_node.set_exit(exit_nodes[0])
             for j in range(3):
                 exit_nodes[j].set_next(exit_nodes[j + 1])
-                # both directions point to the next, so that one can easily enter with a -4 but not exit
+                # both directions point to the next, so that one can enter with a -4 but not exit
                 exit_nodes[j].set_prev(exit_nodes[j + 1])
-                exit_nodes[j].set_exit(exit_nodes[j + 1])
 
             for _ in range(NODES_BETWEEN_PLAYERS - 1):
                 new_node = GameNode(len(nodes))
                 nodes.append(new_node)
+
+            self.entry_nodes[i] = new_entry_node
 
         # connect the nodes
         for index in range(len(nodes)):

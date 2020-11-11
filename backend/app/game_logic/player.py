@@ -29,11 +29,11 @@ class Player:
     @property
     def uid(self):
         return self._uid
-    
+
     @property
     def position(self):
         return self._position
-    
+
     def set_position(self, position):
         self._position = position
 
@@ -45,7 +45,7 @@ class Player:
         self.marbles = {
             marble_id: Marble(marble_id, self.starting_node)
             for marble_id in range(self.position * 4, 4 * self.position + 4)
-        } 
+        }
 
     def set_card(self, card):
         """
@@ -61,9 +61,9 @@ class Player:
         return self.has_folded or self.hand.cards == {}
 
     def has_finished_marbles(self):
-        if any(marble.curr == None for marble in self.marbles.values()):
+        if any(marble.currentNode == None for marble in self.marbles.values()):
             return False
-        return sum([marble.curr.position for marble in self.marbles.values()]) > 4000
+        return sum([marble.currentNode.position for marble in self.marbles.values()]) > 4000
 
     """
     Player State

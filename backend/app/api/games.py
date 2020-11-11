@@ -104,7 +104,7 @@ async def join_game_socket(sid, data):
         'response': f'successfully joined game {game_id}',
         'game_id': game_id
     },
-        room=socket_connections[player_id]
+        room=socket_connections[int(player_id)]
     )
     await sio_emit_game_state(game_id)
     await sio_emit_player_state(game_id, player_id)
@@ -113,16 +113,16 @@ async def join_game_socket(sid, data):
 @sio.event
 async def leave_game(sid, data):
     game_id = data['game_id']
-    player_id = data['player_id']
+    user_id = data['player_id']
 
     sio.leave_room(sid, game_id)
 
-    logging.info(f'#{player_id} [{sid}] tries to leave the game')
+    logging.info(f'#{user_id} [{sid}] tries to leave the game')
 
-    response = games[game_id].remove_player(player_id)
+    response = games[game_id].remove_player(user_id)
 
     if response['requestValid']:
-        if not playing_users.pop(player_id, None):
+        if not playing_users.pop(user_id, None):
             logging.error('Unable to remove player from playing users')
         await sio.emit('leave_game_success')
     else:
@@ -266,7 +266,7 @@ async def start_game(game_id: str, user:  User = Depends(get_current_user)):
     return games[game_id].public_state()
 
 
-@router.get('/games/{game_id}/cards', tags=["game action"])
+@router.get('/games/{game_id}/cards', tags=["game action"], response_model=PlayerPublic)
 def get_cards(game_id: str, player: User = Depends(get_current_user)):
     """
     start an existing game
@@ -302,7 +302,7 @@ async def swap_card(game_id: str,  card: CardBase, user: User = Depends(get_curr
     return res
 
 
-@router.post('/games/{game_id}/fold', tags=["game action"])
+@router.post('/games/{game_id}/fold', tags=["game action"], response_model=PlayerPublic)
 async def fold_round(game_id: str, user: User = Depends(get_current_user)):
     """
     make the card swap before starting the round
@@ -320,7 +320,7 @@ async def fold_round(game_id: str, user: User = Depends(get_current_user)):
     return games[game_id].get_cards(user)
 
 
-@router.post('/games/{game_id}/action', tags=["game action"])
+@router.post('/games/{game_id}/action', response_model=GamePublic, tags=["game action"])
 async def perform_action(game_id: str, action: Action, user: User = Depends(get_current_user)):
     """
 

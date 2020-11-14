@@ -46,7 +46,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from starlette.responses import Response, JSONResponse
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session # only used for typing
 
 from app import models  # those are all the pydantic base models
 
@@ -73,6 +73,10 @@ credentials_exception = HTTPException(
     detail='Could not validate credentials',
     headers={'WWW-Authenticate': 'Bearer'},
 )
+
+# bind the database models for the table 'users'. This is not needed for using
+# the heroku database so perhaps this is somewhat obsolete. 
+db_models.database.Base.metadata.create_all(bind=database.engine)
 
 
 def authenticate_user(db, username: str, password: str):

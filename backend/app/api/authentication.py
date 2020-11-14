@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-import logging
+from loguru import logger
 
 import jwt  # json web tokens
 
@@ -36,8 +36,6 @@ from app.config import SECRET_KEY, JWT_ALGORITHM, ACCESS_TOKEN_EXPIRE_DAYS, \
 # playing users dictionary
 from app.api.api_globals import playing_users
 
-# logger = logging.getLogger('backend')
-
 # define the authentication router that is imported in main
 router = APIRouter()
 
@@ -47,7 +45,6 @@ oauth2_scheme = OAuth2PasswordBearerCookie(tokenUrl='/token')
 
 # bind the database models for the table 'users'
 db_models.Base.metadata.create_all(bind=engine)
-
 
 
 credentials_exception = HTTPException(
@@ -91,7 +88,7 @@ def get_db():
 
 """ 
 Implement the authentication using json web tokens:
-Upon login, the users credentials are verified against the sqlite database
+Upon login, the users credentials are verified against the database
 and if successful, the user obtains a access token that is stored as a 
 httponly cookie. 
 """
@@ -152,7 +149,7 @@ async def get_current_user(
             raise credentials_exception
         token_data = models.token.TokenData(username=username)
     except jwt.PyJWTError:
-        logging.warn('PyJWTError')
+        logger.warn('PyJWTError')
         raise credentials_exception
     
     user = get_user(db, username=token_data.username)
@@ -172,7 +169,7 @@ async def read_users_me(current_user: models.user.User = Depends(get_current_use
     # example the hashed password
 
     if current_user.uid in playing_users:
-        logging.info('Player is currently in game')
+        logger.info('Player is currently in game')
         game_id = playing_users[current_user.uid]
         game_token = create_game_token(game_id)
         return models.user.Player(**current_user.dict(),

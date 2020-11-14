@@ -11,13 +11,13 @@ from fastapi.security.utils import get_authorization_scheme_param
 from app.config import SECRET_KEY, JWT_ALGORITHM
 from app.database.database import SessionLocal
 from app.database.crud import get_user_by_username
+from app.api.api_globals import socket_connections
 
 sio = socketio.AsyncServer(
     async_mode='asgi',
     cors_allowed_origins='*')
 
-# store all socket ids in a dictionary of {user id: socket id}
-socket_connections = {}
+
 
 credentials_exception = HTTPException(
     status_code=401,  # unauthorized

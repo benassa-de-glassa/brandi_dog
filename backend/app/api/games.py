@@ -27,7 +27,7 @@ from app.api.authentication import get_current_user, get_current_game, \
     create_game_token
 
 # dictionary { uid: game_id }
-from app.api.api_globals import playing_users
+from app.api.api_globals import playing_users, socket_connections
 
 router = APIRouter()
 

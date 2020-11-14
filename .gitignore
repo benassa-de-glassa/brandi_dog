@@ -161,3 +161,4 @@ yarn-debug.log*
 yarn-error.log*
 backend/users.db
 backend/users.db
+backend/tests/perform_tests.sh

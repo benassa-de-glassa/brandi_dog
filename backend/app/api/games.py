@@ -116,13 +116,13 @@ async def leave_game(sid, data):
 
     sio.leave_room(sid, game_id)
 
-    from loguru logger.info(f'#{player_id} [{sid}] tries to leave the game')
+    logger.info(f'#{player_id} [{sid}] tries to leave the game')
 
     response = games[game_id].remove_player(player_id)
 
     if response['requestValid']:
         if not playing_users.pop(player_id, None):
-            from loguru logger.error('Unable to remove player from playing users')
+            logger.error('Unable to remove player from playing users')
         await sio.emit('leave_game_success')
     else:
         await emit_error(sid, response['note'])
@@ -131,7 +131,7 @@ async def leave_game(sid, data):
     if not games[game_id].players:
         removed_game = games.pop(game_id, None)
         if not removed_game:
-            from loguru logger.warning('Could not delete game')
+            logger.warning('Could not delete game')
 
     await sio_emit_game_list()
 

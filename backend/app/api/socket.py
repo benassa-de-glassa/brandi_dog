@@ -1,10 +1,10 @@
-import logging
 from http import cookies
 import jwt
-
+from loguru import logger
 import socketio
 
 from fastapi import HTTPException
+
 # utils function to extract the token string from "bearer {token}"
 from fastapi.security.utils import get_authorization_scheme_param
 
@@ -25,7 +25,6 @@ credentials_exception = HTTPException(
     headers={'WWW-Authenticate': 'Bearer'},
 )
 
-
 async def authenticate_user(token: str):
     """
     Extract the username from a JSON web token, and return the corresponding
@@ -40,10 +39,10 @@ async def authenticate_user(token: str):
         # obtain user from database
         user = get_user_by_username(db, username=username)
     except jwt.PyJWTError:
-        logging.warn('PyJWTError')
+        logger.warn('PyJWTError')
         raise credentials_exception
     except:
-        logging.warn('Unknown error')
+        logger.warn('Unknown error')
         raise credentials_exception
     finally:
         db.close()      # close database session
@@ -80,8 +79,6 @@ async def connect(sid, environ):
     # removes bearer fromt he string
     scheme, token = get_authorization_scheme_param(authorization)
 
-    logging.debug(f'Sio: token is {token}')
-
     try:
         user = await authenticate_user(token=token)
     except HTTPException:
@@ -89,16 +86,14 @@ async def connect(sid, environ):
 
     # connection successful
     if user.uid in socket_connections:
-        logging.info('Prevented multiple connections to same user.')
+        logger.info('Prevented multiple connections to same user.')
         raise socketio.exceptions.ConnectionRefusedError(
             'Only a single connection is allowed')
 
     # user is not already connected
     socket_connections[user.uid] = sid
 
-    logging.info(f'SIO connection: {user.username} [{sid}]')
-    logging.info(socket_connections)
-
+    logger.info(f'SIO connection: {user.username} [{sid}]')
 
 @sio.event
 async def disconnect(sid):
@@ -110,12 +105,12 @@ async def disconnect(sid):
         pid, _sid in socket_connections.items() if _sid == sid]
 
     if not ids_to_remove:
-        logging.error('Unidentified user disconnected from socket')
+        logger.error('Unidentified user disconnected from socket')
     if not len(ids_to_remove) == 1:
-        logging.error('Socket registered to multiple user ids')
+        logger.error('Socket registered to multiple user ids')
 
     socket_connections.pop(ids_to_remove[0])
 
-    logging.info(f'SIO disconnected: {ids_to_remove[0]} [{sid}]')
-    logging.info(f'He was in rooms {sio.rooms(sid)}')
-    logging.info(socket_connections)
+    logger.info(f'SIO disconnected: {ids_to_remove[0]} [{sid}]')
+    logger.debug(f'He was in rooms {sio.rooms(sid)}')
+    logger.debug(f'Remaining connections are {socket_connections}')

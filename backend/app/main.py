@@ -1,6 +1,3 @@
-import datetime
-import logging
-
 from starlette.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 

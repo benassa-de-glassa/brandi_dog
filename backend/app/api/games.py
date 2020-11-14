@@ -34,18 +34,9 @@ router = APIRouter()
 # dictionary of game_id: game instance
 games = {}
 
-# class SocketBrandi(Brandi):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.connected_sockets = []
-
-#     def log_connected_sockets():
-#         logging.info(self.connected_sockets)
-
 """
 socket events
 """
-
 
 async def emit_error(sid, msg: str):
     await sio.emit(

@@ -2,7 +2,9 @@ import os
 
 import uvicorn
 
-LOG_LEVEL = os.environ.get('LOG_LEVEL', 'DEBUG')
+from dotenv import load_dotenv
+
+load_dotenv()   # (try to) load environment variables from .env
 
 if __name__ == "__main__":
     uvicorn.run(

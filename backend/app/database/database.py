@@ -28,6 +28,3 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # definitions
 Base = declarative_base()
 
-
-# bind the database models for the table 'users'
-Base.metadata.create_all(bind=engine)

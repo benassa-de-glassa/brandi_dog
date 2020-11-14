@@ -1,5 +1,5 @@
 # any db file
-**.db
+**/*.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -141,6 +141,7 @@ dmypy.json
 /node_modules
 /.pnp
 .pnp.js
+**/node_modules
 
 # testing
 /coverage

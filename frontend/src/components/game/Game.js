@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import Chat from '../chat/Chat'
 import Board from '../board/Board'
+import Board6 from '../board/Board6'
 import Controls from '../controls/Controls'
 
 import { socket } from '../../socket'
@@ -13,6 +14,9 @@ class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            // 
+            numberOfPlayers: 6, //6, // = 4
+
             // updated by socket.io
             players: [],
             activePlayerIndex: null,
@@ -219,7 +223,7 @@ class Game extends Component {
 
             // if the card is a 7 only show the remaining steps as playable (e.g. [71, 72, 73] if 4 steps were already completed)
             if (selectedCardValue === '7' && this.state.remainingStepsOf7 !== -1) {
-                playableActions = playableActions.filter(action => action <= 70+this.state.remainingStepsOf7)
+                playableActions = playableActions.filter(action => action <= 70 + this.state.remainingStepsOf7)
             }
             console.log(playableActions)
 
@@ -261,7 +265,7 @@ class Game extends Component {
 
     tooltipClicked(action) {
         let selectedCard = this.state.cards[this.state.selectedCardIndex]
-        let successCallback = () => {}
+        let successCallback = () => { }
 
         this.performAction(
             this.state.selectedMarble,
@@ -343,20 +347,40 @@ class Game extends Component {
     render() {
         return (
             <div className="game-container">
-                <Board
-                    player={this.props.player}
-                    playerList={this.state.players}
-                    activePlayerIndex={this.state.activePlayerIndex}
-                    marbleList={this.state.allMarbles}
-                    selectedMarble={this.state.selectedMarble}
-                    tooltipActions={this.state.tooltipActions}
-                    tooltipClicked={this.tooltipClicked}
-                    marbleClicked={this.marbleClicked}
-                    selectedCard={this.state.cards[this.state.selectedCardIndex]}
-                    topCard={this.state.topCard}
-                    switchingSeats={this.state.switchingSeats}
-                    submitNewTeams={this.submitNewTeams}
-                />
+                {this.state.numberOfPlayers === 4
+                    ?
+                    <Board
+                        numberOfPlayers={this.state.numberOfPlayers}
+                        player={this.props.player}
+                        playerList={this.state.players}
+                        activePlayerIndex={this.state.activePlayerIndex}
+                        marbleList={this.state.allMarbles}
+                        selectedMarble={this.state.selectedMarble}
+                        tooltipActions={this.state.tooltipActions}
+                        tooltipClicked={this.tooltipClicked}
+                        marbleClicked={this.marbleClicked}
+                        selectedCard={this.state.cards[this.state.selectedCardIndex]}
+                        topCard={this.state.topCard}
+                        switchingSeats={this.state.switchingSeats}
+                        submitNewTeams={this.submitNewTeams}
+                    />
+                    :
+                    <Board6
+                        numberOfPlayers={this.state.numberOfPlayers}
+                        player={this.props.player}
+                        playerList={this.state.players}
+                        activePlayerIndex={this.state.activePlayerIndex}
+                        marbleList={this.state.allMarbles}
+                        selectedMarble={this.state.selectedMarble}
+                        tooltipActions={this.state.tooltipActions}
+                        tooltipClicked={this.tooltipClicked}
+                        marbleClicked={this.marbleClicked}
+                        selectedCard={this.state.cards[this.state.selectedCardIndex]}
+                        topCard={this.state.topCard}
+                        switchingSeats={this.state.switchingSeats}
+                        submitNewTeams={this.submitNewTeams}
+                    />
+                }
                 <div className="right-container">
                     <Controls
                         players={this.state.players}

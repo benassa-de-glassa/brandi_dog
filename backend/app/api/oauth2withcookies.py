@@ -1,8 +1,12 @@
-# mostly taken from
-# https://medium.com/data-rebels/fastapi-how-to-add-basic-and-cookie-authentication-a45c85ef47d3
+"""Extension to the OAuth2 password bearer class from FastAPI
 
-import logging
+The code is mostly copied from 
+https://medium.com/data-rebels/fastapi-how-to-add-basic-and-cookie-authentication-a45c85ef47d3
+"""
+
 from typing import Optional
+
+from loguru import logger
 
 from fastapi import HTTPException
 from fastapi.security import OAuth2
@@ -14,12 +18,13 @@ from starlette.status import HTTP_403_FORBIDDEN
 
 
 class OAuth2PasswordBearerCookie(OAuth2):
+    """Extension to the standard OAuth2PasswordBearer class by FastAPI
+    
+    Originally the OAuth2PasswordBearer class only works with authorization 
+    headers. This adds cookie functionality. It tries to obtain authorization
+    through both headers and cookies and it only fails if neither is present. 
     """
-    Extends the standard OAuth2PasswordBearer class that only works with 
-    authorization headers with cookie functionality. It tries to obtain 
-    authorization through both headers and cookies and it only fails if neither
-    is present. 
-    """
+
     def __init__(
         self,
         tokenUrl: str,
@@ -33,7 +38,12 @@ class OAuth2PasswordBearerCookie(OAuth2):
         super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
 
     async def __call__(self, request: Request) -> Optional[str]:
-        logging.info(f'Obtained OAuth2 cookie: {request.cookies}')
+        """Turns the class into a callable
+        
+        This allows it to be used as a dependency by FastAPI
+        """
+
+        logger.debug(f'Obtained OAuth2 cookie')
 
         header_authorization: str = request.headers.get('Authorization')
         cookie_authorization: str = request.cookies.get('Authorization')

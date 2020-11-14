@@ -148,24 +148,6 @@ header {
     /* border-radius: 5px; */
 }
 
-.svg-container {
-    width: 100%;
-    padding-bottom: 100%;
-    display: inline-block;
-    position: relative;
-    min-width: 400px;
-    height: 0;
-    vertical-align: top;
-    /* overflow: hidden; */
-}
-
-.svg-content-responsive {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
 .component-title {
     margin: 5px;
 }

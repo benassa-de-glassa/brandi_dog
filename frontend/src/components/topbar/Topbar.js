@@ -11,7 +11,7 @@ function TopBar(props) {
                 />
             </svg>
             { !props.socketConnected && props.playerLoggedIn &&
-                <input type='button' className='top-bar-link ml-2 white' value='Try to reconnect' />
+                <input type='button' className='top-bar-link ml-2 white' value='Try to reconnect'  onClick={props.sio_reconnect}/>
             }
             <span className='topbar'>
                 <Link

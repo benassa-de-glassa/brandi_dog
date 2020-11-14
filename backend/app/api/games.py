@@ -1,6 +1,7 @@
 import random
 import string
-import logging
+
+from loguru import logger
 
 from fastapi import APIRouter, Body, Depends
 from pydantic import BaseModel
@@ -27,24 +28,12 @@ from app.api.authentication import get_current_user, get_current_game, \
     create_game_token
 
 # dictionary { uid: game_id }
-from app.api.api_globals import playing_users
+from app.api.api_globals import playing_users, socket_connections
 
 router = APIRouter()
 
 # dictionary of game_id: game instance
 games = {}
-
-# class SocketBrandi(Brandi):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.connected_sockets = []
-
-#     def log_connected_sockets():
-#         logging.info(self.connected_sockets)
-
-"""
-socket events
-"""
 
 
 async def emit_error(sid, msg: str):
@@ -125,13 +114,13 @@ async def leave_game(sid, data):
 
     sio.leave_room(sid, game_id)
 
-    logging.info(f'#{player_id} [{sid}] tries to leave the game')
+    logger.info(f'#{player_id} [{sid}] tries to leave the game')
 
     response = games[game_id].remove_player(player_id)
 
     if response['requestValid']:
         if not playing_users.pop(player_id, None):
-            logging.error('Unable to remove player from playing users')
+            logger.error('Unable to remove player from playing users')
         await sio.emit('leave_game_success')
     else:
         await emit_error(sid, response['note'])
@@ -140,7 +129,7 @@ async def leave_game(sid, data):
     if not games[game_id].players:
         removed_game = games.pop(game_id, None)
         if not removed_game:
-            logging.warning('Could not delete game')
+            logger.warning('Could not delete game')
 
     await sio_emit_game_list()
 

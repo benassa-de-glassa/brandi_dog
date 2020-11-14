@@ -23,7 +23,10 @@ var GameViewer = function (props) {
     }
 
     // let react control the input
-    const handleCreateGameInput = event => setInput(event.target.value)
+    const handleCreateGameInput = event => {
+        setError('')
+        setInput(event.target.value)
+    }
 
     const handleCreateGameSubmit = async event => {
         event.preventDefault() // don't use the default submit
@@ -36,7 +39,7 @@ var GameViewer = function (props) {
             props.joinGameSocket(responseJson.game_token)
             setCreateGame(false)
         } else {
-            console.log(responseJson.detail)
+            setError(responseJson.detail)
         }
     }
 

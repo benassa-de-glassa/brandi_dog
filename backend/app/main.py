@@ -5,7 +5,7 @@ import uvicorn
 import socketio
 
 from app.api.socket import sio
-from app.api import games, chats, users, authentication
+from app.api import games, chats, authentication
 
 # wildcard "*" does not work with credentials so we have to put in the frontend origins??
 origins = [
@@ -38,10 +38,10 @@ app.include_router(
     prefix='/v1'
 )
 
-app.include_router(
-    users.router,
-    prefix='/v1'
-)
+# app.include_router(
+#     users.router,
+#     prefix='/v1'
+# )
 
 # without prefix for testing purposes
 app.include_router(authentication.router)

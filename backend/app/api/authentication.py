@@ -1,3 +1,40 @@
+"""Implement the OAuth2 protocol for user authentication using JWT
+
+The authentication is implemented according to the OAuth2 protocol employing
+JSON web tokens. 
+
+Most routes are only accessible to authorized users. Those are users whose 
+requests carry a bearer token which is stored on the client-side in a http-only
+cookie. 
+
+Upon login, the users credentials are verified against the database
+and if successful, the user obtains the access token that is described above as
+a http-only cookie. 
+
+The routes make use of the Depends() of FastAPI which injects dependencies
+automatically. 
+
+Routes
+------
+/create_user
+    Create a user in the database for the given username and return it.
+
+/token
+    This is the login route. A given username and password is verified against
+    the database. In case of success, an access token is returned as a cookie.
+
+/users/me
+    For authenticated users (i.e. requests with a valid access token) this
+    returns the full user information possibly including a current game in 
+    which the user participates. This allows rejoining a game - for instance 
+    after a browser refresh. 
+
+/logout
+    Remove the access token from the user and log him out. Otherwise it would
+    be impossible to log in from another account. 
+
+"""
+
 from datetime import datetime, timedelta
 from loguru import logger
 
@@ -6,47 +43,30 @@ import jwt  # json web tokens
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-# starlette HTTPException doesn't work with headers= {} keyword arg
-# from starlette.exceptions import HTTPException
-
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from starlette.responses import Response, JSONResponse
 
 from sqlalchemy.orm import Session
 
-# from app.models.player import Player, PlayerBase
-# from app.models import user as _user, token as _token
-from app import models
+from app import models  # those are all the pydantic base models
 
-# TODO: ???
-from app.models.token import Token # no idea why this is required ???
-# import app.models
-
-from app.game_logic.user import User
-from app.database import crud, db_models
-from app.database.database import SessionLocal, engine
+from app.database import database, crud, db_models
 
 # cookie authorization
 from app.api.oauth2withcookies import OAuth2PasswordBearerCookie
-
 from app.api.password_context import verify_password
 
+# TODO: security concerns regarding secret key, store it in environment variable
 from app.config import SECRET_KEY, JWT_ALGORITHM, ACCESS_TOKEN_EXPIRE_DAYS, \
     COOKIE_DOMAIN, COOKIE_EXPIRES
 
-# playing users dictionary
-from app.api.api_globals import playing_users
+from app.api.api_globals import playing_users  # playing users dictionary
 
 # define the authentication router that is imported in main
 router = APIRouter()
 
-# O authentification scheme 2 that is injected as a dependency
-# oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/token')
+# authentication scheme using an access token
 oauth2_scheme = OAuth2PasswordBearerCookie(tokenUrl='/token')
-
-# bind the database models for the table 'users'
-db_models.Base.metadata.create_all(bind=engine)
-
 
 credentials_exception = HTTPException(
     status_code=HTTP_401_UNAUTHORIZED,
@@ -56,13 +76,14 @@ credentials_exception = HTTPException(
 
 
 def authenticate_user(db, username: str, password: str):
+    """Tries to get the user from the database and verifies the password
+
+    Returns
+    -------
+    User / Bool
+        The user if the user exists and was verified, False otherwise
     """
-    Tries to get the user from the database and verifies the supplied password
-    with the stored hashed one. 
-    Returns: 
-    the user if the user exists and was verified
-    False, otherwise
-    """
+
     user = get_user(db, username)
     if not user:
         return False
@@ -72,30 +93,28 @@ def authenticate_user(db, username: str, password: str):
 
 
 def get_db():
+    """Function that 'yields' a database session for CRUD operations. 
+
+    Fastapi resolves this session as a dependency that injects the database 
+    session into functions that need it. See the fastapi docs for more
+    information
     """
-    Function that 'yields' a database session for CRUD operations. Fastapi
-    resolves this session as a dependency that injects the database session
-    into functions that need it. 
-    """
-    db = SessionLocal()
+
+    db = database.SessionLocal()
     try:
-        # need python >3.6 for the yield dependency to work, see the fastapi
-        # docs for a backport
+        # need python >3.6 for the yield dependency, see the fastapi docs
         yield db
     finally:
         # make sure the database closes even if there was an exception
         db.close()
 
 
-""" 
-Implement the authentication using json web tokens:
-Upon login, the users credentials are verified against the database
-and if successful, the user obtains a access token that is stored as a 
-httponly cookie. 
-"""
-
-
 def create_access_token(*, data: dict, expires_delta: timedelta = None) -> str:
+    """Create an access token tailored to a username
+
+    Encode an authorized user in a JSON web token to grant access to the
+    protected routes and returns it. 
+    """
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -112,9 +131,11 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None) -> str:
 
 
 def create_game_token(game_id: str) -> str:
+    """Create a game token to allow users to join a game. 
+
+    To join a game, the user has to present a valid game token. 
     """
-    Create a game token, that is sent in order to rejoin a game.
-    """
+
     to_encode = {'sub': game_id}
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=JWT_ALGORITHM)
     encoded_jwt_utf8 = encoded_jwt.decode('utf-8')
@@ -122,12 +143,16 @@ def create_game_token(game_id: str) -> str:
 
 
 def get_current_game(token: str) -> str:
+    """Decodes a game token."""
+
     payload = jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
     game_id: str = payload.get('sub')
     return game_id
 
 
 def get_user(db, username: str) -> models.user.UserInDB:
+    """Retrieve user from database."""
+
     user = crud.get_user_by_username(db, username)
     if not user:
         return None
@@ -142,6 +167,21 @@ def get_user(db, username: str) -> models.user.UserInDB:
 async def get_current_user(
         db: Session = Depends(get_db),
         token: str = Depends(oauth2_scheme)):
+    """Decode the user from the access token.
+
+    The current user is "injected" into methods below as a dependency. This 
+    means that the user variable is assigned to the authenticated user encoded
+    in the access token automatically by FastAPI.  
+
+    Parameters
+    ----------
+    db : sqlalchemy.orm.Session
+        database session injected by FastAPI as a dependency
+        
+    token : str
+        Access token encoding the username injected by FastAPI. It is retrieved
+        from a cookie by the oauth2_scheme defined in oauth2withcookies.py.
+    """
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
@@ -152,7 +192,7 @@ async def get_current_user(
     except jwt.PyJWTError:
         logger.warn('PyJWTError')
         raise credentials_exception
-    
+
     user = get_user(db, username=token_data.username)
 
     if user is None:
@@ -160,36 +200,54 @@ async def get_current_user(
     return user
 
 
-# -----------------------------------------------------------------------------
+###############################################################################
 # Paths:
 
+@router.post('/create_user', response_model=models.user.User, tags=["player info"])
+async def create_user(
+        new_user: models.user.UserCreate,
+        db: Session = Depends(get_db)):
+    """Create a new user in the database
+    
+    Parameters
+    ----------
+    new_user
+        username (str) and password (str)
+    """
 
-@router.get('/users/me', response_model=models.user.Player, tags=["player info"])
-async def read_users_me(current_user: models.user.User = Depends(get_current_user)):
-    # the response model makes sure that only id and name are sent, and not for
-    # example the hashed password
+    # check for empty name( TODO: could also enforce minimum length)
+    if not new_user.username:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail='Invalid username'
+        )
 
-    if current_user.uid in playing_users:
-        logger.info('Player is currently in game')
-        game_id = playing_users[current_user.uid]
-        game_token = create_game_token(game_id)
-        return models.user.Player(**current_user.dict(),
-                            current_game=game_id,
-                            game_token=game_token)
-    return current_user
+    # check for duplicate names
+    db_user = crud.get_user_by_username(db, new_user.username)
+    if db_user:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail='Username already exists'
+        )
 
-
-@router.get('/tokens', tags=["authentication"])
-async def read_tokens(token: str = Depends(oauth2_scheme)):
-    return {'token': token}
+    # the user containing the ID generated by the database is returned
+    user_in_db = crud.create_user(db, new_user)
+    return user_in_db
 
 
 @router.post("/token", response_model=models.token.Token, tags=["authentication"])
 async def login_for_access_token(
     response: Response,
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    # A = Depends() is equivalent to A = Depends(A)
+    form_data: OAuth2PasswordRequestForm = Depends(), 
     db: Session = Depends(get_db)
 ):
+    """Login function that verifies credentials and issues an access token
+
+    FastAPI resolves the user credentials that have to be submitted according
+    to the OAuth2 standard. Upon verification against the database (injected 
+    by FastAPI as well) an access token is issued as a http-only cookie.
+    """
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -217,29 +275,30 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post('/create_user', response_model=models.user.User, tags=["player info"])
-async def create_user(
-        new_user: models.user.UserCreate,
-        db: Session = Depends(get_db)):
-    # user contains username (str) and password (str)
-    if not new_user.username:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail='Invalid username'
-        )
-
-    # check for duplicate names
-    db_user = crud.get_user_by_username(db, new_user.username)
-    if db_user:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail='Username already exists'
-        )
-
-    # the user containing the ID generated by the database is returned
-    user_in_db = crud.create_user(db, new_user)
-    return user_in_db
-
 @router.get('/logout', tags=["player info"])
 async def logout_user(response: Response):
+    """Deletes the cookie and allows the user to log in again."""
     response.delete_cookie('Authorization', domain=COOKIE_DOMAIN)
+
+
+@router.get('/users/me', response_model=models.user.Player, tags=["player info"])
+async def read_users_me(current_user: models.user.User = Depends(get_current_user)):
+    """Try to retrieve the user based on an access token cookie. 
+    
+    The response model makes sure that only id and name are sent, and not for
+    example the hashed password
+    """
+
+    if current_user.uid in playing_users:
+        logger.info('Player is currently in game')
+        game_id = playing_users[current_user.uid]
+        game_token = create_game_token(game_id)
+        return models.user.Player(**current_user.dict(),
+                                  current_game=game_id,
+                                  game_token=game_token)
+    return current_user
+
+
+@router.get('/tokens', tags=["authentication"])
+async def read_tokens(token: str = Depends(oauth2_scheme)):
+    return {'token': token}

@@ -1,5 +1,6 @@
 import random
 import string
+
 from loguru import logger
 
 from fastapi import APIRouter, Body, Depends
@@ -34,9 +35,6 @@ router = APIRouter()
 # dictionary of game_id: game instance
 games = {}
 
-"""
-socket events
-"""
 
 async def emit_error(sid, msg: str):
     await sio.emit(

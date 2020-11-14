@@ -26,3 +26,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # factory function that constructs a base class for declarative class
 # definitions
 Base = declarative_base()
+
+
+# bind the database models for the table 'users'
+Base.metadata.create_all(bind=engine)

@@ -34,7 +34,7 @@ class TestRequests:
 
     def test_create_users(self):
         for player in self.players:
-            res = self.clients[0].post("/create_user", json=player)
+            res = self.clients[0].post("v1/create_user", json=player)
             assert res.status_code == 200
             assert "uid" in res.json()
             assert res.json()["username"] == player["username"]
@@ -42,7 +42,7 @@ class TestRequests:
 
     def test_login_users(self):
         for i, client in enumerate(self.clients):
-            res = client.post("/token", data=self.players[i])
+            res = client.post("v1/token", data=self.players[i])
             assert res.status_code == 200
             assert "access_token" in res.json()
             assert "token_type" in res.json()

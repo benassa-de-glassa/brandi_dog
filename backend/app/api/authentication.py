@@ -33,6 +33,9 @@ Routes
     Remove the access token from the user and log him out. Otherwise it would
     be impossible to log in from another account. 
 
+/clear_socket
+    Remove a players socket connection to allow reconnecting.
+
 """
 
 from datetime import datetime, timedelta
@@ -56,11 +59,13 @@ from app.database import database, crud, db_models
 from app.api.oauth2withcookies import OAuth2PasswordBearerCookie
 from app.api.password_context import verify_password
 
+from app.api import socket
+
 # TODO: security concerns regarding secret key, store it in environment variable
 from app.config import SECRET_KEY, JWT_ALGORITHM, ACCESS_TOKEN_EXPIRE_DAYS, \
     COOKIE_DOMAIN, COOKIE_EXPIRES
 
-from app.api.api_globals import playing_users  # playing users dictionary
+from app.api.api_globals import playing_users, socket_connections  # playing users dictionary
 
 # define the authentication router that is imported in main
 router = APIRouter()
@@ -306,3 +311,11 @@ async def read_users_me(current_user: models.user.User = Depends(get_current_use
 @router.get('/tokens', tags=["authentication"])
 async def read_tokens(token: str = Depends(oauth2_scheme)):
     return {'token': token}
+
+@router.get('/clear_socket')
+async def clear_socket(current_user: models.user.User = Depends(get_current_user)):
+    sid = socket_connections.get(str(current_user.uid))
+    if sid:
+        logger.info(f'Remove socket connection by {current_user.username} [{current_user.uid}]')
+        await socket.sio.disconnect(sid) 
+    

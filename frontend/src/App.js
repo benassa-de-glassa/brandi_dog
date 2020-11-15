@@ -79,6 +79,7 @@ class App extends Component {
             showMenu: true          // top menu containing global chat and lobbies
         }
 
+        this.clearSocket = this.clearSocket.bind(this)
         this.toggleMenu = this.toggleMenu.bind(this)
         this.getPlayer = this.getPlayer.bind(this)
         this.login = this.login.bind(this)
@@ -118,9 +119,12 @@ class App extends Component {
         })
     }
 
-    clearSocket() {
+    async clearSocket() {
         // if the connection is blocked force a reconnection
         getFromBackend('clear_socket')
+        // socket.close()
+        socket.close()
+        setTimeout(function () {socket.open()}, 1000) // need a delay to not crash backend!
     }
 
     toggleMenu() {

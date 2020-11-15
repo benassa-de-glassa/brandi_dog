@@ -1,3 +1,9 @@
+/* Here the backend connection and most important states are handled. 
+
+
+
+*/
+
 import React, { Component } from 'react';
 import {
     BrowserRouter as Router,
@@ -5,8 +11,8 @@ import {
     Switch
 } from 'react-router-dom'
 
-import './App.css';
-import './mycss.css'
+import './css/App.css'
+import './css/mycss.css'
 
 import TopBar from './components/topbar/Topbar'
 import Menu from './components/menu/Menu'
@@ -14,7 +20,7 @@ import Game from './components/game/Game'
 import UserLogin from './components/userlogin/UserLogin'
 import About from './components/about/About'
 
-import { postData, API_URL_WITHOUT_V1 } from './paths'
+import { postData, API_URL } from './paths'
 import { socket } from './socket'
 import UserCreate from './components/userlogin/UserCreate';
 
@@ -25,14 +31,15 @@ class App extends Component {
         this.state = {
             socketConnected: false, // connection to socket.io of the backend
             playerLoggedIn: false,  // player has signed in with a name
-            showMenu: true,         // top menu containing global chat and lobbies
             player: {
                 username: "",
                 uid: null
             },
             gameID: null,           // currently joined game
-            gameToken: '',          // jwt
-            errorMessage: ''
+            gameToken: '',          // JSON web token encoding current game
+
+            errorMessage: '',
+            showMenu: true          // top menu containing global chat and lobbies
         }
 
         this.toggleMenu = this.toggleMenu.bind(this)
@@ -46,9 +53,11 @@ class App extends Component {
     }
 
     startSocketIO() {
-        // connect to the backend socket.io instance
-        // the socket connection state is indicated by the green or red circle
-        // const socket = getSocket()
+        /* Connect to the backend socket.io instance
+        
+        The socket connection state is indicated by the green or red circle in 
+        the top left corner. */
+
         socket.on('connect', () => {
             console.debug('socket.io connection successful')
             this.setState({ socketConnected: true })
@@ -64,7 +73,12 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.getPlayer()    // try to log in using a httponly cookie
+        /* On mount, try to obtain player credentials and start socketio
+
+        getPlayer() is only successful if an access token already exists from
+        a previous login. */
+
+        this.getPlayer()    
         this.startSocketIO()
     }
 
@@ -76,9 +90,14 @@ class App extends Component {
     }
 
     async getPlayer() {
-        // try to get the player name and id from the backend. For this to work a 
-        // valid authorization cookie has to be sent. 
-        let url = new URL('users/me', API_URL_WITHOUT_V1)
+        /* Try to get the player name and id from the backend 
+        
+        This only works if a valid authentication cookie is present in the 
+        request. If it is successful, check if the player is currently in a
+        game. If that is the case, join the game socket instance using the
+        game_token that was received. */
+
+        let url = new URL('users/me', API_URL)
         const playerResponse = await fetch(url, {
             method: 'GET',
             credentials: 'include'
@@ -104,8 +123,11 @@ class App extends Component {
     }
 
 async login(username, password, errorCallback) {
-    // sends player name to API_URL/login
-    // expects { name: str, id: str } in return
+    /* Try to log user into backend
+    
+    The player name and password are sent to API_URL/token. If the credentials
+    are valid, an acces token is issued by the backend.
+    */
 
     const data = new URLSearchParams(
         {
@@ -115,7 +137,7 @@ async login(username, password, errorCallback) {
         }
     )
 
-    let url = new URL('token', API_URL_WITHOUT_V1)
+    let url = new URL('token', API_URL)
     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -137,7 +159,7 @@ async login(username, password, errorCallback) {
 
 async logout() {
     socket.close()
-    let url = new URL('logout', API_URL_WITHOUT_V1)
+    let url = new URL('logout', API_URL)
     const response = await fetch(url, {
         method: 'GET',
         credentials: 'include'
@@ -200,7 +222,7 @@ async createUser(username, password, successCallback, errorCallback) {
     // creates a user but does not login
     let data = { username: username, password: password }
 
-    let url = new URL('create_user', API_URL_WITHOUT_V1)
+    let url = new URL('create_user', API_URL)
     let response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

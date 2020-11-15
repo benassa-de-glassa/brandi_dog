@@ -3,9 +3,9 @@
 
 from sqlalchemy import Column, Integer, Boolean, String
 
-from .database import Base
+from app.database import database
 
-class User(Base):
+class User(database.Base):
     # Base is the declarative_base() from sqlalchemy
 
     __tablename__ = 'users'

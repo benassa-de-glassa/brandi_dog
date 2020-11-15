@@ -5,6 +5,34 @@
     /* border-radius: 8px; */
 }
 
+.svg-container {
+    width: 100%;
+    padding-bottom: 100%;
+    display: inline-block;
+    position: relative;
+    min-width: 400px;
+    height: 0;
+    vertical-align: top;
+    /* overflow: hidden; */
+}
+
+.svg-container-6 {
+    padding-bottom: 120%;
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    min-width: 400px;
+    height: 0;
+    vertical-align: top;
+}
+
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .tooltip {
     position: absolute;
     z-index: 1100;
@@ -76,22 +104,22 @@
     fill-opacity: 1;
 }
 
-.occupied-red{
+.occupied-red, occupied-0{
     stroke: black;
     fill:red;
 }
 
-.occupied-blue {
+.occupied-blue, occupied-4{
     stroke: black;
     fill:blue;
 }
 
-.occupied-green {
+.occupied-green, occupied-3{
     stroke: black;
     fill: green;
 }
 
-.occupied-yellow {
+.occupied-yellow, occupied-1 {
     stroke: black;
     fill: yellow; 
 }
@@ -101,20 +129,28 @@
     stroke-width: 4px;
 }
 
-.out-red {
+.out-red, .out-0{
     stroke: red;
 }
 
-.out-blue {
+.out-blue, .out-4 {
     stroke: blue;
 }
 
-.out-green {
+.out-green, .out-3{
     stroke: green;
 }
 
-.out-yellow {
+.out-yellow, .out-1{
     stroke: yellow;
+}
+
+.out-2 {
+    stroke: purple
+}
+
+.out-5 {
+    stroke: orange
 }
 
 .card-number {

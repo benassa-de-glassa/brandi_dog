@@ -37,7 +37,7 @@ function UserLogin(props) {
                     <p>Login successful.</p>
                     :
                     <Fragment>
-                        <p className='error'>{state.errorMessage}</p>
+                        <p className='error'>{state.error}</p>
                         <form className='ml-auto mr-2' onSubmit={handleSubmit}>
                             <label className='mr-1'>
                                 Log in: </label>

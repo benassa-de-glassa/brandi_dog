@@ -226,6 +226,7 @@ render() {
                 player={this.state.player}
                 login={this.login}
                 logout={this.logout}
+                sio_reconnect={this.sio_reconnect}
                 showMenu={this.state.showMenu}
                 toggleMenu={this.toggleMenu}
             />

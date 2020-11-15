@@ -5,7 +5,7 @@ import Board from '../board/Board'
 import Board6 from '../board/Board6'
 import Controls from '../controls/Controls'
 
-import { socket } from '../../socket'
+import { socket } from '../../api/socket'
 import { postData } from '../../paths'
 
 import { possibleActions } from '../../config'
@@ -15,7 +15,7 @@ class Game extends Component {
         super(props);
         this.state = {
             // 
-            numberOfPlayers: 6, //6, // = 4
+            numberOfPlayers: 4, // default to 4 players
 
             // updated by socket.io
             players: [],

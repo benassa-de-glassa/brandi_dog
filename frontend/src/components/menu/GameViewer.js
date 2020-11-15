@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
-import { socket } from '../../socket'
-import { get, postData } from '../../paths'
+import { socket } from '../../api/socket'
+import { getFromBackend, postToBackend } from '../../api/fetch_backend'
 
-import { DEBUG } from '../../config'
 
 var GameViewer = function (props) {
-    // use hooks because cooler!?
     const [gameList, setGameList] = useState([])
     const [createGame, setCreateGame] = useState(false)
     const [input, setInput] = useState("")
@@ -17,9 +15,13 @@ var GameViewer = function (props) {
     const updateGameList = async function () {
         // this function is only called after pressing the update button
         // manually as the game list is updated using socket.io
-        const response = await get('games')
-        const responseJson = await response.json()
-        setGameList(responseJson)
+        let data = await getFromBackend('games')
+        if (data.code) {
+            // something did not work
+            console.warn(data.message)
+        } else {
+            setGameList(data)
+        }
     }
 
     // let react control the input
@@ -31,15 +33,13 @@ var GameViewer = function (props) {
     const handleCreateGameSubmit = async event => {
         event.preventDefault() // don't use the default submit
         var relURL = 'games'
-        if (DEBUG) { relURL += '?debug=true' } // adds 3 filler players
 
-        const response = await postData(relURL, input)
-        const responseJson = await response.json()
-        if (response.status === 200) {
-            props.joinGameSocket(responseJson.game_token)
+        const data = await postToBackend(relURL, input)
+        if (data.game_token) {
+            props.joinGameSocket(data.game_token)
             setCreateGame(false)
         } else {
-            setError(responseJson.detail)
+            setError(data.detail)
         }
     }
 

@@ -34,7 +34,10 @@ Routes
     be impossible to log in from another account. 
 
 /clear_socket
-    Remove a players socket connection to allow reconnecting.
+    Remove a players socket connection to allow reconnecting. This can be 
+    necessary since only one socket connection per user is permitted. If for 
+    some reason the connection is lost, the user can reconnect to the socket
+    using this route. 
 
 """
 

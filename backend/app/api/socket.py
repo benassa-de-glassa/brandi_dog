@@ -104,13 +104,13 @@ async def connect(sid, environ):
         raise sio_exception
 
     # connection successful
-    if str(user.uid) in socket_connections:
+    if int(user.uid) in socket_connections:
         logger.info('Prevented multiple connections to same user.')
         raise socketio.exceptions.ConnectionRefusedError(
             'Only a single connection is allowed')
 
     # user is not already connected
-    socket_connections[str(user.uid)] = sid
+    socket_connections[int(user.uid)] = sid
 
     logger.info(f'SIO connection: {user.username} [{sid}]')
 

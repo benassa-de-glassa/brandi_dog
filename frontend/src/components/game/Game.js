@@ -6,9 +6,9 @@ import Board6 from '../board/Board6'
 import Controls from '../controls/Controls'
 
 import { socket } from '../../api/socket'
-import { postData } from '../../paths'
+import { postToBackend } from '../../api/fetch_backend'
 
-import { possibleActions } from '../../config'
+import { possibleActions } from '../../constants/game_config'
 
 class Game extends Component {
     constructor(props) {
@@ -125,19 +125,21 @@ class Game extends Component {
         this.setState({ switchingSeats: true })
     }
 
+    // TODO
     async submitNewTeams(newTeams) {
         // called by Board component when another player's seat is clicked
-        const relURL = 'games/' + this.props.gameID + '/teams'
-        const response = await postData(relURL,
-            newTeams
-        )
-        const responseJson = await response.json()
-        if (response.status === 200) {
-            this.setState({ switchingSeats: false })
-        } else {
-            this.setState({ errorMessage: responseJson.detail })
-            console.log(responseJson)
-        }
+
+        // const relURL = 'games/' + this.props.gameID + '/teams'
+        // const response = await postData(relURL,
+        //     newTeams
+        // )
+        // const responseJson = await response.json()
+        // if (response.status === 200) {
+        //     this.setState({ switchingSeats: false })
+        // } else {
+        //     this.setState({ errorMessage: responseJson.detail })
+        //     console.log(responseJson)
+        // }
     }
 
     cardClicked(index) {
@@ -166,12 +168,16 @@ class Game extends Component {
     async swapCard() {
         const index = this.state.selectedCardIndex
         const selectedCard = this.state.cards[index]
-        console.debug('try to swap', selectedCard)
-        const relURL = 'games/' + this.props.gameID + '/swap_cards '
-        const response = await postData(relURL, { uid: selectedCard.uid })
-        const responseJson = await response.json()
-        console.log(responseJson)
-        if (response.status === 200) {
+
+        const response = await postToBackend(
+            `games/${this.props.gameID}/swap_cards`,
+            { uid: selectedCard.uid }
+        )
+
+        if (response.code) {
+            // something went wrong
+            console.warn(`[${response.code}] ${response.message}`)
+        } else {
             this.setState({
                 cardSwapConfirmed: true,
                 cardBeingSwapped: index
@@ -180,13 +186,16 @@ class Game extends Component {
     }
 
     async fold() {
-        const relURL = 'games/' + this.props.gameID + '/fold'
-        const response = await postData(relURL, this.props.player)
-        const responseJson = await response.json()
-        if (response.status === 200) {
-            this.resetState()
+        const response = await postToBackend(
+            `games/${this.props.gameID}/fold`,
+            this.props.player
+        )
+
+        if (response.code) {
+            console.warn(`[${response.code}] ${response.message}`)
+            this.setState({ errorMessage: response.message })
         } else {
-            this.setState({ errorMessage: responseJson.detail })
+            this.resetState()
         }
     }
 
@@ -277,8 +286,8 @@ class Game extends Component {
 
     async performAction(marble, card, action, success = () => { }, error = () => { }) {
         // performs an action selected marble
-        const relURL = 'games/' + this.props.gameID + '/action'
-        const response = await postData(relURL,
+        const response = await postToBackend(
+            `games/${this.props.gameID}/action`,
             {
                 card: {
                     uid: card.uid,
@@ -288,9 +297,15 @@ class Game extends Component {
                 },
                 action: action,
                 mid: marble.mid
-            })
-        const responseJson = await response.json()
-        if (response.status === 200) {
+            }
+        )
+
+        if (response.code) {
+            // something went wrong
+            error(response.message)
+            this.setState({ errorMessage: response.message })
+            console.warn(`[${response.code}] ${response.message}`)
+        } else {
             success()
             this.setState({ tooltipActions: [] })
 
@@ -298,10 +313,6 @@ class Game extends Component {
             if (this.state.remainingStepsOf7 === -1) {
                 this.setState({ selectedCardIndex: null })
             }
-        } else {
-            error(responseJson.detail)
-            this.setState({ errorMessage: responseJson.detail })
-            console.log(responseJson)
         }
     }
 
@@ -309,8 +320,8 @@ class Game extends Component {
         // reset stored marble in case of errors
         this.setState({ marbleToSwitch: null })
 
-        const relURL = 'games/' + this.props.gameID + '/action'
-        const response = await postData(relURL,
+        const response = await postToBackend(
+            `games/${this.props.gameID}/action`,
             {
                 card: {
                     uid: card.uid,
@@ -321,26 +332,27 @@ class Game extends Component {
                 action: 'switch',
                 mid: ownMarble.mid,
                 mid_2: otherMarble.mid
-            })
-        const responseJson = await response.json()
-        if (response.status === 200) {
-        } else {
-            this.setState({ errorMessage: responseJson.detail })
-            console.log(responseJson)
+            }
+        )
+        if (response.code) {
+            this.setState({ errorMessage: response.message })
+            console.warn(`[${response.code}] ${response.message}`)
         }
     }
 
     async startGame(successCallback, errorCallback) {
-        const relURL = 'games/' + this.props.gameID + '/start'
-        const response = await postData(relURL,
-            this.props.player,
+
+        const response = await postToBackend(
+            `games/${this.props.gameID}/start`,
+            this.props.player
         )
-        const responseJson = await response.json()
-        if (response.status === 200) {
-            successCallback()
+
+        if (response.code) {
+            // something went wrong
+            errorCallback(response.message)
+            console.warn(`[${response.code}] ${response.message}`)
         } else {
-            errorCallback(responseJson.detail)
-            console.log(responseJson)
+            successCallback()
         }
     }
 

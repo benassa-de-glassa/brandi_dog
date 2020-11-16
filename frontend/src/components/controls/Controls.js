@@ -3,7 +3,7 @@ import React, { useState, Fragment } from 'react'
 import Hand from './Hand'
 import './controls.css'
 
-import { possibleActions } from '../../config'
+import { possibleActions } from '../../constants/game_config.js'
 
 const cards = Object.keys(possibleActions)
 

@@ -317,7 +317,7 @@ async def read_tokens(token: str = Depends(oauth2_scheme)):
 
 @router.get('/clear_socket')
 async def clear_socket(current_user: models.user.User = Depends(get_current_user)):
-    sid = socket_connections.get(str(current_user.uid))
+    sid = socket_connections.get(int(current_user.uid))
     if sid:
         logger.info(f'Remove socket connection by {current_user.username} [{current_user.uid}]')
         await socket.sio.disconnect(sid) 

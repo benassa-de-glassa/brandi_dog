@@ -121,7 +121,7 @@ class App extends Component {
 
     async clearSocket() {
         // if the connection is blocked force a reconnection
-        getFromBackend('clear_socket')
+        await getFromBackend('clear_socket')
         // socket.close()
         socket.close()
         setTimeout(function () {socket.open()}, 1000) // need a delay to not crash backend!
@@ -165,7 +165,7 @@ class App extends Component {
 
     async createUser(username, password, successCallback, errorCallback) {
         // creates a user in the backend but does not log in
-        const data = postToBackend('create_user', {
+        const data = await postToBackend('create_user', {
             username: username,
             password: password
         })
@@ -199,7 +199,7 @@ class App extends Component {
     async logout() {
         socket.close()
 
-        const data = getFromBackend('logout')
+        const data = await getFromBackend('logout')
 
         if (data.code) {
             console.warn('Unable to logout | ' + data.message)
@@ -213,7 +213,7 @@ class App extends Component {
     }
 
     async joinGame(gameID) {
-        const data = postToBackend(`games/${gameID}/join`, this.state.player)
+        const data = await postToBackend(`games/${gameID}/join`, this.state.player)
 
         if (data.code) {
             console.warn(`Unable to join game [${data.message}]`)

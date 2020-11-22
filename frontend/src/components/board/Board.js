@@ -147,63 +147,6 @@ function Board(props) {
                     isActive={props.activePlayerIndex === 3} />
                 }
                 <svg id="board" className="svg-content-responsive" viewBox={"0 0 " + width + " " + height}>
-                    {/* add players */}
-                    {/* top right player */}
-                    {/* <svg x="80%" y="0%" height="20%" width="20%">
-                        <g transform={"rotate(45 " + 0.2 * 0.05 * width + " " + 0.25 * 0.2 * height + ")"}>
-                            <rect
-                                className={props.activePlayerIndex === 0 ? 'player-box active' : 'player-box'}
-                                x="5%" y="5%"
-                                width="90%" height="20%" style={{ stroke: "red" }}
-                                onClick={() => playerBoxClicked(0)}
-                            />
-                            <text x="10%" y="20%" className="player-name">
-                                {playerList[0].uid === props.player.uid ? '\u265F' + playerList[0].username : playerList[0].username}
-                            </text>
-                        </g>
-                    </svg> */}
-                    {/* top left player */}
-                    {/* <svg x="0%" y="0%" height="20%" width="20%">
-                            <g transform={"rotate(-45 " + 0.2 * 0.95 * width + " " + (0.25 * 0.2 * height) + ")"}>
-                                <rect
-                                    className={props.activePlayerIndex === 1 ? 'player-box active' : 'player-box'}
-                                    x="5%" y="5%"
-                                    width="90%" height="20%" style={{ stroke: "yellow" }}
-                                    onClick={() => playerBoxClicked(1)}
-                                />
-                                <text className="player-name" x="10%" y="20%" >
-                                    {playerList[1].uid === props.player.uid ? '\u265F' + playerList[1].username : playerList[1].username}
-                                </text>
-                            </g>
-                        </svg> */}
-                    {/* bottom left player */}
-                    {/* <svg x="0%" y="80%" height="20%" width="20%">
-                        <g transform={"rotate(45 " + 0.2 * 0.95 * width + " " + 0.2 * 0.75 * height + ")"}>
-                            <rect
-                                className={props.activePlayerIndex === 2 ? 'player-box active' : 'player-box'}
-                                x="5%" y="75%"
-                                width="90%" height="20%" style={{ stroke: "green" }}
-                                onClick={() => playerBoxClicked(2)}
-                            />
-                            <text x="10%" y="90%" className="player-name">
-                                {playerList[2].uid === props.player.uid ? '\u265F' + playerList[2].username : playerList[2].username}
-                            </text>
-                        </g>
-                    </svg> */}
-                    {/* bottom right player */}
-                    {/* <svg x="80%" y="80%" height="20%" width="20%">
-                        <g transform={"rotate(-45 " + 0.2 * 0.05 * width + " " + 0.2 * 0.75 * height + ")"}>
-                            <rect
-                                className={props.activePlayerIndex === 3 ? 'player-box active' : 'player-box'}
-                                x="5%" y="75%"
-                                width="90%" height="20%" style={{ stroke: "blue" }}
-                                onClick={() => playerBoxClicked(3)}
-                            />
-                            <text x="10%" y="90%" className="player-name">
-                                {playerList[3].uid === props.player.uid ? '\u265F' + playerList[3].username : playerList[3].username}
-                            </text>
-                        </g>
-                    </svg> */}
                     {/* build steps for the path around the board */}
                     {boardData.steps.map(
                         data =>

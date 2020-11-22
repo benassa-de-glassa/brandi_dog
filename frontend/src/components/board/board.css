@@ -104,24 +104,24 @@
     fill-opacity: 1;
 }
 
-.occupied-red, occupied-0{
+.occupied-red, .occupied-0{
     stroke: black;
     fill:red;
 }
 
-.occupied-blue, occupied-4{
+.occupied-yellow, .occupied-1 {
     stroke: black;
-    fill:blue;
+    fill: yellow; 
 }
 
-.occupied-green, occupied-3{
+.occupied-green, .occupied-3{
     stroke: black;
     fill: green;
 }
 
-.occupied-yellow, occupied-1 {
+.occupied-blue, .occupied-4{
     stroke: black;
-    fill: yellow; 
+    fill:blue;
 }
 
 .out {
@@ -133,11 +133,11 @@
     stroke: red;
 }
 
-.out-blue, .out-4 {
+.out-blue, .out-3 {
     stroke: blue;
 }
 
-.out-green, .out-3{
+.out-green, .out-2{
     stroke: green;
 }
 
@@ -145,7 +145,7 @@
     stroke: yellow;
 }
 
-.out-2 {
+.out-4 {
     stroke: purple
 }
 

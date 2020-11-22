@@ -1,9 +1,11 @@
 import React, { useState, Fragment } from 'react'
 
 import Tooltip from './Tooltip'
+import Avatar from './Avatar'
 import './board.css'
+import './avatar.css'
 
-const boardData = require("./boarddata.json")
+const boardData = require("./boarddata4.json")
 const color2unicode = {
     spades: '\u2660',
     hearts: '\u2665',
@@ -111,11 +113,43 @@ function Board(props) {
     return (
         <div id='left-game-container'>
             <div className="svg-container">
+                { playerList[0] && 
+                <Avatar
+                    className='player-box top-right'
+                    image='avatars/lama.png'
+                    textOnTop={true}
+                    playername={playerList[0].username}
+                    isMe={playerList[0].uid === props.player.uid}
+                    isActive={props.activePlayerIndex === 0} />
+                } { playerList[1] &&
+                <Avatar
+                    className='player-box top-left'
+                    image='avatars/penguin.png'
+                    textOnTop={true}
+                    playername={playerList[1].username}
+                    isMe={playerList[1].uid === props.player.uid}
+                    isActive={props.activePlayerIndex === 1} />
+                } { playerList[2] &&
+                <Avatar
+                    className='player-box bottom-left'
+                    image='avatars/squirrel.png'
+                    textOnTop={false}
+                    playername={playerList[2].username}
+                    isMe={playerList[2].uid === props.player.uid}
+                    isActive={props.activePlayerIndex === 2} />
+                } { playerList[3] &&
+                <Avatar
+                    className='player-box bottom-right'
+                    image='avatars/panda.png'
+                    textOnTop={false}
+                    playername={playerList[3].username}
+                    isMe={playerList[3].uid === props.player.uid}
+                    isActive={props.activePlayerIndex === 3} />
+                }
                 <svg id="board" className="svg-content-responsive" viewBox={"0 0 " + width + " " + height}>
-
                     {/* add players */}
                     {/* top right player */}
-                    <svg x="80%" y="0%" height="20%" width="20%">
+                    {/* <svg x="80%" y="0%" height="20%" width="20%">
                         <g transform={"rotate(45 " + 0.2 * 0.05 * width + " " + 0.25 * 0.2 * height + ")"}>
                             <rect
                                 className={props.activePlayerIndex === 0 ? 'player-box active' : 'player-box'}
@@ -127,23 +161,23 @@ function Board(props) {
                                 {playerList[0].uid === props.player.uid ? '\u265F' + playerList[0].username : playerList[0].username}
                             </text>
                         </g>
-                    </svg>
+                    </svg> */}
                     {/* top left player */}
-                    <svg x="0%" y="0%" height="20%" width="20%">
-                        <g transform={"rotate(-45 " + 0.2 * 0.95 * width + " " + (0.25 * 0.2 * height) + ")"}>
-                            <rect
-                                className={props.activePlayerIndex === 1 ? 'player-box active' : 'player-box'}
-                                x="5%" y="5%"
-                                width="90%" height="20%" style={{ stroke: "yellow" }}
-                                onClick={() => playerBoxClicked(1)}
-                            />
-                            <text className="player-name" x="10%" y="20%" >
-                                {playerList[1].uid === props.player.uid ? '\u265F' + playerList[1].username : playerList[1].username}
-                            </text>
-                        </g>
-                    </svg>
+                    {/* <svg x="0%" y="0%" height="20%" width="20%">
+                            <g transform={"rotate(-45 " + 0.2 * 0.95 * width + " " + (0.25 * 0.2 * height) + ")"}>
+                                <rect
+                                    className={props.activePlayerIndex === 1 ? 'player-box active' : 'player-box'}
+                                    x="5%" y="5%"
+                                    width="90%" height="20%" style={{ stroke: "yellow" }}
+                                    onClick={() => playerBoxClicked(1)}
+                                />
+                                <text className="player-name" x="10%" y="20%" >
+                                    {playerList[1].uid === props.player.uid ? '\u265F' + playerList[1].username : playerList[1].username}
+                                </text>
+                            </g>
+                        </svg> */}
                     {/* bottom left player */}
-                    <svg x="0%" y="80%" height="20%" width="20%">
+                    {/* <svg x="0%" y="80%" height="20%" width="20%">
                         <g transform={"rotate(45 " + 0.2 * 0.95 * width + " " + 0.2 * 0.75 * height + ")"}>
                             <rect
                                 className={props.activePlayerIndex === 2 ? 'player-box active' : 'player-box'}
@@ -155,9 +189,9 @@ function Board(props) {
                                 {playerList[2].uid === props.player.uid ? '\u265F' + playerList[2].username : playerList[2].username}
                             </text>
                         </g>
-                    </svg>
+                    </svg> */}
                     {/* bottom right player */}
-                    <svg x="80%" y="80%" height="20%" width="20%">
+                    {/* <svg x="80%" y="80%" height="20%" width="20%">
                         <g transform={"rotate(-45 " + 0.2 * 0.05 * width + " " + 0.2 * 0.75 * height + ")"}>
                             <rect
                                 className={props.activePlayerIndex === 3 ? 'player-box active' : 'player-box'}
@@ -169,7 +203,7 @@ function Board(props) {
                                 {playerList[3].uid === props.player.uid ? '\u265F' + playerList[3].username : playerList[3].username}
                             </text>
                         </g>
-                    </svg>
+                    </svg> */}
                     {/* build steps for the path around the board */}
                     {boardData.steps.map(
                         data =>

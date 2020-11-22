@@ -93,6 +93,7 @@ function Board(props) {
     }
 
     function playerBoxClicked(index) {
+        console.debug(`${index} clicked`)
         // index is 0, 1, 2, or 3
         if (props.switchingSeats) {
             // enabled by clicking on 'switch seats' button in the Controls component
@@ -113,38 +114,46 @@ function Board(props) {
     return (
         <div id='left-game-container'>
             <div className="svg-container">
-                { playerList[0] && 
-                <Avatar
-                    className='player-box top-right'
-                    image='avatars/lama.png'
-                    textOnTop={true}
-                    playername={playerList[0].username}
-                    isMe={playerList[0].uid === props.player.uid}
-                    isActive={props.activePlayerIndex === 0} />
-                } { playerList[1] &&
-                <Avatar
-                    className='player-box top-left'
-                    image='avatars/penguin.png'
-                    textOnTop={true}
-                    playername={playerList[1].username}
-                    isMe={playerList[1].uid === props.player.uid}
-                    isActive={props.activePlayerIndex === 1} />
-                } { playerList[2] &&
-                <Avatar
-                    className='player-box bottom-left'
-                    image='avatars/squirrel.png'
-                    textOnTop={false}
-                    playername={playerList[2].username}
-                    isMe={playerList[2].uid === props.player.uid}
-                    isActive={props.activePlayerIndex === 2} />
-                } { playerList[3] &&
-                <Avatar
-                    className='player-box bottom-right'
-                    image='avatars/panda.png'
-                    textOnTop={false}
-                    playername={playerList[3].username}
-                    isMe={playerList[3].uid === props.player.uid}
-                    isActive={props.activePlayerIndex === 3} />
+                {playerList[0] &&
+                    <Avatar
+                        className='player-box top-right'
+                        image='avatars/lama.png'
+                        textOnTop={true}
+                        playername={playerList[0].username}
+                        isMe={playerList[0].uid === props.player.uid}
+                        isActive={props.activePlayerIndex === 0}
+                        clickHandler={() => playerBoxClicked(0)}
+                    />
+                } {playerList[1] &&
+                    <Avatar
+                        className='player-box top-left'
+                        image='avatars/penguin.png'
+                        textOnTop={true}
+                        playername={playerList[1].username}
+                        isMe={playerList[1].uid === props.player.uid}
+                        isActive={props.activePlayerIndex === 1}
+                        clickHandler={() => playerBoxClicked(1)}
+                    />
+                } {playerList[2] &&
+                    <Avatar
+                        className='player-box bottom-left'
+                        image='avatars/squirrel.png'
+                        textOnTop={false}
+                        playername={playerList[2].username}
+                        isMe={playerList[2].uid === props.player.uid}
+                        isActive={props.activePlayerIndex === 2}
+                        clickHandler={() => playerBoxClicked(2)}
+                    />
+                } {playerList[3] &&
+                    <Avatar
+                        className='player-box bottom-right'
+                        image='avatars/panda.png'
+                        textOnTop={false}
+                        playername={playerList[3].username}
+                        isMe={playerList[3].uid === props.player.uid}
+                        isActive={props.activePlayerIndex === 3}
+                        clickHandler={() => playerBoxClicked(3)}
+                    />
                 }
                 <svg id="board" className="svg-content-responsive" viewBox={"0 0 " + width + " " + height}>
                     {/* build steps for the path around the board */}

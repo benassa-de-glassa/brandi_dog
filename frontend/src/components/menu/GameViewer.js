@@ -45,7 +45,7 @@ var GameViewer = function (props) {
 
     // like componendDidMount
     useEffect(() => {
-        updateGameList()
+        // updateGameList()
         socket.on('game-list', games => {
             setGameList(games)
         })
@@ -77,7 +77,7 @@ var GameViewer = function (props) {
                                     game.players && Object.values(game.players).map(
                                         player =>
                                             player.username === props.player.username
-                                                ? <strong>{player.username}</strong>
+                                                ? <strong key={player.username}>{player.username}</strong>
                                                 : player.username
                                     ).reduce((accu, elem) => {
                                         return accu === null ? [elem] : [...accu, ', ', elem]

@@ -62,11 +62,9 @@ class Game extends Component {
 
     componentDidMount() {
         socket.on("game-state", (data) => {
-            console.log("received game state", data);
             this.handleNewGameState(data);
         });
         socket.on("player-state", (data) => {
-            console.log("received player state", data);
             this.handleNewPlayerState(data);
         });
     }
@@ -210,87 +208,6 @@ class Game extends Component {
         this.setState({ jokerCard: val });
     }
 
-    marbleClicked(marble, homeClicked = false) {
-        console.log(marble);
-        if (this.state.selectedCardIndex !== null) {
-            let selectedCard = this.state.cards[this.state.selectedCardIndex];
-
-            if (!selectedCard) {
-                console.error("Selected card is", selectedCard);
-                return;
-            }
-            // define variables that are overwritten in case a joker is played
-            let selectedCardValue = selectedCard.value;
-            let selectedCardActions = selectedCard.actions;
-
-            if (selectedCardValue === "Jo") {
-                selectedCardValue = this.state.jokerCard;
-                selectedCardActions = possibleActions[this.state.jokerCard];
-            }
-
-            if (selectedCardActions.includes(0) && homeClicked) {
-                // (try) to go out
-                this.performAction(marble, selectedCard, 0);
-                return;
-            }
-            // home is not clicked
-            // remove the 0 from the options to see if a tooltip is needed
-            // this is the case for the cards '4', 'A', and '7'
-            let playableActions = selectedCardActions.filter(
-                (action) => action !== 0
-            );
-
-            // if the card is a 7 only show the remaining steps as playable (e.g. [71, 72, 73] if 4 steps were already completed)
-            if (selectedCardValue === "7" && this.state.remainingStepsOf7 !== -1) {
-                playableActions = playableActions.filter(
-                    (action) => action <= 70 + this.state.remainingStepsOf7
-                );
-            }
-            console.log(playableActions, selectedCardValue);
-
-            if (selectedCardValue === "Ja") {
-                let myColor = this.state.marbles[0].color;
-                console.log(this.state.marbles);
-                if (this.state.marbleToSwitch === null) {
-                    // no other marble has been selected
-                    this.setState({ marbleToSwitch: marble });
-
-                    // check that one of my own and one not of my own is selected
-                } else if (
-                    marble.color === myColor &&
-                    this.state.marbleToSwitch.color !== myColor
-                ) {
-                    // my own marble clicked second
-                    this.performSwitch(selectedCard, marble, this.state.marbleToSwitch);
-                } else if (
-                    marble.color !== myColor &&
-                    this.state.marbleToSwitch.color === myColor
-                ) {
-                    // other marble clicked second
-                    this.performSwitch(selectedCard, this.state.marbleToSwitch, marble);
-                } else {
-                    console.debug("couldnt swap", marble, this.state.marbleToSwitch);
-                    this.setState({
-                        marbleToSwitch: null,
-                        // the line below would otherwise take precedence over backend errors
-                        //errorMessage: 'Choose one of your marbles, and one from another player.'
-                    });
-                }
-            } else if (playableActions.length === 1) {
-                // clicked on a marble on the field while a card with only one
-                // possible action
-                this.performAction(marble, selectedCard, playableActions[0]);
-            } else {
-                // clicked on a marble on the field for which multiple actions
-                // are possible
-                this.setState({
-                    tooltipActions: playableActions,
-                    selectedMarble: marble,
-                });
-            }
-        }
-    }
-
     tooltipClicked(action) {
         let selectedCard = this.state.cards[this.state.selectedCardIndex];
         let successCallback = () => { };
@@ -366,10 +283,6 @@ class Game extends Component {
         }
     }
 
-    setJokerCard(val) {
-        this.setState({ jokerCard: val });
-    }
-
     marbleClicked(marble, homeClicked = false) {
         if (this.state.selectedCardIndex !== null) {
             let selectedCard = this.state.cards[this.state.selectedCardIndex];
@@ -405,7 +318,6 @@ class Game extends Component {
                     (action) => action <= 70 + this.state.remainingStepsOf7
                 );
             }
-            console.log(playableActions);
 
             if (selectedCardValue === "Ja") {
                 let myColor = this.state.marbles[0].color;

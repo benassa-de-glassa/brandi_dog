@@ -2,8 +2,6 @@ import { API_URL } from '../constants/constants'
 
 export async function getFromBackend(relURL) {
     /*
-    Try to obtain the current games from the backend. 
-
     Returns
     -------
     response.json()
@@ -25,7 +23,7 @@ export async function getFromBackend(relURL) {
         }
     }
 
-    return data
+    return data || {}
 }
 
 export async function postToBackend(relURL = '', body = {}) {
@@ -46,7 +44,7 @@ export async function postToBackend(relURL = '', body = {}) {
             message: typeof data.detail === String ? data.detail : 'Invalid request'
         }
     }
-    return data
+    return data || {}
 }
 
 

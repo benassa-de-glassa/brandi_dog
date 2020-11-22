@@ -1,9 +1,6 @@
 import React from 'react'
 
 export default function Avatar(props) {
-    // 
-    console.log(props)
-
     return (
         <div className={props.className}>
             <p id={props.isMe? 'me' : ''} className='player-name'>{props.playername}</p>

@@ -13,8 +13,6 @@ const color2unicode = {
     clubs: '\u2663'
 }
 
-const marbleColors = ['red', 'yellow', 'green', 'blue']
-
 function Board(props) {
     const height = 800;
     const width = 800;

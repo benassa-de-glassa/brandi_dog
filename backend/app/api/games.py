@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from starlette.exceptions import HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST
 
-from typing import List, Optional
+from typing import List, Dict
 
 # Brandi game object
 from app.game_logic.brandi import Brandi
@@ -33,7 +33,7 @@ from app.api.api_globals import playing_users, socket_connections
 router = APIRouter()
 
 # dictionary of game_id: game instance
-games = {}
+games: Dict[str, Brandi] = {}
 
 
 async def emit_error(sid, msg: str):
@@ -44,7 +44,7 @@ async def emit_error(sid, msg: str):
     )
 
 
-async def sio_emit_game_state(game_id):
+async def sio_emit_game_state(game_id: str):
     """
     Emit the game state to all players in the same game. 
     """
@@ -110,17 +110,17 @@ async def join_game_socket(sid, data):
 @sio.event
 async def leave_game(sid, data):
     game_id = data['game_id']
-    player_id = data['player_id']
+    user_id = data['player_id']
 
     sio.leave_room(sid, game_id)
 
-    logger.info(f'#{player_id} [{sid}] tries to leave the game')
+    logging.info(f'#{user_id} [{sid}] tries to leave the game')
 
-    response = games[game_id].remove_player(player_id)
+    response = games[game_id].remove_player(user_id)
 
     if response['requestValid']:
-        if not playing_users.pop(player_id, None):
-            logger.error('Unable to remove player from playing users')
+        if not playing_users.pop(user_id, None):
+            logging.error('Unable to remove player from playing users')
         await sio.emit('leave_game_success')
     else:
         await emit_error(sid, response['note'])
@@ -218,42 +218,35 @@ async def join_game(game_id: str, user: User = Depends(get_current_user)):
 
     token = create_game_token(game_id)
 
-    # await sio_emit_game_state(game_id)
     await sio_emit_game_list()
 
-    # return {'game_state': games[game_id].public_state(), 'game_token': token}
-    # return games[game_id].public_state()
     return {'game_token': token}
 
 
-@router.post('/games/{game_id}/teams', response_model=GamePublic, tags=["game action"])
-async def set_teams(game_id: str,  teams: List[Player],  player: User = Depends(get_current_user),):
-    if player.uid not in games[game_id].players:
+@router.post('/games/{game_id}/player_position', response_model=GamePublic, tags=["game action"])
+async def set_teams(game_id: str,  position: int = Body(...),  user: User = Depends(get_current_user)):
+    if user.uid not in games[game_id].players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {player.uid} not in Game.")
-    if not all([_p.uid in games[game_id].players for _p in teams]):  # check validity of teams
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Players not in Game.")
+                            detail=f"Player {user.uid} not in Game.")
 
-    res = games[game_id].change_teams(teams)
+    res = games[game_id].change_position(user, position)
     if res['requestValid']:
         await sio_emit_game_state(game_id)
     else:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST, detail=res["note"])
-        return
     return games[game_id].public_state()
 
 
 @router.post('/games/{game_id}/start', tags=["game action"])
-async def start_game(game_id: str, player:  User = Depends(get_current_user)):
+async def start_game(game_id: str, user:  User = Depends(get_current_user)):
     """
     start an existing game
     """
     # check if the player is in the right game id
-    if player.uid not in games[game_id].players:
+    if user.uid not in games[game_id].players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {player.uid} not in Game.")
+                            detail=f"Player {user.uid} not in Game.")
     # check if there are four players in the game
     if len(games[game_id].players) != 4:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
@@ -270,7 +263,7 @@ async def start_game(game_id: str, player:  User = Depends(get_current_user)):
     return games[game_id].public_state()
 
 
-@router.get('/games/{game_id}/cards', tags=["game action"])
+@router.get('/games/{game_id}/cards', tags=["game action"], response_model=PlayerPublic)
 def get_cards(game_id: str, player: User = Depends(get_current_user)):
     """
     start an existing game
@@ -285,47 +278,47 @@ def get_cards(game_id: str, player: User = Depends(get_current_user)):
 
 
 @router.post('/games/{game_id}/swap_cards', tags=["game action"])
-async def swap_card(game_id: str,  card: CardBase, player: User = Depends(get_current_user)):
+async def swap_card(game_id: str,  card: CardBase, user: User = Depends(get_current_user)):
     """
     make the card swap before starting the round
     """
-    if player.uid not in games[game_id].players:
+    if user.uid not in games[game_id].players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {player.uid} not in Game.")
+                            detail=f"Player {user.uid} not in Game.")
 
-    if card.uid not in games[game_id].players[player.uid].hand.cards:
+    if card.uid not in games[game_id].players[user.uid].hand.cards:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Card {card.uid} not in {player.username}'s hand.")
+                            detail=f"Card {card.uid} not in {user.username}'s hand.")
 
-    res = games[game_id].swap_card(player, card)
+    res = games[game_id].swap_card(user, card)
     if res["requestValid"] and res["taskFinished"]:
         for uid in games[game_id].order:
             await sio_emit_player_state(game_id, uid)
         await sio_emit_game_state(game_id)
 
-    return res  # do not return cards at this point as the player is not allowed to view them yet
+    return res
 
 
-@router.post('/games/{game_id}/fold', tags=["game action"])
-async def fold_round(game_id: str, player: User = Depends(get_current_user)):
+@router.post('/games/{game_id}/fold', tags=["game action"], response_model=PlayerPublic)
+async def fold_round(game_id: str, user: User = Depends(get_current_user)):
     """
     make the card swap before starting the round
     """
-    if player.uid not in games[game_id].players:
+    if user.uid not in games[game_id].players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {player.uid} not in Game.")
+                            detail=f"Player {user.uid} not in Game.")
 
-    res = games[game_id].event_player_fold(player)
+    res = games[game_id].event_player_fold(user)
 
     if res['requestValid']:
         await sio_emit_game_state(game_id)
         for uid in games[game_id].order:
             await sio_emit_player_state(game_id, uid)
-    return games[game_id].get_cards(player)
+    return games[game_id].get_cards(user)
 
 
-@router.post('/games/{game_id}/action', tags=["game action"])
-async def perform_action(game_id: str, action: Action, player: User = Depends(get_current_user)):
+@router.post('/games/{game_id}/action', response_model=GamePublic, tags=["game action"])
+async def perform_action(game_id: str, action: Action, user: User = Depends(get_current_user)):
     """
 
     """
@@ -334,19 +327,19 @@ async def perform_action(game_id: str, action: Action, player: User = Depends(ge
     if not game:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"Game {game_id} does not exist (anymore).")
-    if player.uid not in game.players:
+    if user.uid not in game.players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {player.uid} not in Game.")
+                            detail=f"Player {user.uid} not in Game.")
 
-    if action.card.uid not in games[game_id].players[player.uid].hand.cards:
+    if action.card.uid not in games[game_id].players[user.uid].hand.cards:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Card {action.card.uid} not in {player.username}'s hand.")
+                            detail=f"Card {action.card.uid} not in {user.username}'s hand.")
 
-    res = games[game_id].event_move_marble(player, action)
+    res = games[game_id].event_move_marble(user, action)
 
     if res['requestValid']:
         await sio_emit_game_state(game_id)
-        await sio_emit_player_state(game_id, player.uid)
+        await sio_emit_player_state(game_id, user.uid)
     else:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST, detail=res["note"])

@@ -4,7 +4,8 @@ from app.game_logic.hand import Hand
 from app.game_logic.marble import Marble
 from app.game_logic.field import Field
 
-class Player():
+
+class Player:
     """
     Player object instance handling the Player
 
@@ -13,31 +14,38 @@ class Player():
     Player.hand is an instance of the Players Hand
     """
 
-    def __init__(self, uid: str,  username: str, color: str=None):
-        self.uid: str = uid
+    def __init__(self, uid: str, username: str, position: int = None):
+        self._uid: str = uid
         self.username: str = username
-        self.color: str = color
+        self._position: int = position
         self.hand: Hand = Hand()
-
-        #
-        self.goal = [0] * 4
         self.marbles: Dict[str, Marble] = {}
 
         # keep track of actions
-        self.may_swap_cards:bool = True
+        self.may_swap_cards: bool = True
         self.has_folded: bool = False
-        self.steps_of_seven_remaining:int = -1
+        self.steps_of_seven_remaining: int = -1
 
-    def set_color(self, color:str):
-        self.color = color
+    @property
+    def uid(self):
+        return self._uid
 
-    def set_starting_position(self, field: Field, ind: int):
+    @property
+    def position(self):
+        return self._position
+
+    def set_position(self, position):
+        self._position = position
+
+    def set_starting_node(self, field: Field):
         """
         set the players starting position
         """
-        self.starting_node = field.get_starting_node(self)
-        self.marbles = {mid: Marble(self.color, mid, self.starting_node) for mid in range(
-            ind * 4, 4 * ind + 4)}  # mid: marble id
+        self.starting_node = field.get_starting_node(self.position)
+        self.marbles = {
+            marble_id: Marble(marble_id, self.starting_node)
+            for marble_id in range(self.position * 4, 4 * self.position + 4)
+        }
 
     def set_card(self, card):
         """
@@ -53,8 +61,9 @@ class Player():
         return self.has_folded or self.hand.cards == {}
 
     def has_finished_marbles(self):
-        if any(marble.curr == None for marble in self.marbles.values()): return False
-        return sum([marble.curr.position for marble in self.marbles.values()]) > 4000
+        if any(marble.currentNode == None for marble in self.marbles.values()):
+            return False
+        return sum([marble.currentNode.position for marble in self.marbles.values()]) > 4000
 
     """
     Player State
@@ -64,16 +73,16 @@ class Player():
 
     def private_state(self):
         return {
-            'uid': self.uid,
-            'username': self.username,
-            'hand': self.hand.to_json(),
-            'marbles': [marble.to_json() for marble in self.marbles.values()],
-            'steps_of_seven': self.steps_of_seven_remaining
+            "uid": self._uid,
+            "username": self.username,
+            "hand": self.hand.to_json(),
+            "marbles": [marble.to_json() for marble in self.marbles.values()],
+            "steps_of_seven": self.steps_of_seven_remaining,
         }
 
     def to_json(self):
         return {
-            'uid': self.uid,
-            'username': self.username,
-            'marbles': [marble.to_json() for marble in self.marbles.values()]
+            "uid": self._uid,
+            "username": self.username,
+            "marbles": [marble.to_json() for marble in self.marbles.values()],
         }

@@ -1,54 +1,53 @@
 
-class Marble():
+class Marble:
     """
     Marble Object
-
-
     """
-    
-    def __init__(self, color: str, mid: int, starting_node) -> None:
-        self.prev = None
-        self.curr = None  # start in the starting area
-        self.next = starting_node
+
+    def __init__(self, marble_id: int, starting_node) -> None:
+        self._currentNode = None  # start in the starting area
 
         # store the starting position separately for a reset
-        self.starting_position = starting_node
-        colors = ['red', 'yellow', 'green', 'blue']
-        self.color: str = colors[mid//4]
-        self.mid: int = mid  # marble
-        self.blocking: bool = False
+        self._starting_node = starting_node
+        self._marble_id: int = marble_id
+        self.is_blocking: bool = False
         self.can_enter_goal: bool = False
 
+    @property
+    def starting_node(self):
+        return self._starting_node
+
+    @property
+    def marble_id(self):
+        return self._marble_id
+
+    @property
+    def currentNode(self):
+        return self._currentNode
+
     def reset_to_starting_position(self) -> None:
-        self.curr.unset_marble()
+        self.currentNode.unset_marble()
+        self._currentNode = None
 
-        self.prev = None
-        self.curr = None
-        self.next = self.starting_position
-
-        self.blocking = False
+        self.is_blocking = False
         self.can_enter_goal = False
 
     def set_new_position(self, node) -> None:
         # remove the marble from the previous position
-        if self.curr is not None:
-            self.curr.unset_marble()
+        if self.currentNode is not None:
+            self._currentNode.unset_marble()
 
-        self.curr = node.curr
-        self.prev = node.prev
-        self.next = node.next
-        self.exit = node.exit
+        self._currentNode = node.curr
 
-        node.marble = self
+        node.set_marble(self)
 
     def to_json(self):
-        if self.curr is None:  # at start
-            position = -self.mid - 1
+        if self.currentNode is None:  # at start
+            position = -self.marble_id - 1
         else:
-            position = self.curr.position
+            position = self.currentNode.position
 
         return {
-            'mid': self.mid,
-            'position': position,
-            'color': self.color
+            "mid": self.marble_id,
+            "position": position,
         }

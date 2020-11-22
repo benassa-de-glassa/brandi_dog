@@ -138,15 +138,15 @@ class Game extends Component {
     // TODO
     async submitNewTeams(newTeams) {
         // called by Board component when another player's seat is clicked
-        const relURL = "games/" + this.props.gameID + "/teams";
-        const response = await postData(relURL, newTeams);
-        const responseJson = await response.json();
-        if (response.status === 200) {
-            this.setState({ switchingSeats: false });
-        } else {
-            this.setState({ errorMessage: responseJson.detail });
-            console.log(responseJson);
-        }
+        // const relURL = "games/" + this.props.gameID + "/teams";
+        // const response = await postData(relURL, newTeams);
+        // const responseJson = await response.json();
+        // if (response.status === 200) {
+        //     this.setState({ switchingSeats: false });
+        // } else {
+        //     this.setState({ errorMessage: responseJson.detail });
+        //     console.log(responseJson);
+        // }
     }
 
     cardClicked(index) {
@@ -446,54 +446,6 @@ class Game extends Component {
                     selectedMarble: marble,
                 });
             }
-        }
-    }
-
-    tooltipClicked(action) {
-        let selectedCard = this.state.cards[this.state.selectedCardIndex];
-        let successCallback = () => { };
-
-        this.performAction(
-            this.state.selectedMarble,
-            selectedCard,
-            action,
-            successCallback,
-            () => { } // error callback
-        ); 
-    }
-
-    async performAction(
-        marble,
-        card,
-        action,
-        success = () => { },
-        error = () => { }
-    ) {
-        // performs an action selected marble
-        const relURL = "games/" + this.props.gameID + "/action";
-        const response = await postData(relURL, {
-            card: {
-                uid: card.uid,
-                value: card.value,
-                color: card.color,
-                actions: card.actions,
-            },
-            action: action,
-            mid: marble.mid,
-        });
-        const responseJson = await response.json();
-        if (response.status === 200) {
-            success();
-            this.setState({ tooltipActions: [] });
-
-            // don't deselect the selected card if there are still sevens to be played
-            if (this.state.remainingStepsOf7 === -1) {
-                this.setState({ selectedCardIndex: null });
-            }
-        } else {
-            error(responseJson.detail);
-            this.setState({ errorMessage: responseJson.detail });
-            console.log(responseJson);
         }
     }
 

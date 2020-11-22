@@ -440,11 +440,11 @@ class Brandi:
                 "note": "Marble does not seem to belong to you.",
             }
 
-        pnt: GameNode = marble.currentNode
+        pointer_to_node: GameNode = marble.currentNode
 
         #  get out of the start
         if action.action == 0:
-            if pnt is not None:
+            if pointer_to_node is not None:
                 return {"requestValid": False, "note": "Not in the starting position."}
             # check that the marble goes to an entry node
             # and
@@ -490,57 +490,44 @@ class Brandi:
 
             # use pnt variable to check the path along the action of the marble i.e. whether it
             # is blocked or it may enter its goal
-            if pnt is None:
+            if pointer_to_node is None:
                 return {"requestValid": False, "note": "In the starting position."}
 
-            flag_has_entered_home = False
             for i in range(action.action):
+                if not action.go_past_base and marble.can_enter_goal and pointer_to_node.get_is_entry_node_for_player_at_position(current_player.position):
+                    flag_home_is_not_allowed: bool = False
+                    pointer_copy: GameNode = pointer_to_node.curr
+                    pointer_copy = pointer_copy.exit
 
-                # check whether pnt is looking at the own exit node and if it can enter
-                if marble.can_enter_goal and pnt.get_is_entry_node_for_player_at_position(current_player.position):
-                    flag_home_is_blocking = False
-                    # make a copy of the pointer to check whether or not the home fields are blocking
-                    pnt_copy = pnt.curr
-                    pnt_copy = pnt_copy.exit
-
-                    # check the remaining steps in goal for blockage
-                    # one less step as the pointer has moved one through pnt_copy.exit
                     for _ in range(i, action.action - 1):
-                        flag_home_is_blocking = pnt_copy.is_blocking()
-                        pnt_copy = pnt_copy.next
-                        if pnt_copy is None:
-                            return {
-                                "requestValid": False,
-                                "note": f"You cannot enter your goal without going to far.",
-                            }
+                        flag_home_is_not_allowed = flag_home_is_not_allowed or pointer_copy.is_blocking()
+                        pointer_copy = pointer_copy.next
+                        if pointer_copy is None:
+                            flag_home_is_not_allowed = True
+                            break
 
-                    # if the the pointer was not blocked on its way in the home, then it is a valid action
-                    if not flag_home_is_blocking:
-                        pnt = pnt_copy
-                        flag_has_entered_home = True
-                        break  # break out ouf the for loop taking all action steps, as they were taken by the pnt_copy pointer
-                    # if the pointer was blocked along its steps, then the marble couldn't enter the home
-                    else:
-                        pnt = pnt.next
+                    # if we are allowed to enter the house, we will do so by setting the actual pointer to the node of the pointer copy
+                    if not flag_home_is_not_allowed:
+                        pointer_to_node = pointer_copy
+
                 else:
-                    pnt = pnt.next
-                # check whether a marble is blocking along the way
-                if pnt.is_blocking():
-                    return {
-                        "requestValid": False,
-                        "note": f"Blocked by a marble at position {pnt.position}.",
-                    }
+                    pointer_to_node = pointer_to_node.next
+                    if pointer_to_node.is_blocking():
+                        return {
+                            "requestValid": False,
+                            "note": f"Blocked by a marble at position {pointer_to_node.position}.",
+                        }
 
-            if pnt.has_marble():
+            if pointer_to_node.has_marble():
                 # kick the marble
-                pnt.marble.reset_to_starting_position()
+                pointer_to_node.marble.reset_to_starting_position()
 
             # performing any motion with a marble on the field removes the blocking capability
             # however entering the goals makes the marble blocking again
             # if the pointers position is >= 1000 then the marble is at home and therefor blocking
-            marble.is_blocking = False + (pnt.position >= 1000)
+            marble.is_blocking = False + (pointer_to_node.position >= 1000)
             marble.can_enter_goal = True
-            marble.set_new_position(pnt)
+            marble.set_new_position(pointer_to_node)
             self.increment_active_player_index()
             self.top_card = self.players[user.uid].hand.play_card(action.card)
             self.discarded_cards.append(self.top_card)
@@ -555,24 +542,24 @@ class Brandi:
 
             # use pnt variable to check the path along the action of the marble i.e. whether it
             # is blocked or it may enter its goal
-            pnt = marble.currentNode
+            pointer_to_node = marble.currentNode
             for i in range(abs(action.action)):
-                pnt = pnt.prev
+                pointer_to_node = pointer_to_node.prev
                 # check whether a marble is blocking along the way
-                if pnt is None:
+                if pointer_to_node is None:
                     return {
                         "requestValid": False,
                         "note": f"You cannot enter your goal without going to far.",
                     }
-                if pnt.is_blocking():
+                if pointer_to_node.is_blocking():
                     return {
                         "requestValid": False,
-                        "note": f"Blocked by a marble at position {pnt.position}.",
+                        "note": f"Blocked by a marble at position {pointer_to_node.position}.",
                     }
 
-            if pnt.has_marble():
+            if pointer_to_node.has_marble():
                 # kick the marble
-                pnt.marble.reset_to_starting_position()
+                pointer_to_node.marble.reset_to_starting_position()
 
             # performing any motion with a marble on the field removes the blocking capability
             # it also allows the marble to enter the goal
@@ -580,7 +567,7 @@ class Brandi:
             marble.can_enter_goal = True
 
             # move the marble to the entry node
-            marble.set_new_position(pnt)
+            marble.set_new_position(pointer_to_node)
 
             self.increment_active_player_index()
             self.top_card = self.players[user.uid].hand.play_card(action.card)
@@ -638,7 +625,7 @@ class Brandi:
         # assume you want to play a 7 as the other options have been exausted
         elif action.action in list(range(71, 78)):
             steps = action.action - 70
-            if pnt is None:
+            if pointer_to_node is None:
                 return {"requestValid": False, "note": "In the starting position."}
 
             if self.players[user.uid].steps_of_seven_remaining == -1:
@@ -672,10 +659,10 @@ class Brandi:
 
             for i in range(steps):
                 # check whether pnt is looking at the own exit node and if it can enter
-                if marble.can_enter_goal and pnt.get_is_entry_node_for_player_at_position(current_player.position):
+                if marble.can_enter_goal and pointer_to_node.get_is_entry_node_for_player_at_position(current_player.position):
                     flag_home_is_blocking = False
                     # make a copy of the pointer to check whether or not the home fields are blocking
-                    pnt_copy = pnt.curr
+                    pnt_copy = pointer_to_node.curr
                     pnt_copy = pnt_copy.exit
                     # pnt_copy.next = pnt_copy.exit
                     # check the remaining steps in goal for blockage
@@ -692,35 +679,35 @@ class Brandi:
 
                     # if the the pointer was not blocked on its way in the home, then it is a valid action
                     if not flag_home_is_blocking:
-                        pnt = pnt_copy
+                        pointer_to_node = pnt_copy
                         flag_has_entered_home = True
                         break  # break out ouf the for loop taking all action steps, as they were taken by the pnt_copy pointer
                     # if the pointer was blocked along its steps, then the marble couldn't enter the home
                     else:
-                        pnt = pnt.next
+                        pointer_to_node = pointer_to_node.next
                 else:
-                    pnt = pnt.next
+                    pointer_to_node = pointer_to_node.next
 
                 # check whether a marble is blocking along the way
-                if pnt.is_blocking():
+                if pointer_to_node.is_blocking():
                     return {
                         "requestValid": False,
-                        "note": f"Blocked by a marble at position {pnt.position}.",
+                        "note": f"Blocked by a marble at position {pointer_to_node.position}.",
                     }
 
                 # this needs to be inside of the for loop as the 7 card kicks every marble along its path
                 # not just the one it lands on
                 # is the is_blocking() redundant? i think it breaks before anyway
-                if pnt.has_marble() and not pnt.is_blocking():
+                if pointer_to_node.has_marble() and not pointer_to_node.is_blocking():
                     # kick the marble
-                    pnt.marble.reset_to_starting_position()
+                    pointer_to_node.marble.reset_to_starting_position()
 
             # performing any motion with a marble on the field removes the blocking capability
             # however entering the goals makes the marble blocking again
             # if the marble position is >= 1000 then the marble is at home and therefore blocking
-            marble.is_blocking = False + (pnt.position >= 1000)
+            marble.is_blocking = False + (pointer_to_node.position >= 1000)
             marble.can_enter_goal = True
-            marble.set_new_position(pnt)
+            marble.set_new_position(pointer_to_node)
             self.players[user.uid].steps_of_seven_remaining -= steps
 
             if self.players[user.uid].steps_of_seven_remaining == 0:

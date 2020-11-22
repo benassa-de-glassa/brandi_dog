@@ -1,3 +1,9 @@
+# TODO
+#   1)
+#   make the PLAYER_COUNT constant dynamic per Brandi instance. 
+#   n_players is already supplied as an argument to the constructor. 
+
+
 from typing import Dict, List
 
 from itertools import count, filterfalse
@@ -65,6 +71,7 @@ class Brandi:
         self,
         game_id: str,
         host: User,
+        n_players: int = 4,
         seed=None,
         game_name: str = None,
         debug: bool = False,

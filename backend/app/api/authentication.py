@@ -313,10 +313,18 @@ async def read_users_me(current_user: models.user.User = Depends(get_current_use
 
 @router.get('/tokens', tags=["authentication"])
 async def read_tokens(token: str = Depends(oauth2_scheme)):
+    """Allows reading the current token. 
+    """
     return {'token': token}
 
 @router.get('/clear_socket')
 async def clear_socket(current_user: models.user.User = Depends(get_current_user)):
+    """Forcibly disconnect a socket session to allow the user to reconnect
+
+    This can happen if multiple tabs are open. To avoid weird interactions the
+    socket connections are limited to 1 per user. For the time being this is 
+    implemented using a dictionary of all connections. 
+    """
     sid = socket_connections.get(int(current_user.uid))
     if sid:
         logger.info(f'Remove socket connection by {current_user.username} [{current_user.uid}]')

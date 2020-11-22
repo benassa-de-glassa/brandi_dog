@@ -37,6 +37,9 @@ games: Dict[str, Brandi] = {}
 
 
 async def emit_error(sid, msg: str):
+    """
+    Emit an error message to the [sid] socket
+    """
     await sio.emit(
         'error',
         {'detail': msg},
@@ -80,21 +83,40 @@ async def sio_emit_game_list():
 
 @sio.event
 async def join_game_socket(sid, data):
+    """Try to add the socket [sid] to a game socket
+
+    This function is called by the frontend upon successfully connecting to a 
+    game by POST request. The response to said request contained a game token
+    which has to be sent together with the player object. 
+
+    Parameters
+    ----------
+    player
+        player object containing {uid: int}
+
+    game_token
+        JSON web token encoding the game
+    """
     player_id = data['player']['uid']
     game_token = data['game_token']
 
+    # Verify game token
     try:
         game_id = get_current_game(game_token)
     except:
         return await emit_error(sid, 'Unable to verify game token.')
 
+    # Try to find game
     if game_id not in games:
         return await emit_error(sid, 'Unable to join game, game does not exist.')
 
+    # Verify that the player already joined per POST request
     if player_id not in games[game_id].players:
         return await emit_error(sid, 'Unable to join game socket, player is not in this game.')
 
     sio.enter_room(sid, game_id)
+
+    # This is required to allow the player to rejoin upon refreshing
     playing_users[player_id] = game_id
 
     await sio.emit('join_game_success', {
@@ -158,7 +180,13 @@ def get_list_of_games():
 @router.post('/games', response_model=GamePrivate, tags=["game maintenance"])
 # Body(...) is needed to not have game_name recognized as a query parameter
 # ... is the ellipsis and I have no clue why they decided to (ab)use this notation
-async def initialize_new_game(player: User = Depends(get_current_user), game_name: str = Body(...), seed: int = None, debug: bool = False):
+async def initialize_new_game(
+    player: User = Depends(get_current_user),
+    game_name: str = Body(...),
+    n_players: int = 4,             # number of players (4 or 6)
+    seed: int = None,
+    debug: bool = False
+):
     """
     Start a new game.
     """
@@ -178,7 +206,8 @@ async def initialize_new_game(player: User = Depends(get_current_user), game_nam
                           for i in range(4))
 
     games[game_id] = Brandi(game_id, game_name=game_name,
-                            host=player, seed=seed, debug=debug)
+                            host=player, n_players=n_players, seed=seed, 
+                            debug=debug)
 
     await sio_emit_game_list()
 

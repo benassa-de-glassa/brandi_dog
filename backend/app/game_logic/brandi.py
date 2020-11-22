@@ -509,6 +509,7 @@ class Brandi:
                     # if we are allowed to enter the house, we will do so by setting the actual pointer to the node of the pointer copy
                     if not flag_home_is_not_allowed:
                         pointer_to_node = pointer_copy
+                        break
 
                 else:
                     pointer_to_node = pointer_to_node.next

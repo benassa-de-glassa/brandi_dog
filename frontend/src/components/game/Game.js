@@ -99,6 +99,7 @@ class Game extends Component {
     marbles = marbles.map((marble) => {
       return { ...marble, color: colors[parseInt(Math.floor(marble.mid / 4))] };
     });
+    data.number_of_players = 4;
 
     this.setState((prevState) => ({
       ...prevState,

@@ -261,9 +261,15 @@ async def join_game(game_id: str, user: User = Depends(get_current_user)):
 
 @router.post('/games/{game_id}/player_position', response_model=GamePublic, tags=["game action"])
 async def set_teams(game_id: str,  position: int = Body(...),  user: User = Depends(get_current_user)):
+    # verify game_id 
+    if not game_id in games:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                            detail=f"Game {game_id} does not exist.")
+
+    # verify that the user is in said game
     if user.uid not in games[game_id].players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {user.uid} not in Game.")
+                            detail=f"Player {user.uid} not in game.")
 
     res = games[game_id].change_position(user, position)
     if res['requestValid']:

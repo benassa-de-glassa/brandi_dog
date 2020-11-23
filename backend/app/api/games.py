@@ -260,7 +260,10 @@ async def join_game(game_id: str, user: User = Depends(get_current_user)):
 
 
 @router.post('/games/{game_id}/player_position', response_model=GamePublic, tags=["game action"])
-async def set_teams(game_id: str,  position: int = Body(...),  user: User = Depends(get_current_user)):
+async def player_position(game_id: str,  position: int = Body(...),  user: User = Depends(get_current_user)):
+    """
+    Changes the position on the board of the player to choose new teams.
+    """
     # verify game_id 
     if not game_id in games:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,

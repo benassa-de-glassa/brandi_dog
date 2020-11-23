@@ -54,6 +54,9 @@
     color: rgb(211, 10, 10)
 }
 
-svg .card {
+.svg-container .card {
+    position: absolute;
+    left: calc(50% - 45px);
+    top: calc(50% - 75px);
     color: green;
 }

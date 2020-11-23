@@ -2,6 +2,8 @@ import React, { useState, Fragment } from 'react'
 
 import Tooltip from './Tooltip'
 import Avatar from './Avatar'
+import Card from '../card/Card'
+
 import './board.css'
 import './avatar.css'
 
@@ -209,23 +211,13 @@ function Board(props) {
                                 onClick={() => onStepClick(data)}
                             />
                     )}
-                    {/* top card */}
-                    {/* <path className="card-path" d="M305,315 h90 a10,10 0 0 1 10,10 v150 a10,10 0 0 1 
-        -10,10 h-90 a10,10 0 0 1 -10,-10 v-150 a10,10 0 0 1 10,-10 z" /> 
-        <text className="card-number" x="310" y="365">7</text> */}
-
-                    {props.topCard !== null &&
-                        <Fragment>
-                            <path className={'card-path'} d="M355,315 h90 a10,10 0 0 1 10,10 v150 a10,10 0 0 1 
-          -10,10 h-90 a10,10 0 0 1 -10,-10 v-150 a10,10 0 0 1 10,-10 z" />
-                            <text className="card-number" x="360" y="365">{props.topCard.value}</text>
-                            <text className="card-number" x="400" y="400">{color2unicode[props.topCard.color]}</text>
-                        </Fragment>
-                    }
-                    {/* <path className="card-path" d="M405,315 h90 a10,10 0 0 1 10,10 v150 a10,10 0 0 1 
-        -10,10 h-90 a10,10 0 0 1 -10,-10 v-150 a10,10 0 0 1 10,-10 z" /> 
-        <text className="card-number" x="410" y="365">7</text> */}
                 </svg>
+                {props.topCard !== null &&
+                        <Card
+                            value={props.topCard.value}
+                            color={props.topCard.color}
+                        />
+                    }
                 {props.tooltipActions.length && tooltip.visible &&
                     <Tooltip tooltip={tooltip}
                         tooltipActions={props.tooltipActions}

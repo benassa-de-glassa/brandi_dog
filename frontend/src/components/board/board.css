@@ -1,5 +1,7 @@
 #board {
-    background-image: url(wood_background.png);
+    /* background-image: url(wood_background.png); */
+    background-image: url(plywood-background.png);
+    background-size: 100%;
     border: 2px solid black;
     box-shadow: yellow;
     /* border-radius: 8px; */

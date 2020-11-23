@@ -166,7 +166,6 @@ class Game extends Component {
                 selectedCardIndex: index,
                 marblesToSelect: selectedCard.value === "switch" ? 2 : 1,
             });
-            console.log("select" + this.state.marblesToSelect + "marbles");
         }
     }
 

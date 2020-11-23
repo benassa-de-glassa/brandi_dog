@@ -97,13 +97,15 @@ function Board(props) {
         // index is 0, 1, 2, or 3
         if (props.switchingSeats) {
             // enabled by clicking on 'switch seats' button in the Controls component
-            let ownIndex = props.playerList.findIndex(props.player.uid)
-            if (!(ownIndex === index)) {
-                // swap players
-                let newTeams = [...props.playerList]
-                newTeams[index] = props.playerList[ownIndex]
-                newTeams[ownIndex] = props.playerList[index]
-            }
+            // let ownIndex = props.playerList.findIndex(id => id === props.player.uid)
+            // if (!(ownIndex === index)) {
+            //     // swap players
+            //     let newTeams = [...props.playerList]
+            //     newTeams[index] = props.playerList[ownIndex]
+            //     newTeams[ownIndex] = props.playerList[index]
+
+                props.setNewPosition(index)
+            // }
         }
     }
 

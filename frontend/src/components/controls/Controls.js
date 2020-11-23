@@ -76,6 +76,7 @@ function Controls(props) {
 
     const swapClicked = event => {
         event.preventDefault()
+        props.switchSeats()
     }
 
     return (
@@ -90,6 +91,7 @@ function Controls(props) {
                         {error &&
                             <p className='error'>{error}</p>
                         }
+                        { props.switchingSeats && <p>Click on another player to change seats.</p> }
                         <button className='green my-1 mr-1' onClick={handleClick}>Start game</button>
                         <button className='elegant my-1' onClick={swapClicked}>Change seat</button>
                     </div>

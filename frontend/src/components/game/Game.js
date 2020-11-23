@@ -48,7 +48,7 @@ class Game extends Component {
         this.handleNewGameState = this.handleNewGameState.bind(this);
         this.handleNewPlayerState = this.handleNewPlayerState.bind(this);
         this.switchSeats = this.switchSeats.bind(this);
-        this.submitNewTeams = this.submitNewTeams.bind(this);
+        this.setNewPosition = this.setNewPosition.bind(this);
 
         this.startGame = this.startGame.bind(this);
         this.swapCard = this.swapCard.bind(this);
@@ -133,18 +133,18 @@ class Game extends Component {
         this.setState({ switchingSeats: true });
     }
 
-    // TODO
-    async submitNewTeams(newTeams) {
-        // called by Board component when another player's seat is clicked
-        // const relURL = "games/" + this.props.gameID + "/teams";
-        // const response = await postData(relURL, newTeams);
-        // const responseJson = await response.json();
-        // if (response.status === 200) {
-        //     this.setState({ switchingSeats: false });
-        // } else {
-        //     this.setState({ errorMessage: responseJson.detail });
-        //     console.log(responseJson);
-        // }
+    async setNewPosition(index) {
+        const response = await postToBackend(
+            `games/${this.props.gameID}/player_position`,
+            index
+        );
+        if (response.code) {
+            // something went wrong
+            console.warn(`[${response.code}] ${response.message}`)
+            this.setState({ errorMessage: response.message })
+        } else {
+            this.setState({ switchingSeats: false })
+        }
     }
 
     cardClicked(index) {
@@ -379,23 +379,25 @@ class Game extends Component {
     render() {
         return (
             <div className="game-container">
-                {this.state.numberOfPlayers === 4 ? (
-                    <Board
-                        numberOfPlayers={this.state.numberOfPlayers}
-                        player={this.props.player}
-                        playerList={this.state.players}
-                        activePlayerIndex={this.state.activePlayerIndex}
-                        marbleList={this.state.allMarbles}
-                        selectedMarble={this.state.selectedMarble}
-                        tooltipActions={this.state.tooltipActions}
-                        tooltipClicked={this.tooltipClicked}
-                        marbleClicked={this.marbleClicked}
-                        selectedCard={this.state.cards[this.state.selectedCardIndex]}
-                        topCard={this.state.topCard}
-                        switchingSeats={this.state.switchingSeats}
-                        submitNewTeams={this.submitNewTeams}
-                    />
-                ) : (
+                {this.state.numberOfPlayers === 4 ?
+                    (
+                        <Board
+                            numberOfPlayers={this.state.numberOfPlayers}
+                            player={this.props.player}
+                            playerList={this.state.players}
+                            activePlayerIndex={this.state.activePlayerIndex}
+                            marbleList={this.state.allMarbles}
+                            selectedMarble={this.state.selectedMarble}
+                            tooltipActions={this.state.tooltipActions}
+                            tooltipClicked={this.tooltipClicked}
+                            marbleClicked={this.marbleClicked}
+                            selectedCard={this.state.cards[this.state.selectedCardIndex]}
+                            topCard={this.state.topCard}
+                            switchingSeats={this.state.switchingSeats}
+                            submitNewTeams={this.submitNewTeams}
+                            setNewPosition={this.setNewPosition}
+                        />
+                    ) : (
                         <Board6
                             numberOfPlayers={this.state.numberOfPlayers}
                             player={this.props.player}
@@ -410,6 +412,7 @@ class Game extends Component {
                             topCard={this.state.topCard}
                             switchingSeats={this.state.switchingSeats}
                             submitNewTeams={this.submitNewTeams}
+                            setNewPosition={this.setNewPosition}
                         />
                     )}
                 <div className="right-container">
@@ -431,6 +434,8 @@ class Game extends Component {
                         cardSwapConfirmed={this.state.cardSwapConfirmed}
                         cardBeingSwapped={this.state.cardBeingSwapped}
                         errorMessage={this.state.errorMessage}
+                        switchSeats={this.switchSeats}
+                        switchingSeats={this.state.switchingSeats}
                     />
                     <Chat player={this.props.player} gameID={this.props.gameID} />
                 </div>

@@ -503,7 +503,7 @@ class Brandi:
                     for _ in range(i, action.action - 1):
                         flag_home_is_not_allowed = flag_home_is_not_allowed or pointer_copy.is_blocking()
                         pointer_copy = pointer_copy.next
-                        if pointer_copy is None:
+                        if pointer_copy is None or flag_home_is_not_allowed:
                             flag_home_is_not_allowed = True
                             pointer_to_node = pointer_to_node.next
                             break

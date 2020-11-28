@@ -1,14 +1,17 @@
 
+from app.game_logic.field import Node
+
+
 class Marble:
     """
     Marble Object
     """
 
-    def __init__(self, marble_id: int, starting_node) -> None:
-        self._currentNode = None  # start in the starting area
+    def __init__(self, marble_id: int, starting_node: Node) -> None:
+        self._currentNode: Node = None  # start in the starting area
 
         # store the starting position separately for a reset
-        self._starting_node = starting_node
+        self._starting_node: Node = starting_node
         self._marble_id: int = marble_id
         self.is_blocking: bool = False
         self.can_enter_goal: bool = False
@@ -26,7 +29,7 @@ class Marble:
         return self._currentNode
 
     def reset_to_starting_position(self) -> None:
-        self.currentNode.unset_marble()
+        self._currentNode.unset_marble()
         self._currentNode = None
 
         self.is_blocking = False

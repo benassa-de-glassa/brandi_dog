@@ -245,9 +245,9 @@ async def join_game(game_id: str, user: User = Depends(get_current_user)):
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"Player {user.username} has already joined.")
     # ensure only four players can join
-    if len(games[game_id].players) >= 4:
+    if len(games[game_id].players) >= games[game_id].n_players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Four player have already joined this game, there is no more room.")
+                            detail=f"The game is already full, there is no more room.")
 
     player = Player(**user.dict(), current_game=game_id)
     games[game_id].player_join(player)

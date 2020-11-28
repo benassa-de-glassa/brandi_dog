@@ -64,14 +64,14 @@
 /* 6 player css */
 
 .svg-container-6 .player-box.center-left {
-    align-items: flex-start;
+    align-items: flex-end;
     flex-direction: column-reverse;
     top: 42.5%;
     left: 3%;
 }
 
 .svg-container-6 .player-box.center-right {
-    align-items: flex-end;
+    align-items: flex-start;
     top: 42.5%;
     right: 3%;
 }

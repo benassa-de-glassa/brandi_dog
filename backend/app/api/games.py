@@ -181,9 +181,9 @@ def get_list_of_games():
 # Body(...) is needed to not have game_name recognized as a query parameter
 # ... is the ellipsis and I have no clue why they decided to (ab)use this notation
 async def initialize_new_game(
-    player: User = Depends(get_current_user),
     game_name: str = Body(...),
-    n_players: int = 4,             # number of players (4 or 6)
+    n_players: int = Body(...),             # number of players (4 or 6)
+    player: User = Depends(get_current_user),
     seed: int = None,
     debug: bool = False
 ):

@@ -293,7 +293,7 @@ async def start_game(game_id: str, user:  User = Depends(get_current_user)):
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"Player {user.uid} not in Game.")
     # check if there are four players in the game
-    if len(games[game_id].players) != 4:
+    if len(games[game_id].players) != games[game_id].n_players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail='Not enough players.')
 

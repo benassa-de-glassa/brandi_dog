@@ -361,7 +361,7 @@ class Game extends Component {
         }
     }
 
-    async startGame(successCallback, errorCallback) {
+    async startGame() {
         const response = await postToBackend(
             `games/${this.props.gameID}/start`,
             this.props.player
@@ -369,10 +369,8 @@ class Game extends Component {
 
         if (response.code) {
             // something went wrong
-            errorCallback(response.message)
+            this.setState({ errorMessage: response.message })
             console.warn(`[${response.code}] ${response.message}`)
-        } else {
-            successCallback()
         }
     }
 

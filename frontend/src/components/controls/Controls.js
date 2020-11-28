@@ -71,7 +71,7 @@ function Controls(props) {
     const handleClick = event => {
         event.preventDefault()
         // successCallback, errorCallback
-        props.startGame(() => setError(''), setError)
+        props.startGame()
     }
 
     const swapClicked = event => {

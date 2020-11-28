@@ -72,6 +72,7 @@ var GameViewer = function (props) {
                     <tr>
                         <th>Name</th>
                         <th>Host</th>
+                        <th>Size</th>
                         <th>Players</th>
                     </tr>
                 </thead>
@@ -81,6 +82,7 @@ var GameViewer = function (props) {
                             className={(index === selectedRow ? "selected-row " : "") + (game.game_id === props.joinedGame ? 'joined-row' : "")}>
                             <td>{game.game_name}</td>
                             <td>{game.host.username}</td>
+                            <td>{game.n_players}</td>
                             <td>
                                 { // reduce only works if game.players is not empty
                                     game.players && Object.values(game.players).map(

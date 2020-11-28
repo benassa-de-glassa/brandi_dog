@@ -1,3 +1,4 @@
+/* default is 4 players for 6 player styles see below */
 .player-box {
     width: 11%;
     height: 15%;
@@ -58,4 +59,19 @@
 
 .avatar.active {
     border: 6px solid rgb(98, 255, 234);
+}
+
+/* 6 player css */
+
+.svg-container-6 .player-box.center-left {
+    align-items: flex-start;
+    flex-direction: column-reverse;
+    top: 42.5%;
+    left: 3%;
+}
+
+.svg-container-6 .player-box.center-right {
+    align-items: flex-end;
+    top: 42.5%;
+    right: 3%;
 }

@@ -8,7 +8,7 @@
 #board {
     /* background-image: url(wood_background.png); */
     background-image: url(plywood-background.png);
-    background-size: 100%;
+    background-size: 120%;
     border: 2px solid black;
     box-shadow: yellow;
     /* border-radius: 8px; */
@@ -26,7 +26,7 @@
 }
 
 .svg-container-6 {
-    padding-bottom: 120%;
+    padding-bottom: 100%;
     width: 100%;
     display: inline-block;
     position: relative;
@@ -160,14 +160,4 @@
 
 .out-5 {
     stroke: orange
-}
-
-.card-number {
-    font-size: 40px;
-}
-
-.card-path {
-    stroke: black;
-    stroke-width: 3px;
-    fill: whitesmoke;
 }

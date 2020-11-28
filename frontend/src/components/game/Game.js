@@ -418,6 +418,7 @@ class Game extends Component {
                 <div id="right-container">
                     <Controls
                         players={this.state.players}
+                        numberOfPlayers={this.state.numberOfPlayers}
                         playerIsActive={this.state.playerIsActive}
                         gameState={this.state.gameState}
                         roundState={this.state.roundState}

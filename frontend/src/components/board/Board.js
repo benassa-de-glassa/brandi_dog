@@ -5,7 +5,6 @@ import Avatar from './Avatar'
 import Card from '../card/Card'
 
 import './board.css'
-import './avatar.css'
 
 const boardData = require("./boarddata4.json")
 

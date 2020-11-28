@@ -59,5 +59,11 @@
     position: absolute;
     left: calc(50% - 45px);
     top: calc(50% - 75px);
-    color: green;
+}
+
+.svg-container-6 .card {
+    /* put the card in the middle of the board */
+    position: absolute;
+    left: calc(50% - 45px);
+    top: calc(50% - 75px);
 }

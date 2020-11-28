@@ -86,7 +86,7 @@ function Controls(props) {
                 <span className='mb-1'>{roundStateText[props.roundState]}</span>
                 {props.players.length < 4 &&
                     <span>Waiting for players.</span>}
-                {props.gameState < 2 && props.players.length === 4 &&
+                {props.gameState < 2 && props.players.length === props.numberOfPlayers &&
                     <div>
                         {error &&
                             <p className='error'>{error}</p>

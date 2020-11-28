@@ -102,7 +102,6 @@ class Game extends Component {
         marbles = marbles.map((marble) => {
             return { ...marble, color: colors[parseInt(Math.floor(marble.mid / 4))] };
         });
-        data.number_of_players = 4;
 
         this.setState((prevState) => ({
             ...prevState,
@@ -115,7 +114,7 @@ class Game extends Component {
             playerIsActive:
                 players[data.active_player_index]?.uid === this.props.player.uid,
             cardSwapConfirmed: data.round_state < 2,
-            numberOfPlayers: data.number_of_players,
+            numberOfPlayers: data.n_players,
         }));
     }
 

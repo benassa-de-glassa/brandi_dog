@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState } from 'react'
 
 import Tooltip from './Tooltip'
 import Avatar from './Avatar'
@@ -8,12 +8,6 @@ import './board.css'
 import './avatar.css'
 
 const boardData = require("./boarddata4.json")
-const color2unicode = {
-    spades: '\u2660',
-    hearts: '\u2665',
-    diamonds: '\u2666',
-    clubs: '\u2663'
-}
 
 function Board(props) {
     const height = 800;

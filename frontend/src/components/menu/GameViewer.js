@@ -8,6 +8,7 @@ var GameViewer = function (props) {
     const [gameList, setGameList] = useState([])
     const [createGame, setCreateGame] = useState(false)
     const [input, setInput] = useState("")
+    const [boardSize, setBoardSize] = useState(4)
     const [selectedRow, setSelectRow] = useState()
     const [error, setError] = useState("")
 
@@ -34,13 +35,21 @@ var GameViewer = function (props) {
         event.preventDefault() // don't use the default submit
         var relURL = 'games'
 
-        const data = await postToBackend(relURL, input)
+        const data = await postToBackend(relURL,
+            {
+                game_name: input,
+                n_players: parseInt(boardSize)
+            })
         if (data.game_token) {
             props.joinGameSocket(data.game_token)
             setCreateGame(false)
         } else {
             setError(data.detail)
         }
+    }
+
+    const handleBoardSizeChange = async event => {
+        setBoardSize(event.target.value)
     }
 
     // like componendDidMount
@@ -103,14 +112,26 @@ var GameViewer = function (props) {
             </span>
             {
                 createGame &&
-                <form className='mt-1 mr-2' onSubmit={handleCreateGameSubmit}>
-                    <label className='mr-1'>
-                        Enter a name: </label>
-                    <input type='text' className='mr-1' value={input} onChange=
-                        {handleCreateGameInput} placeholder='Enter game name' />
+                <div id='player-create-container'>
+                    <p className='title'>Create game</p>
+                    <form id='form-player-create' className='mt-1 mr-2' onSubmit={handleCreateGameSubmit}>
+                        <span>
+                            <label className='create-game-label w-150 mr-1'>
+                                Enter a name </label>
+                            <input type='text' className='mr-1' value={input} onChange=
+                                {handleCreateGameInput} placeholder='Enter game name' />
+                        </span>
+                        <span>
+                            <span className='create-game-label w-150 mr-1'>Number of players</span>
+                            <input type='radio' id='4p' name='n-of-players' value={4} defaultChecked onChange={handleBoardSizeChange} />
+                            <label for='4p'>4</label>
+                            <input type='radio' id='6p' name='n-of-players' value={6} onChange={handleBoardSizeChange} />
+                            <label for='6p'>6</label><br />
+                        </span>
 
-                    <button type='submit'>Create Game</button>
-                </form>
+                        <button type='submit'>Create Game</button>
+                    </form>
+                </div>
             }
 
         </div>

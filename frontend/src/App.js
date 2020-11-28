@@ -48,12 +48,13 @@ import {
 
 import './css/App.css'
 import './css/mycss.css'
+import './css/default.css'
 
 import TopBar from './components/topbar/Topbar'
 import Menu from './components/menu/Menu'
 import Game from './components/game/Game'
 import UserLogin from './components/userlogin/UserLogin'
-import About from './components/about/About'
+import About from './components/menu/About'
 
 // import { postData, API_URL } from './paths'
 import { socket } from './api/socket'
@@ -271,7 +272,7 @@ class App extends Component {
                     }
                     <Switch>
                         <Route path='/' exact render={() =>
-                            <div className='main-page'>
+                            <div id='main-page'>
                                 {
                                     this.state.showMenu &&
                                     <Menu

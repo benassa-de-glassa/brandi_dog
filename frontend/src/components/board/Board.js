@@ -107,7 +107,7 @@ function Board(props) {
     }
 
     return (
-        <div id='left-game-container'>
+        <div id='board-container'>
             <div className="svg-container">
                 {playerList[0] &&
                     <Avatar

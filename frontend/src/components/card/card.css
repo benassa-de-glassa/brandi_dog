@@ -55,6 +55,7 @@
 }
 
 .svg-container .card {
+    /* put the card in the middle of the board */
     position: absolute;
     left: calc(50% - 45px);
     top: calc(50% - 75px);

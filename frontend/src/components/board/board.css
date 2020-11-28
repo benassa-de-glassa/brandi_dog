@@ -1,3 +1,10 @@
+#board-container {
+    display: inline-block;
+    flex-grow: 1;
+    flex-basis: 50%;
+    box-sizing: border-box;
+}
+
 #board {
     /* background-image: url(wood_background.png); */
     background-image: url(plywood-background.png);

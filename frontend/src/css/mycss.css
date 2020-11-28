@@ -17,34 +17,6 @@ header {
     margin: 6px 0;
 }
 
-.topbar {
-    min-width: 60%;
-    display: flex;
-    text-align: left;
-    align-items: center;
-    margin: 10px auto;
-    max-width: 1200px;
-    color: whitesmoke;
-}
-
-.top-bar-link {
-    display: inline-block;
-    font-size: large;
-    font-weight: 700;
-    font-family: inherit;
-    color: inherit;
-    background: inherit;
-    border: 0;
-    padding: 10px 10px;
-    cursor: pointer;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.top-bar-link:hover {
-    background-color: rgba(169, 169, 169, 0.315);
-}
-
 .error {
     color: red;
     margin-top: 20px;
@@ -68,84 +40,9 @@ header {
     font-weight: 600;
 }
 
-.bold {
-    font-weight: 600;
-}
-
-.mr-auto {
-    margin-right: auto;
-}
-
-.ml-auto {
-    margin-left: auto;
-}
-
-.mr-2 {
-    margin-right: 20px;
-}
-
-.ml-2 {
-    margin-left: 20px;
-}
-
-.mr-1 {
-    margin-right: 10px;
-}
-
-.ml-1 {
-    margin-left: 10px;
-}
-
-.mb-1 {
-    margin-bottom: 10px;
-}
-
-.mt-1 {
-    margin-top: 10px;
-}
-
-.my-1 {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
 .wrap-text{
     display: flex;
     word-wrap: break-word;
-}
-
-.game-container {
-    background: rgb(233, 233, 233);
-    display: flex;
-    flex-flow: row wrap;
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto;
-    text-align: left;
-}
-
-#left-game-container {
-    display: inline-block;
-    flex-grow: 1;
-    flex-basis: 50%;
-    box-sizing: border-box;
-}
-
-.right-container {
-    /* For this element */
-    position: relative;
-    display: flex;
-    flex-flow: column nowrap;
-    /* for parent flex */
-    flex-grow: 1;   
-    flex-basis: 25%;
-
-    box-sizing: border-box;
-    min-width: 400px;
-    margin: 0;
-    margin-left: 0;
-    border: 0px solid slategrey;
-    /* border-radius: 5px; */
 }
 
 .component-title {
@@ -172,13 +69,6 @@ button:disabled {
     background-color:rgba(105, 90, 205, 0.425);
     color: lightgrey;
 }
-
-
-/* 
-.button:disabled:hover {
-    border: 2px solid transparent;
-} */
-
 
 button.close {
     width: 28px;

@@ -5,6 +5,8 @@ import Board from "../board/Board";
 import Board6 from "../board/Board6";
 import Controls from "../controls/Controls";
 
+import './game.css'
+
 import { socket } from '../../api/socket'
 import { postToBackend } from '../../api/fetch_backend'
 
@@ -377,7 +379,7 @@ class Game extends Component {
 
     render() {
         return (
-            <div className="game-container">
+            <div id="game-container">
                 {this.state.numberOfPlayers === 4 ?
                     (
                         <Board
@@ -414,7 +416,7 @@ class Game extends Component {
                             setNewPosition={this.setNewPosition}
                         />
                     )}
-                <div className="right-container">
+                <div id="right-container">
                     <Controls
                         players={this.state.players}
                         playerIsActive={this.state.playerIsActive}

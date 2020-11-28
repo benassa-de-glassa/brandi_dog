@@ -46,7 +46,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from starlette.responses import Response, JSONResponse
 
-from sqlalchemy.orm import Session # only used for typing
+from sqlalchemy.orm import Session  # only used for typing
 
 from app import models  # those are all the pydantic base models
 
@@ -75,7 +75,7 @@ credentials_exception = HTTPException(
 )
 
 # bind the database models for the table 'users'. This is not needed for using
-# the heroku database so perhaps this is somewhat obsolete. 
+# the heroku database so perhaps this is somewhat obsolete.
 db_models.database.Base.metadata.create_all(bind=database.engine)
 
 
@@ -181,7 +181,7 @@ async def get_current_user(
     ----------
     db : sqlalchemy.orm.Session
         database session injected by FastAPI as a dependency
-        
+
     token : str
         Access token encoding the username injected by FastAPI. It is retrieved
         from a cookie by the oauth2_scheme defined in oauth2withcookies.py.
@@ -212,7 +212,7 @@ async def create_user(
         new_user: models.user.UserCreate,
         db: Session = Depends(get_db)):
     """Create a new user in the database
-    
+
     Parameters
     ----------
     new_user
@@ -243,7 +243,7 @@ async def create_user(
 async def login_for_access_token(
     response: Response,
     # A = Depends() is equivalent to A = Depends(A)
-    form_data: OAuth2PasswordRequestForm = Depends(), 
+    form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
     """Login function that verifies credentials and issues an access token
@@ -288,7 +288,7 @@ async def logout_user(response: Response):
 @router.get('/users/me', response_model=models.user.Player, tags=["player info"])
 async def read_users_me(current_user: models.user.User = Depends(get_current_user)):
     """Try to retrieve the user based on an access token cookie. 
-    
+
     The response model makes sure that only id and name are sent, and not for
     example the hashed password
     """

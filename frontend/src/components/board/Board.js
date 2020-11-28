@@ -11,6 +11,8 @@ const color2unicode = {
     clubs: '\u2663'
 }
 
+const marbleColors = ['red', 'yellow', 'green', 'blue']
+
 function Board(props) {
     const height = 800;
     const width = 800;
@@ -24,7 +26,6 @@ function Board(props) {
         }
     )
 
-    // const [seatOccupation, setSeatOccupation] = useState([null, null, null, null]
     var playerList = [...props.playerList, '', '', '', ''] // make sure this list is at least 4 long.. players are added to the beginning
 
     var homeOccupation = new Array(16);
@@ -33,6 +34,7 @@ function Board(props) {
 
     // place the marbles
     props.marbleList.forEach(marble => {
+        // marble.color = marbleColors[parseInt(Math.floor(marble.mid / 4))] 
         // negative positions correspond to home
         if (marble.position < 0) {
             homeOccupation[-(marble.position + 1)] = marble

@@ -68,7 +68,8 @@ from app.api import socket
 from app.config import SECRET_KEY, JWT_ALGORITHM, ACCESS_TOKEN_EXPIRE_DAYS, \
     COOKIE_DOMAIN, COOKIE_EXPIRES
 
-from app.api.api_globals import playing_users, socket_connections  # playing users dictionary
+# playing users dictionary
+from app.api.api_globals import playing_users, socket_connections
 
 # define the authentication router that is imported in main
 router = APIRouter()
@@ -281,8 +282,8 @@ async def login_for_access_token(
         expires=COOKIE_EXPIRES,
         # domain='localtest.me',
         httponly=True,
-        secure=False,
-        # samesite='none'
+        secure=True,
+        samesite='none'
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -317,6 +318,7 @@ async def read_tokens(token: str = Depends(oauth2_scheme)):
     """
     return {'token': token}
 
+
 @router.get('/clear_socket')
 async def clear_socket(current_user: models.user.User = Depends(get_current_user)):
     """Forcibly disconnect a socket session to allow the user to reconnect
@@ -327,6 +329,6 @@ async def clear_socket(current_user: models.user.User = Depends(get_current_user
     """
     sid = socket_connections.get(int(current_user.uid))
     if sid:
-        logger.info(f'Remove socket connection by {current_user.username} [{current_user.uid}]')
-        await socket.sio.disconnect(sid) 
-    
+        logger.info(
+            f'Remove socket connection by {current_user.username} [{current_user.uid}]')
+        await socket.sio.disconnect(sid)

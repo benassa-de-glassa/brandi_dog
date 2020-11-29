@@ -9,8 +9,8 @@ from app.api import games, chats, authentication
 
 # wildcard "*" does not work with credentials so we have to put in the frontend origins??
 origins = [
-    'http://localhost:3000',
-    # "*",
+    # 'http://localhost:3000',
+    "https://boomerdog.herokuapp.com/",
 ]
 
 app = FastAPI(

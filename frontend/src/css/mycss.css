@@ -1,0 +1,112 @@
+body {
+    background-color: #f8fcff;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    /* background-color: rgb(95, 2, 2); */
+    background-color: var(--topbar-background-color);
+    box-shadow: 0px 11px 50px -5px grey;
+    border-bottom: 3px solid grey;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+#title {
+    font-size: 36px;
+    margin: 6px 0;
+}
+
+.error {
+    color: red;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.form-container {
+    background-color: white;
+    padding: 20px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    margin-top: 0px;
+}
+
+.subtitle {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.wrap-text{
+    display: flex;
+    word-wrap: break-word;
+}
+
+.component-title {
+    margin: 5px;
+}
+
+button {
+    font-weight: 450;
+    color:white;
+    background-color: slateblue;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 6px 20px;
+    border: 2px solid transparent;
+    border-radius: 3px;
+}
+
+button:hover:not(:disabled) {
+    border: 2px solid lightgrey;
+}
+
+button:disabled {
+    cursor: default;
+    background-color:rgba(105, 90, 205, 0.425);
+    color: lightgrey;
+}
+
+button.close {
+    width: 28px;
+    height: 28px;
+    z-index: 1500;
+    color: grey;
+    box-sizing: border-box;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 1px 0 #fff;
+    padding: 0;
+    border:0;
+    background: transparent;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    float: none;
+    display: inline-block
+}
+
+button.close:hover {
+    color: #000;
+    cursor: pointer;
+    background-color: lightgrey;
+}
+
+button.danger {
+    color: white;
+    background-color: darkred;
+}
+
+button.green {
+    color: white;
+    background-color: darkolivegreen
+}
+
+.white {
+    color: white;
+}

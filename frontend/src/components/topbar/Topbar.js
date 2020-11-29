@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react'
 
+import './topbar.css'
+
 import { Link, withRouter } from 'react-router-dom'
 
 function TopBar(props) {
@@ -11,9 +13,9 @@ function TopBar(props) {
                 />
             </svg>
             { !props.socketConnected && props.playerLoggedIn &&
-                <input type='button' className='top-bar-link ml-2 white' value='Try to reconnect'  onClick={props.sio_reconnect}/>
+                <input type='button' className='top-bar-link ml-2 white' value='Try to reconnect'  onClick={props.clearSocket}/>
             }
-            <span className='topbar'>
+            <span id='topbar'>
                 <Link
                     id='title'
                     className='top-bar-link ml-2 mr-2'

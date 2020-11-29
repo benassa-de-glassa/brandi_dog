@@ -10,6 +10,7 @@ class GameBase(BaseModel):
 
 
 class GamePublic(GameBase):
+    n_players: int
     game_state: int
     round_state: int
     round_turn: int
@@ -17,7 +18,6 @@ class GamePublic(GameBase):
     active_player_index: int
     players: Dict[str, User]
     player_list: List[User] # kind of redundant with players
-    # thilo branch
     host: User
     game_name: str
     top_card: Optional[Card]

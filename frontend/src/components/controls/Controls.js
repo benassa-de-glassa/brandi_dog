@@ -3,7 +3,7 @@ import React, { useState, Fragment } from 'react'
 import Hand from './Hand'
 import './controls.css'
 
-import { possibleActions } from '../../config'
+import { possibleActions } from '../../constants/game_config.js'
 
 const cards = Object.keys(possibleActions)
 
@@ -54,7 +54,6 @@ const roundStateText = [
 ]
 
 function Controls(props) {
-    var [error, setError] = useState('')
     var [aboutToFold, setAboutToFold] = useState(false)
 
     // var selectedCardString, 
@@ -71,11 +70,12 @@ function Controls(props) {
     const handleClick = event => {
         event.preventDefault()
         // successCallback, errorCallback
-        props.startGame(() => setError(''), setError)
+        props.startGame()
     }
 
     const swapClicked = event => {
         event.preventDefault()
+        props.switchSeats()
     }
 
     return (
@@ -85,11 +85,9 @@ function Controls(props) {
                 <span className='mb-1'>{roundStateText[props.roundState]}</span>
                 {props.players.length < 4 &&
                     <span>Waiting for players.</span>}
-                {props.gameState < 2 && props.players.length === 4 &&
+                {props.gameState < 2 && props.players.length === props.numberOfPlayers &&
                     <div>
-                        {error &&
-                            <p className='error'>{error}</p>
-                        }
+                        { props.switchingSeats && <p>Click on another player to change seats.</p> }
                         <button className='green my-1 mr-1' onClick={handleClick}>Start game</button>
                         <button className='elegant my-1' onClick={swapClicked}>Change seat</button>
                     </div>

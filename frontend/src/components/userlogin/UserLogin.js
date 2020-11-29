@@ -9,7 +9,8 @@ function UserLogin(props) {
         }
     )
     const handleChange = event => {
-        setState({ ...state, [event.target.name]: event.target.value })
+        // hide error, when the entries change
+        setState({ ...state, [event.target.name]: event.target.value, error: ''})
     }
 
     const handleSubmit = async event => {

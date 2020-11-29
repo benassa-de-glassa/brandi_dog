@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 
 import './chat.css'
-import { socket } from '../../socket'
+import { socket } from '../../api/socket'
 
 class Chat extends Component {
   constructor(props) {

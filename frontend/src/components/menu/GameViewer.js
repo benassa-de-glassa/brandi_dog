@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react'
 
-import { socket } from '../../socket'
-import { get, postData } from '../../paths'
+import { socket } from '../../api/socket'
+import { getFromBackend, postToBackend } from '../../api/fetch_backend'
 
-import { DEBUG } from '../../config'
 
 var GameViewer = function (props) {
-    // use hooks because cooler!?
     const [gameList, setGameList] = useState([])
     const [createGame, setCreateGame] = useState(false)
     const [input, setInput] = useState("")
+    const [boardSize, setBoardSize] = useState(4)
     const [selectedRow, setSelectRow] = useState()
     const [error, setError] = useState("")
 
@@ -17,9 +16,13 @@ var GameViewer = function (props) {
     const updateGameList = async function () {
         // this function is only called after pressing the update button
         // manually as the game list is updated using socket.io
-        const response = await get('games')
-        const responseJson = await response.json()
-        setGameList(responseJson)
+        let data = await getFromBackend('games')
+        if (data.code) {
+            // something did not work
+            console.warn(data.message)
+        } else {
+            setGameList(data)
+        }
     }
 
     // let react control the input
@@ -31,21 +34,27 @@ var GameViewer = function (props) {
     const handleCreateGameSubmit = async event => {
         event.preventDefault() // don't use the default submit
         var relURL = 'games'
-        if (DEBUG) { relURL += '?debug=true' } // adds 3 filler players
 
-        const response = await postData(relURL, input)
-        const responseJson = await response.json()
-        if (response.status === 200) {
-            props.joinGameSocket(responseJson.game_token)
+        const data = await postToBackend(relURL,
+            {
+                game_name: input,
+                n_players: parseInt(boardSize)
+            })
+        if (data.game_token) {
+            props.joinGameSocket(data.game_token)
             setCreateGame(false)
         } else {
-            setError(responseJson.detail)
+            setError(data.detail)
         }
+    }
+
+    const handleBoardSizeChange = async event => {
+        setBoardSize(event.target.value)
     }
 
     // like componendDidMount
     useEffect(() => {
-        updateGameList()
+        // updateGameList()
         socket.on('game-list', games => {
             setGameList(games)
         })
@@ -63,6 +72,7 @@ var GameViewer = function (props) {
                     <tr>
                         <th>Name</th>
                         <th>Host</th>
+                        <th>Size</th>
                         <th>Players</th>
                     </tr>
                 </thead>
@@ -72,12 +82,13 @@ var GameViewer = function (props) {
                             className={(index === selectedRow ? "selected-row " : "") + (game.game_id === props.joinedGame ? 'joined-row' : "")}>
                             <td>{game.game_name}</td>
                             <td>{game.host.username}</td>
+                            <td>{game.n_players}</td>
                             <td>
                                 { // reduce only works if game.players is not empty
                                     game.players && Object.values(game.players).map(
                                         player =>
                                             player.username === props.player.username
-                                                ? <strong>{player.username}</strong>
+                                                ? <strong key={player.username}>{player.username}</strong>
                                                 : player.username
                                     ).reduce((accu, elem) => {
                                         return accu === null ? [elem] : [...accu, ', ', elem]
@@ -103,14 +114,26 @@ var GameViewer = function (props) {
             </span>
             {
                 createGame &&
-                <form className='mt-1 mr-2' onSubmit={handleCreateGameSubmit}>
-                    <label className='mr-1'>
-                        Enter a name: </label>
-                    <input type='text' className='mr-1' value={input} onChange=
-                        {handleCreateGameInput} placeholder='Enter game name' />
+                <div id='player-create-container'>
+                    <p className='title'>Create game</p>
+                    <form id='form-player-create' className='mt-1 mr-2' onSubmit={handleCreateGameSubmit}>
+                        <span>
+                            <label className='create-game-label w-150 mr-1'>
+                                Enter a name </label>
+                            <input type='text' className='mr-1' value={input} onChange=
+                                {handleCreateGameInput} placeholder='Enter game name' />
+                        </span>
+                        <span>
+                            <span className='create-game-label w-150 mr-1'>Number of players</span>
+                            <input type='radio' id='4p' name='n-of-players' value={4} defaultChecked onChange={handleBoardSizeChange} />
+                            <label for='4p'>4</label>
+                            <input type='radio' id='6p' name='n-of-players' value={6} onChange={handleBoardSizeChange} />
+                            <label for='6p'>6</label><br />
+                        </span>
 
-                    <button type='submit'>Create Game</button>
-                </form>
+                        <button type='submit'>Create Game</button>
+                    </form>
+                </div>
             }
 
         </div>

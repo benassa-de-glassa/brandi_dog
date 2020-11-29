@@ -38,13 +38,11 @@ app.include_router(
     prefix='/v1'
 )
 
-# app.include_router(
-#     users.router,
-#     prefix='/v1'
-# )
 
 # without prefix for testing purposes
-app.include_router(authentication.router)
+app.include_router(
+    authentication.router,
+    prefix='/v1')
 
 # create socket.io app
 sio_app = socketio.ASGIApp(socketio_server=sio, other_asgi_app=app)

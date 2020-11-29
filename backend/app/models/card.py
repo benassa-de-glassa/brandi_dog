@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Union
+from typing import Union
 
 
 class CardBase(BaseModel):
@@ -10,4 +10,4 @@ class Card(CardBase):
     uid: int
     value: str
     color: str
-    actions: Union[int, str, List]
+    actions: Union[int, str, list]

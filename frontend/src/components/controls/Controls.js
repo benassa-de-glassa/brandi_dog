@@ -54,7 +54,6 @@ const roundStateText = [
 ]
 
 function Controls(props) {
-    var [error, setError] = useState('')
     var [aboutToFold, setAboutToFold] = useState(false)
 
     // var selectedCardString, 
@@ -88,9 +87,6 @@ function Controls(props) {
                     <span>Waiting for players.</span>}
                 {props.gameState < 2 && props.players.length === props.numberOfPlayers &&
                     <div>
-                        {error &&
-                            <p className='error'>{error}</p>
-                        }
                         { props.switchingSeats && <p>Click on another player to change seats.</p> }
                         <button className='green my-1 mr-1' onClick={handleClick}>Start game</button>
                         <button className='elegant my-1' onClick={swapClicked}>Change seat</button>

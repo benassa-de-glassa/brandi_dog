@@ -1,3 +1,3 @@
-export const API_URL = "http://localhost:8000/v1/"
+export const API_URL = "https://boomer-backend.herokuapp.com/v1/";
 
-export const SIO_URL = "http://localhost:8000"
+export const SIO_URL = "https://boomer-backend.herokuapp.com";

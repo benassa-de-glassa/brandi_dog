@@ -15,10 +15,10 @@ from app.game_logic.brandi import Brandi
 
 # models
 # from app.models.player import Player, PlayerPublic, PlayerPrivate
-from app.models.action import Action
+from app.models.action import Action, PossibleActions
 from app.models.card import Card, CardBase
 from app.models.game import GameToken, GamePublic, GamePrivate
-
+from app.models.marble import Marble
 # import the socket instance
 from app.api.socket import sio, socket_connections
 
@@ -412,6 +412,11 @@ async def perform_action(game_id: str, action: Action, user: User = Depends(get_
             status_code=HTTP_400_BAD_REQUEST, detail=res["note"])
         return
     return game.public_state()
+
+
+@router.get('/games/{game_id}/possible-actions', response_model=PossibleActions, tags=["game action"])
+async def possible_actions(game_id: str, card: Card, marble: Marble, user: User = Depends(get_current_user)):
+    pass
 
 
 # TODO:

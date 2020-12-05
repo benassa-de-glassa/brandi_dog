@@ -5,8 +5,8 @@ body {
 header {
     width: 100%;
     display: flex;
-    /* background-color: rgb(95, 2, 2); */
-    background-color: var(--topbar-background-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
     box-shadow: 0px 11px 50px -5px grey;
     border-bottom: 3px solid grey;
     margin-bottom: 10px;
@@ -53,7 +53,7 @@ header {
 button {
     font-weight: 450;
     color:white;
-    background-color: slateblue;
+    background-color: var(--primary-color);
     cursor: pointer;
     box-sizing: border-box;
     padding: 6px 20px;
@@ -67,7 +67,7 @@ button:hover:not(:disabled) {
 
 button:disabled {
     cursor: default;
-    background-color:rgba(105, 90, 205, 0.425);
+    background-color:var(--primary-disabled);
     color: lightgrey;
 }
 
@@ -99,12 +99,12 @@ button.close:hover {
 
 button.danger {
     color: white;
-    background-color: darkred;
+    background-color: var(--danger);
 }
 
 button.green {
     color: white;
-    background-color: darkolivegreen
+    background-color: var(--button-green)
 }
 
 .white {

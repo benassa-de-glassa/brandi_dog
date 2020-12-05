@@ -1,8 +1,9 @@
 import React from 'react'
+import { AvatarProps } from '../../models/avatar.model'
 
 import './avatar.css'
 
-export default function Avatar(props) {
+export default function Avatar(props: AvatarProps) {
     return (
         <div className={props.className}
             onClick={props.clickHandler}
@@ -11,7 +12,7 @@ export default function Avatar(props) {
                 id={props.isMe ? 'me' : ''}
                 className='player-name'
                 onClick={props.clickHandler}
-            >{props.isHost ? `! ${props.playername}` : props.playername}</p>
+            >{props.isHost ? `! ${props.playerName}` : props.playerName}</p>
             <img
                 alt='avatar'
                 className={props.isActive ? 'avatar active' : 'avatar'}

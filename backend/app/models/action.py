@@ -11,3 +11,7 @@ class Action(BaseModel):
     mid_2: Optional[int]
     pid_2: Optional[str]
     go_past_base: Optional[bool]
+
+
+class PossibleActions(BaseModel):
+    actions: List[Action]

@@ -49,6 +49,7 @@ import {
 import './css/App.css'
 import './css/mycss.css'
 import './css/default.css'
+import './css/default-theme.css'
 
 import TopBar from './components/topbar/Topbar'
 import Menu from './components/menu/Menu'

@@ -1,6 +1,5 @@
 from typing import Dict, List
 
-from app.game_logic.marble import Marble
 
 NODES_BETWEEN_PLAYERS = 16
 
@@ -38,11 +37,14 @@ class Node(object):
         return self._curr
 
 
+from app.game_logic.marble import Marble  # nopep8
+
+
 class GameNode(Node):
     def __init__(self, position: int):
         super().__init__()
         self._position: int = position
-        self._marble = None
+        self._marble: Marble = None
 
     @property
     def position(self):

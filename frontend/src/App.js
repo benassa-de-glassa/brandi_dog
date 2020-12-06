@@ -126,7 +126,7 @@ class App extends Component {
         await getFromBackend('clear_socket')
         // socket.close()
         socket.close()
-        setTimeout(function () {socket.open()}, 1000) // need a delay to not crash backend!
+        setTimeout(function () { socket.open() }, 1000) // need a delay to not crash backend!
     }
 
     toggleMenu() {
@@ -252,8 +252,6 @@ class App extends Component {
         })
     }
 
-
-
     render() {
         return (
             <Router>
@@ -271,7 +269,6 @@ class App extends Component {
                     {this.state.errorMessage &&
                         <span class='error'>{this.state.errorMessage}</span>
                     }
-                    <span>environment variables: {process.env.REACT_APP_API_URL}, {process.env.NODE_ENV}</span>
                     <Switch>
                         <Route path='/' exact render={() =>
                             <div id='main-page'>

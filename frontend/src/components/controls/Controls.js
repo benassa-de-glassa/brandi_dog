@@ -85,7 +85,7 @@ function Controls(props) {
                 <span className='mb-1'>{roundStateText[props.roundState]}</span>
                 {props.players.length < 4 &&
                     <span>Waiting for players.</span>}
-                {props.gameState < 2 && props.players.length === props.numberOfPlayers &&
+                {props.gameState < 2 &&
                     <div>
                         { props.switchingSeats && <p>Click on another player to change seats.</p> }
                         <button className='green my-1 mr-1' onClick={handleClick}>Start game</button>

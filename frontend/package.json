@@ -17,7 +17,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy:frontend:heroku": "heroku repo:reset --remote heroku-frontend && cd .. && git subtree push --prefix frontend heroku-frontend main",
+    "deploy:backend:heroku": "heroku repo:reset --remote heroku-backend && cd .. && git subtree push --prefix backend heroku-backend main"
   },
   "eslintConfig": {
     "extends": "react-app"

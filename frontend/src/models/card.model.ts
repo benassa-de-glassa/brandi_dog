@@ -27,15 +27,17 @@ export enum CardKey {
   Ja = "Ja",
   Q = "Q",
   K = "K",
+  Jo = "Jo",
 }
 
 export interface Card {
   value: keyof typeof CardKey;
   color: keyof typeof Colors;
+  uid?: number;
 }
 
 export interface CardProps extends Card {
-  clickHandler?: () => {};
   selected?: boolean;
   highlighted?: boolean;
+  clickHandler?: () => {};
 }

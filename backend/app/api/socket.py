@@ -7,7 +7,7 @@ Only authenticated users are granted access to the socket, so in order to
 connect to the socket a valid bearer token cookie has to be present. This is
 asserted by the authenticate_user function. 
 """
-
+import os
 from http import cookies
 
 from loguru import logger
@@ -20,7 +20,10 @@ from fastapi import HTTPException
 from fastapi.security.utils import get_authorization_scheme_param
 
 # TODO security concerns, store secret key in environment variable
-from app.config import SECRET_KEY, JWT_ALGORITHM
+# from app.config import SECRET_KEY, JWT_ALGORITHM
+
+SECRET_KEY = os.environ['SECRET_KEY']
+JWT_ALGORITHM = os.environ['JWT_ALGORITHM']
 # ------------------------------------------------
 
 from app.database import database, crud

@@ -40,10 +40,10 @@ Routes
     using this route. 
 
 """
-
+import os
 from datetime import datetime, timedelta
-from loguru import logger
 
+from loguru import logger
 import jwt  # json web tokens
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -65,10 +65,20 @@ from app.api.password_context import verify_password
 from app.api import socket
 
 # TODO: security concerns regarding secret key, store it in environment variable
-from app.config import SECRET_KEY, JWT_ALGORITHM, ACCESS_TOKEN_EXPIRE_DAYS, \
-    COOKIE_DOMAIN, COOKIE_EXPIRES
+# from app.config import SECRET_KEY, JWT_ALGORITHM, ACCESS_TOKEN_EXPIRE_DAYS, \
+#     COOKIE_DOMAIN, COOKIE_EXPIRES
+
+SECRET_KEY = os.environ['SECRET_KEY']
+JWT_ALGORITHM = os.environ['JWT_ALGORITHM']
+ACCESS_TOKEN_EXPIRE_DAYS = int(os.environ['ACCESS_TOKEN_EXPIRE_DAYS'])
+COOKIE_DOMAIN = os.environ['COOKIE_DOMAIN']
+COOKIE_EXPIRES = int(os.environ['COOKIE_EXPIRES'])
 
 from app.api.api_globals import playing_users, socket_connections  # playing users dictionary
+
+# read in environment variables
+
+
 
 # define the authentication router that is imported in main
 router = APIRouter()

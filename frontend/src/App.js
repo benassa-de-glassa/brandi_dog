@@ -57,7 +57,6 @@ import Game from './components/game/Game'
 import UserLogin from './components/userlogin/UserLogin'
 import About from './components/menu/About'
 
-// import { postData, API_URL } from './paths'
 import { socket } from './api/socket'
 import UserCreate from './components/userlogin/UserCreate';
 

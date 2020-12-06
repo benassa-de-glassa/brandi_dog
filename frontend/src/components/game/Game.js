@@ -182,6 +182,7 @@ class Game extends Component {
         if (response.code) {
             // something went wrong
             console.warn(`[${response.code}] ${response.message}`)
+            this.setState({errorMessage: response.message})
         } else {
             this.setState({
                 cardSwapConfirmed: true,
@@ -250,7 +251,10 @@ class Game extends Component {
             console.warn(`[${response.code}] ${response.message}`)
         } else {
             success()
-            this.setState({ tooltipActions: [] })
+            this.setState({ 
+                tooltipActions: [],
+                errorMessage: '',
+            })
 
             // don't deselect the selected card if there are still sevens to be played
             if (this.state.remainingStepsOf7 === -1) {
@@ -280,10 +284,13 @@ class Game extends Component {
         if (response.code) {
             this.setState({ errorMessage: response.message })
             console.warn(`[${response.code}] ${response.message}`)
+        } else {
+            this.setState({ errorMessage: '' })
         }
     }
 
     marbleClicked(marble, homeClicked = false) {
+        // check if a card is selected
         if (this.state.selectedCardIndex !== null) {
             let selectedCard = this.state.cards[this.state.selectedCardIndex];
 
@@ -371,6 +378,8 @@ class Game extends Component {
             // something went wrong
             this.setState({ errorMessage: response.message })
             console.warn(`[${response.code}] ${response.message}`)
+        } else {
+            this.setState({ errorMessage: '' })
         }
     }
 

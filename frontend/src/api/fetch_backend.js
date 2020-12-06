@@ -19,7 +19,7 @@ export async function getFromBackend(relURL) {
     if (!response.ok) {
         return {
             code: response.status,
-            message: typeof data.detail === String ? data.detail : 'Invalid request'
+            message: typeof data.detail === 'string' ? data.detail : 'Invalid request'
         }
     }
 
@@ -41,7 +41,7 @@ export async function postToBackend(relURL = '', body = {}) {
     if (!response.ok) {
         return {
             code: response.status,
-            message: typeof data.detail === String ? data.detail : 'Invalid request'
+            message: typeof data.detail === 'string' ? data.detail : 'Invalid request'
         }
     }
     return data || {}

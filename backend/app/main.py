@@ -10,8 +10,8 @@ from app.api import games, chats, authentication
 # wildcard "*" does not work with credentials so we have to put in the frontend origins??
 origins = [
     'http://localhost:3000',
-    'http://boomerdog.herokuapp.com'
-    'https://boomerdog.herokuapp.com'
+    'http://boomerdog.herokuapp.com',
+    'https://boomerdog.herokuapp.com',
     # "*",
 ]
 

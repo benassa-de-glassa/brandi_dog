@@ -271,6 +271,7 @@ class App extends Component {
                     {this.state.errorMessage &&
                         <span class='error'>{this.state.errorMessage}</span>
                     }
+                    {process.env.TEST_API_URL}
                     <Switch>
                         <Route path='/' exact render={() =>
                             <div id='main-page'>

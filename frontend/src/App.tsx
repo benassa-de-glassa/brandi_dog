@@ -39,275 +39,291 @@ leaveGame
     emit game leave request to backend socket server
 */
 
-import React, { Component } from 'react';
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch
-} from 'react-router-dom'
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import './css/App.css'
-import './css/mycss.css'
-import './css/default.css'
-import './css/default-theme.css'
+import "./css/App.css";
+import "./css/mycss.css";
+import "./css/default.css";
+import "./css/default-theme.css";
 
-import TopBar from './components/topbar/Topbar'
-import Menu from './components/menu/Menu'
-import Game from './components/game/Game'
-import UserLogin from './components/userlogin/UserLogin'
-import About from './components/menu/About'
+import TopBar from "./components/topbar/Topbar";
+import Menu from "./components/menu/Menu";
+import Game from "./components/game/Game";
+import UserLogin from "./components/userlogin/UserLogin";
+import About from "./components/menu/About";
 
 // import { postData, API_URL } from './paths'
-import { socket } from './api/socket'
-import UserCreate from './components/userlogin/UserCreate';
+import { socket } from "./api/socket";
+import UserCreate from "./components/userlogin/UserCreate";
 
-import { userLogin } from './api/userlogin'
-import { getFromBackend, postToBackend } from './api/fetch_backend'
+import { userLogin } from "./api/userlogin";
+import { getFromBackend, postToBackend } from "./api/fetch_backend";
+import { MainAppProps, MainAppState } from "./models/app.model";
+import { Data } from "./models/response-data.model";
 
-class App extends Component {
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            socketConnected: false, // connection to socket.io of the backend
-            playerLoggedIn: false,  // player has signed in with a name
-            player: {
-                username: "",
-                uid: null
-            },
-            gameID: null,           // currently joined game
-            gameToken: '',          // JSON web token encoding current game
+class App extends Component<MainAppProps, MainAppState> {
+  constructor(props: MainAppProps) {
+    super(props);
+    this.state = {
+      socketConnected: false, // connection to socket.io of the backend
+      playerLoggedIn: false, // player has signed in with a name
+      player: {
+        username: "",
+        uid: null,
+      },
+      gameID: null, // currently joined game
+      gameToken: "", // JSON web token encoding current game
 
-            errorMessage: '',
-            showMenu: true          // top menu containing global chat and lobbies
-        }
+      errorMessage: "",
+      showMenu: true, // top menu containing global chat and lobbies
+    };
 
-        this.clearSocket = this.clearSocket.bind(this)
-        this.toggleMenu = this.toggleMenu.bind(this)
-        this.getPlayer = this.getPlayer.bind(this)
-        this.login = this.login.bind(this)
-        this.logout = this.logout.bind(this)
-        this.joinGame = this.joinGame.bind(this)
-        this.joinGameSocket = this.joinGameSocket.bind(this)
-        this.leaveGame = this.leaveGame.bind(this)
-    }
+    this.clearSocket = this.clearSocket.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this);
+    this.getPlayer = this.getPlayer.bind(this);
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+    this.joinGame = this.joinGame.bind(this);
+    this.joinGameSocket = this.joinGameSocket.bind(this);
+    this.leaveGame = this.leaveGame.bind(this);
+  }
 
-    componentDidMount() {
-        /* On mount, try to obtain player credentials and start socketio
+  componentDidMount() {
+    /* On mount, try to obtain player credentials and start socketio
 
         getPlayer() is only successful if an access token already exists from
         a previous login. */
 
-        this.getPlayer()
-        this.startSocketIO()
-    }
+    this.getPlayer();
+    this.startSocketIO();
+  }
 
-    startSocketIO() {
-        /* Connect to the backend socket.io instance
+  startSocketIO() {
+    /* Connect to the backend socket.io instance
         
         The socket connection state is indicated by the green or red circle in 
         the top left corner. */
 
-        socket.on('connect', () => {
-            console.debug('socket.io connection successful')
-            this.setState({ socketConnected: true })
-        })
-        socket.on('disconnect', () => {
-            console.debug('socket.io connection lost.');
-            this.setState({ socketConnected: false })
-        })
-        socket.on('error', (data: any) => {
-            console.error(data)
-            this.setState({ errorMessage: data.detail })
-        })
-    }
+    socket.on("connect", () => {
+      console.debug("socket.io connection successful");
+      this.setState({ socketConnected: true });
+    });
+    socket.on("disconnect", () => {
+      console.debug("socket.io connection lost.");
+      this.setState({ socketConnected: false });
+    });
+    socket.on("error", (data: any) => {
+      console.error(data);
+      this.setState({ errorMessage: data.detail });
+    });
+  }
 
-    async clearSocket() {
-        // if the connection is blocked force a reconnection
-        await getFromBackend('clear_socket')
-        // socket.close()
-        socket.close()
-        setTimeout(function () {socket.open()}, 1000) // need a delay to not crash backend!
-    }
+  async clearSocket() {
+    // if the connection is blocked force a reconnection
+    await getFromBackend("clear_socket");
+    // socket.close()
+    socket.close();
+    setTimeout(function () {
+      socket.open();
+    }, 1000); // need a delay to not crash backend!
+  }
 
-    toggleMenu() {
-        this.setState({
-            showMenu: !this.state.showMenu,
-            errorMessage: ''
-        }as any)
-    }
+  toggleMenu() {
+    this.setState({
+      showMenu: !this.state.showMenu,
+      errorMessage: "",
+    } as any);
+  }
 
-    async getPlayer() {
-        /* Try to get the player name and id from the backend 
+  async getPlayer() {
+    /* Try to get the player name and id from the backend 
         
         This only works if a valid authentication cookie is present in the 
         request. If it is successful, check if the player is currently in a
         game. If that is the case, join the game socket instance using the
         game_token that was received. */
 
-        const data = await getFromBackend('users/me')
-        if (data.code) {
-            console.log('Unable to get player data | ' + data.message)
-        } else {
-            // successfully obtained player data
-            socket.open()
-            this.setState({
-                playerLoggedIn: true,
-                player: {
-                    username: data.username,
-                    uid: data.uid
-                }
-            })
-            // check if the player is currently playing
-            if (data.current_game) {
-                this.joinGameSocket(data.game_token)
-                this.setState({ showMenu: false })
-            }
-        }
+    const data = await getFromBackend("users/me");
+    if (data.code) {
+      console.log("Unable to get player data | " + data.message);
+    } else {
+      // successfully obtained player data
+      socket.open();
+      this.setState({
+        playerLoggedIn: true,
+        player: {
+          username: data.username ?? "",
+          uid: data.uid,
+        },
+      });
+      // check if the player is currently playing
+      if (data.current_game && data.game_token != null) {
+        this.joinGameSocket(data.game_token);
+        this.setState({ showMenu: false });
+      }
     }
+  }
 
-    async createUser(username, password, successCallback, errorCallback) {
-        // creates a user in the backend but does not log in
-        const data = await postToBackend('create_user', {
-            username: username,
-            password: password
-        })
+  async createUser(
+    username: string,
+    password: string,
+    successCallback: () => void,
+    errorCallback: (message: string) => void
+  ) {
+    // creates a user in the backend but does not log in
+    const data = await postToBackend("create_user", {
+      username: username,
+      password: password,
+    });
 
-        if (data.code) {
-            // something went wrong
-            console.log(data.code + ' | ' + data.message)
-            errorCallback(data.message)
-        } else {
-            successCallback()
-        }
+    if (data.code) {
+      // something went wrong
+      console.log(data.code + " | " + data.message);
+      errorCallback(data.message ?? "");
+    } else {
+      successCallback();
     }
+  }
 
-    async login(username, password, errorCallback) {
-        /* Try to log user into backend
+  async login(
+    username: string,
+    password: string,
+    errorCallback: (message: string) => void
+  ) {
+    /* Try to log user into backend
         
         The player name and password are sent to API_URL/token. If the credentials
         are valid, an acces token is issued by the backend.
         */
-        const data = await userLogin(username, password)
+    const data = await userLogin(username, password);
 
-        if (data.code) {
-            // something went wrong
-            console.log(data.message)
-            errorCallback(data.message)
-        } else {
-            this.getPlayer()
-        }
+    if (data.code) {
+      // something went wrong
+      console.log(data.message);
+      errorCallback(data.message ?? "");
+    } else {
+      this.getPlayer();
     }
+  }
 
-    async logout() {
-        socket.close()
+  async logout() {
+    socket.close();
 
-        const data = await getFromBackend('logout')
+    const data = await getFromBackend("logout");
 
-        if (data.code) {
-            console.warn('Unable to logout | ' + data.message)
-        } else {
-            this.setState({
-                playerLoggedIn: false,
-                player: { name: "", uid: null },
-                gameID: null
-            })
-        }
+    if (data.code) {
+      console.warn("Unable to logout | " + data.message);
+    } else {
+      this.setState({
+        playerLoggedIn: false,
+        player: { username: "", uid: null },
+        gameID: null,
+      });
     }
+  }
 
-    async joinGame(gameID) {
-        const data = await postToBackend(`games/${gameID}/join`, this.state.player)
+  async joinGame(gameID: string) {
+    const data = await postToBackend(`games/${gameID}/join`, this.state.player);
 
-        if (data.code) {
-            console.warn(`Unable to join game [${data.message}]`)
-        } else {
-            this.joinGameSocket(data.game_token)
-        }
+    if (data.code) {
+      console.warn(`Unable to join game [${data.message}]`);
+    } else {
+      if (data.game_token != null) {
+        this.joinGameSocket(data.game_token);
+      }
     }
+  }
 
-    async joinGameSocket(game_token) {
-        // joining the game is only completed once the game socket has been joined
-        socket.emit('join_game_socket', {
-            player: this.state.player,
-            game_token: game_token
-        })
-        socket.on('join_game_success', data => {
-            this.setState({
-                gameID: data.game_id
-            })
-        })
-        socket.on('game_started', () => {
-            this.setState({ showMenu: false })
-        })
-    }
+  async joinGameSocket(game_token: string) {
+    // joining the game is only completed once the game socket has been joined
+    socket.emit("join_game_socket", {
+      player: this.state.player,
+      game_token: game_token,
+    });
+    socket.on("join_game_success", (data: Data) => {
+      this.setState({
+        gameID: data.game_id ?? "",
+      });
+    });
+    socket.on("game_started", () => {
+      this.setState({ showMenu: false });
+    });
+  }
 
-    async leaveGame() {
-        socket.emit('leave_game',
-            {
-                game_id: this.state.gameID,
-                player_id: this.state.player.uid
-            }
-        )
-        socket.on('leave_game_success', () => {
-            this.setState({ gameID: null })
-        })
-    }
+  async leaveGame() {
+    socket.emit("leave_game", {
+      game_id: this.state.gameID,
+      player_id: this.state.player.uid,
+    });
+    socket.on("leave_game_success", () => {
+      this.setState({ gameID: null });
+    });
+  }
 
-
-
-    render() {
-        return (
-            <Router>
-                <div className="App">
-                    <TopBar
-                        socketConnected={this.state.socketConnected}
-                        playerLoggedIn={this.state.playerLoggedIn}
-                        player={this.state.player}
-                        login={this.login}
-                        logout={this.logout}
-                        clearSocket={this.clearSocket}
-                        showMenu={this.state.showMenu}
-                        toggleMenu={this.toggleMenu}
+  render() {
+    return (
+      <Router>
+        <div className="App">
+          <TopBar
+            socketConnected={this.state.socketConnected}
+            playerLoggedIn={this.state.playerLoggedIn}
+            player={this.state.player}
+            logout={this.logout}
+            clearSocket={this.clearSocket}
+            showMenu={this.state.showMenu}
+            toggleMenu={this.toggleMenu}
+          />
+          {this.state.errorMessage && (
+            <span className="error">{this.state.errorMessage}</span>
+          )}
+          <Switch>
+            <Route
+              path="/"
+              exact
+              render={() => (
+                <div id="main-page">
+                  {this.state.showMenu && (
+                    <Menu
+                      playerLoggedIn={this.state.playerLoggedIn}
+                      player={this.state.player}
+                      joinGame={this.joinGame}
+                      joinedGame={this.state.gameID}
+                      joinGameSocket={this.joinGameSocket}
+                      leaveGame={this.leaveGame}
+                      closeMenu={() => this.setState({ showMenu: false })}
                     />
-                    {this.state.errorMessage &&
-                        <span class='error'>{this.state.errorMessage}</span>
-                    }
-                    <Switch>
-                        <Route path='/' exact render={() =>
-                            <div id='main-page'>
-                                {
-                                    this.state.showMenu &&
-                                    <Menu
-                                        playerLoggedIn={this.state.playerLoggedIn}
-                                        player={this.state.player}
-                                        joinGame={this.joinGame}
-                                        joinedGame={this.state.gameID}
-                                        joinGameSocket={this.joinGameSocket}
-                                        leaveGame={this.leaveGame}
-                                        closeMenu={() => this.setState({ showMenu: false })}
-                                    />
-                                } {
-                                    this.state.playerLoggedIn && this.state.gameID !== null &&
-                                    <Game player={this.state.player} gameID={this.state.gameID} />
-                                }
-                            </div>
-                        } />
-                        <Route path='/users/login' exact render={() =>
-                            <UserLogin
-                                playerLoggedIn={this.state.playerLoggedIn}
-                                login={this.login}
-                            />
-                        } />
-                        <Route path='/users/create' exact component={() =>
-                            <UserCreate
-                                createUser={this.createUser}
-                            />
-                        } />
-                        <Route path='/about' exact render={() => <About />} />
-                    </Switch>
+                  )}{" "}
+                  {this.state.playerLoggedIn && this.state.gameID !== null && (
+                    <Game
+                      player={this.state.player}
+                      gameID={this.state.gameID}
+                    />
+                  )}
                 </div>
-            </Router>
-        )
-    };
+              )}
+            />
+            <Route
+              path="/users/login"
+              exact
+              render={() => (
+                <UserLogin
+                  playerLoggedIn={this.state.playerLoggedIn}
+                  login={this.login}
+                />
+              )}
+            />
+            <Route
+              path="/users/create"
+              exact
+              component={() => <UserCreate createUser={this.createUser} />}
+            />
+            <Route path="/about" exact render={() => <About />} />
+          </Switch>
+        </div>
+      </Router>
+    );
+  }
 }
 
 export default App;

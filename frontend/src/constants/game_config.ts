@@ -3,7 +3,7 @@ import { CardKey } from "../models/card.model";
 // export const DEBUG = true
 export const DEBUG = false;
 
-export const possibleActions: { [key in CardKey]: (number | string)[] } = {
+export const possibleActions: { [key in CardKey]?: (number | string)[] } = {
   A: [0, 1, 11],
   "2": [2],
   "3": [3],

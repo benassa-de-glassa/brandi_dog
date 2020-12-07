@@ -7,7 +7,7 @@ export interface UserLoginProps {
   ) => void;
 }
 
-export interface UserCreateProps extends UserLoginProps {
+export interface UserCreateProps {
   createUser: (
     username: string,
     password: string,

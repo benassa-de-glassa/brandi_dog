@@ -1,16 +1,9 @@
 import React from 'react'
+import { CardProps, colorToUnicode } from '../../models/card.model'
 
 import './card.css'
 
-const color2unicode = {
-    // these are the unicode symbols
-    spades: '\u2660',
-    hearts: '\u2665',
-    diamonds: '\u2666',
-    clubs: '\u2663'
-}
-
-export default function Card(props) {
+export default function Card(props: CardProps) {
     let className = props.highlighted
         ? "card card-highlighted"
         : props.selected
@@ -26,7 +19,7 @@ export default function Card(props) {
             onClick={props.clickHandler}
         >
             <span className={`card-value card-${textColor}`}>{props.value}</span>
-            <span className={`card-color card-${textColor}`}>{color2unicode[props.color]}</span>
+            <span className={`card-color card-${textColor}`}>{colorToUnicode[props.color]}</span>
         </div>
     )
 }

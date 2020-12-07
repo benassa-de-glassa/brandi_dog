@@ -1,5 +1,5 @@
-import { API_URL } from "../constants/constants.js";
-import { handleError } from "./fetch_backend.js";
+import { API_URL } from "../constants/constants";
+import { handleError } from "./fetch_backend";
 
 export async function userLogin(username: string, password: string) {
   const body = new URLSearchParams({

@@ -61,12 +61,12 @@ import About from './components/menu/About'
 import { socket } from './api/socket'
 import UserCreate from './components/userlogin/UserCreate';
 
-import { userLogin } from './api/userlogin.js'
+import { userLogin } from './api/userlogin'
 import { getFromBackend, postToBackend } from './api/fetch_backend'
 
 class App extends Component {
-    constructor() {
-        super();
+    constructor(props: any) {
+        super(props);
         this.state = {
             socketConnected: false, // connection to socket.io of the backend
             playerLoggedIn: false,  // player has signed in with a name
@@ -115,7 +115,7 @@ class App extends Component {
             console.debug('socket.io connection lost.');
             this.setState({ socketConnected: false })
         })
-        socket.on('error', data => {
+        socket.on('error', (data: any) => {
             console.error(data)
             this.setState({ errorMessage: data.detail })
         })
@@ -133,7 +133,7 @@ class App extends Component {
         this.setState({
             showMenu: !this.state.showMenu,
             errorMessage: ''
-        })
+        }as any)
     }
 
     async getPlayer() {

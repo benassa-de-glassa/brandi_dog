@@ -2,7 +2,7 @@ import React, { useState, Fragment } from "react";
 
 import "./controls.css";
 
-import { possibleActions } from "../../constants/game_config.js";
+import { possibleActions } from "../../constants/game_config";
 import { ControlProps } from "../../models/control.model";
 import { Card } from "../../models/card.model";
 import Hand from "./Hand";

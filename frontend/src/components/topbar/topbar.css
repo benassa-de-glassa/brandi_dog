@@ -1,24 +1,42 @@
+
+
 #topbar {
     min-width: 60%;
-    display: flex;
-    text-align: left;
-    align-items: center;
-    margin: 10px auto;
     max-width: 1200px;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 2em;
+}
+
+#navbar {
+    margin-inline-start: auto;
 }
 
 .top-bar-link {
     display: inline-block;
-    font-size: large;
+    font-size: calc(16px + 0.3vw);
     font-weight: 700;
-    font-family: inherit;
-    color: inherit;
-    background: inherit;
-    border: 0;
-    padding: 10px 10px;
+    padding: 0.5em 1em;
     cursor: pointer;
     text-decoration: none;
     border-radius: 5px;
+}
+
+#hamburger-button {
+    display: none;
+}
+
+/* hide the links if the viewports width is too small */
+@media (max-width: 768px){
+    #navbar .top-bar-link {
+        display: none;
+    }
+
+    #hamburger-button {
+        display: inline-block;
+    }
 }
 
 .top-bar-link:hover {

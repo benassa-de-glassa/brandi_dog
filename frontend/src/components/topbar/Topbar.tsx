@@ -5,30 +5,14 @@ import "./topbar.css";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { TopBarProps } from "../../models/topbar.model";
 
+import { ConnectionIndicator } from "./ConnectionIndicator";
+
 const TopBar: React.FunctionComponent<TopBarProps & RouteComponentProps> = (
   props: TopBarProps
 ) => {
   return (
     <header>
-      <svg
-        className="ml-2"
-        height="20"
-        width="20"
-        name={
-          props.socketConnected
-            ? "socket connection established"
-            : "socket connection failed"
-        }
-      >
-        <circle
-          cx="10"
-          cy="10"
-          r="10"
-          stroke="black"
-          strokeWidth="2"
-          fill={props.socketConnected ? "green" : "red"}
-        />
-      </svg>
+      <ConnectionIndicator socketConnected={props.socketConnected} />
       {!props.socketConnected && props.playerLoggedIn && (
         <input
           type="button"
@@ -37,52 +21,53 @@ const TopBar: React.FunctionComponent<TopBarProps & RouteComponentProps> = (
           onClick={props.clearSocket}
         />
       )}
-      <span id="topbar">
+      <div id="topbar">
         <Link id="title" className="top-bar-link ml-2 mr-2" to="/">
           Boomer Dog{"\u2122"}
         </Link>
-
-        <Link className="top-bar-link ml-2" to="/about">
-          About
-        </Link>
-
-        {props.location.pathname === "/" ? (
-          <input
-            type="button"
-            className="top-bar-link ml-2 mr-2"
-            value={props.showMenu ? "Hide Menu" : "Menu"}
-            onClick={props.toggleMenu}
-          />
-        ) : (
-          <Link className="top-bar-link ml-2" to="/">
-            Home
+        <div id="navbar">
+          <Link className="top-bar-link ml-2" to="/about">
+            About
           </Link>
-        )}
-
-        {props.playerLoggedIn ? (
-          <span className="ml-auto mr-2">
-            Playing as{" "}
-            <span className="bold">
-              {props.player.username} (#{props.player.uid})
-            </span>
+          {props.location.pathname === "/" ? (
             <input
               type="button"
-              className="top-bar-link ml-2 mr-2 mt-1 mb-1"
-              value="Logout"
-              onClick={props.logout}
+              className="top-bar-link ml-2 mr-2"
+              value={props.showMenu ? "Hide Menu" : "Menu"}
+              onClick={props.toggleMenu}
             />
-          </span>
-        ) : (
-          <Fragment>
-            <Link className="top-bar-link mr-2 ml-auto" to="/users/login">
-              Login
+          ) : (
+            <Link className="top-bar-link ml-2" to="/">
+              Home
             </Link>
-            <Link className="top-bar-link mr-2" to="/users/create">
-              Create User
-            </Link>
-          </Fragment>
-        )}
-      </span>
+          )}
+
+          {props.playerLoggedIn ? (
+            <span className="ml-auto mr-2">
+              Playing as{" "}
+              <span className="bold">
+                {props.player.username} (#{props.player.uid})
+              </span>
+              <input
+                type="button"
+                className="top-bar-link ml-2 mr-2 mt-1 mb-1"
+                value="Logout"
+                onClick={props.logout}
+              />
+            </span>
+          ) : (
+            <Fragment>
+              <Link className="top-bar-link mr-2 ml-auto" to="/users/login">
+                Login
+              </Link>
+              <Link className="top-bar-link mr-2" to="/users/create">
+                Create User
+              </Link>
+            </Fragment>
+          )}
+        </div>
+      <button id="hamburger-button">hello</button>
+      </div>
     </header>
   );
 };

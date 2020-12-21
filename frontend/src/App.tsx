@@ -42,11 +42,6 @@ leaveGame
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import "./css/App.css";
-import "./css/mycss.css";
-import "./css/default.css";
-import "./css/default-theme.css";
-
 import TopBar from "./components/topbar/Topbar";
 import Menu from "./components/menu/Menu";
 import Game from "./components/game/Game";
@@ -235,11 +230,11 @@ class App extends Component<MainAppProps, MainAppState> {
     }
   }
 
-  async joinGameSocket(game_token: string) {
+  async joinGameSocket(gameToken: string) {
     // joining the game is only completed once the game socket has been joined
     socket.emit("join_game_socket", {
       player: this.state.player,
-      game_token: game_token,
+      game_token: gameToken,
     });
     socket.on("join_game_success", (data: Data) => {
       this.setState({

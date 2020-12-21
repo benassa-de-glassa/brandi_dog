@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import { UserLoginProps } from "../../models/user.model";
 
 function UserLogin(props: UserLoginProps) {
@@ -31,19 +31,18 @@ function UserLogin(props: UserLoginProps) {
   };
 
   return (
-    <div className="form-container">
-      {props.playerLoggedIn ? (
-        <p>Login successful.</p>
-      ) : (
-        <Fragment>
-          <p className="error">{state.error}</p>
-          <form className="ml-auto mr-2" onSubmit={handleSubmit}>
-            <label className="mr-1">Log in: </label>
+    <div className="container user-container">
+      <div className="form-container">
+        {state.error && <div className="error"> {state.error}</div>}
+        {props.playerLoggedIn ? (
+          <div className="success">Login successful.</div>
+        ) : (
+          <form className="user-form" onSubmit={handleSubmit}>
+            <label>Log in: </label>
             <input
               name="username"
               title="USERNAME"
               type="text"
-              className="mr-1"
               value={state.username}
               onChange={handleChange}
               placeholder="Username"
@@ -52,15 +51,14 @@ function UserLogin(props: UserLoginProps) {
               name="password"
               title="PASSWORD"
               type="password"
-              className="mr-1"
               value={state.password}
               onChange={handleChange}
               placeholder="Password"
             />
-            <input type="submit" className="top-bar-link" value="Submit" />
+            <input type="submit" className="btn" value="Submit" />
           </form>
-        </Fragment>
-      )}
+        )}
+      </div>
     </div>
   );
 }

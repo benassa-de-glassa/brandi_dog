@@ -1,24 +1,22 @@
 import React from 'react'
 
+import { MenuProps } from '../../models/menu.model'
+
 import GameViewer from './GameViewer'
 import GlobalChat from './GlobalChat'
-import './menu.css'
 
-
-export default function Menu(props) {
+export default function Menu(props: MenuProps) {
     return (
-        <div className='menu-container'>
-            <p className='title ml-1'>Menu</p>
+        <div id="menu-container" className='container'>
+            <h3>Menu</h3>
             <button
-                id="close-tooltip"
-                type="button"
                 className='close'
                 aria-label="Close"
                 onClick={props.closeMenu}
             >
                 <span aria-hidden="true">&times;</span>
             </button>
-            <div id='menu-flex-container'>
+            <div id='menu-content'>
                 <GameViewer
                     playerLoggedIn={props.playerLoggedIn}
                     player={props.player}

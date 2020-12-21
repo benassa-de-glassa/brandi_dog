@@ -1,6 +1,4 @@
-import React, { Fragment } from "react";
-
-import "./topbar.css";
+import React, { useState } from "react";
 
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { TopBarProps } from "../../models/topbar.model";
@@ -10,64 +8,71 @@ import { ConnectionIndicator } from "./ConnectionIndicator";
 const TopBar: React.FunctionComponent<TopBarProps & RouteComponentProps> = (
   props: TopBarProps
 ) => {
+  let [collapseNav, setCollapseNav] = useState(true);
+
   return (
     <header>
-      <ConnectionIndicator socketConnected={props.socketConnected} />
-      {!props.socketConnected && props.playerLoggedIn && (
-        <input
-          type="button"
-          className="top-bar-link ml-2 white"
-          value="Try to reconnect"
-          onClick={props.clearSocket}
-        />
-      )}
       <div id="topbar">
-        <Link id="title" className="top-bar-link ml-2 mr-2" to="/">
-          Boomer Dog{"\u2122"}
-        </Link>
-        <div id="navbar">
-          <Link className="top-bar-link ml-2" to="/about">
-            About
+        <span>
+          <ConnectionIndicator socketConnected={props.socketConnected} />
+          <Link id="title" className="nav-btn" to="/">
+            Boomer Dog{"\u2122"}
           </Link>
-          {props.location.pathname === "/" ? (
-            <input
-              type="button"
-              className="top-bar-link ml-2 mr-2"
-              value={props.showMenu ? "Hide Menu" : "Menu"}
-              onClick={props.toggleMenu}
-            />
-          ) : (
-            <Link className="top-bar-link ml-2" to="/">
-              Home
-            </Link>
-          )}
+        </span>
 
+        <nav id="nav-menu" className={collapseNav ? "" : "open"}>
+          <span className="subnav">
+            {props.location.pathname === "/" ? (
+              <button className="nav-btn" onClick={props.toggleMenu}>
+                Menu
+              </button>
+            ) : (
+              <Link className="nav-btn" to="/">
+                Home
+              </Link>
+            )}
+
+            <Link className="nav-btn" to="/about">
+              About
+            </Link>
+          </span>
           {props.playerLoggedIn ? (
-            <span className="ml-auto mr-2">
-              Playing as{" "}
-              <span className="bold">
-                {props.player.username} (#{props.player.uid})
-              </span>
-              <input
-                type="button"
-                className="top-bar-link ml-2 mr-2 mt-1 mb-1"
-                value="Logout"
-                onClick={props.logout}
-              />
+            <span id="player-logout" className="subnav">
+              <button id="player-btn" className="nav-btn">
+                <img src="/player-icon.svg" id="player-icon" alt="p-icon" />
+                {props.player.username}
+              </button>
+              <button className="nav-btn" onClick={props.logout}>
+                Logout
+              </button>
             </span>
           ) : (
-            <Fragment>
-              <Link className="top-bar-link mr-2 ml-auto" to="/users/login">
+            <span id="login-signup" className="subnav">
+              <Link className="nav-btn" to="/users/login">
                 Login
               </Link>
-              <Link className="top-bar-link mr-2" to="/users/create">
-                Create User
+              <Link className="nav-btn" to="/users/create">
+                Create user
               </Link>
-            </Fragment>
+            </span>
           )}
-        </div>
-      <button id="hamburger-button">hello</button>
+        </nav>
+        <img
+          src="/hamburger.svg"
+          className="menu-btn"
+          id="open-menu"
+          alt="menu"
+          onClick={() => setCollapseNav(!collapseNav)}
+        />
       </div>
+      {!props.socketConnected && props.playerLoggedIn && (
+        <div id="connection-lost">
+          Connection lost...{" "}
+          <button id="reconnect-btn" onClick={props.clearSocket}>
+            Try to reconnect
+          </button>
+        </div>
+      )}
     </header>
   );
 };

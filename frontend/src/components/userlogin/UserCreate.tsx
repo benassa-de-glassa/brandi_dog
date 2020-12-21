@@ -1,6 +1,5 @@
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 
-import { Link } from "react-router-dom";
 import { UserCreateProps, UserCreateState } from "../../models/user.model";
 
 function UserCreate(props: UserCreateProps) {
@@ -36,41 +35,38 @@ function UserCreate(props: UserCreateProps) {
   };
 
   return (
-    <div className="form-container">
-      {state.success ? (
-        <Fragment>
-          <p>User creation successful. You can log in now.</p>
-          <Link className="top-bar-link" to="/users/login">
-            Login
-          </Link>
-        </Fragment>
-      ) : (
-        <Fragment>
-          <p className={state.error ? "error" : ""}>{state.error}</p>
-          <form className="ml-auto mr-2" onSubmit={handleSubmit}>
-            <label className="mr-1">Create user account: </label>
-            <input
-              name="username"
-              // label='USERNAME'
-              type="text"
-              className="mr-1"
-              value={state.username}
-              onChange={handleChange}
-              placeholder="Username"
-            />
-            <input
-              name="password"
-              // label='PASSWORD'
-              type="password"
-              className="mr-1"
-              value={state.password}
-              onChange={handleChange}
-              placeholder="Password"
-            />
-            <input type="submit" className="top-bar-link" value="Create user" />
-          </form>
-        </Fragment>
-      )}
+    <div className="container user-container">
+      <div className="form-container">
+        {state.success ? (
+          <div className="success">
+            User creation successful. You can log in now.
+          </div>
+        ) : (
+          <div>
+            {state.error && <div className="error"> {state.error}</div>}
+            <form className="user-form" onSubmit={handleSubmit}>
+              <label>Create user account: </label>
+              <input
+                name="username"
+                // label='USERNAME'
+                type="text"
+                value={state.username}
+                onChange={handleChange}
+                placeholder="Username"
+              />
+              <input
+                name="password"
+                // label='PASSWORD'
+                type="password"
+                value={state.password}
+                onChange={handleChange}
+                placeholder="Password"
+              />
+              <input type="submit" className="btn" value="Create user" />
+            </form>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

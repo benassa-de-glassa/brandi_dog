@@ -1,0 +1,71 @@
+#menu-container {
+  button.close {
+    width: 28px;
+    height: 28px;
+    z-index: 1500;
+    color: grey;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 1px 0 #fff;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    display: block;
+  }
+
+  button.close:hover {
+    color: #000;
+    cursor: pointer;
+    background-color: lightgrey;
+  }
+
+  #menu-content {
+      min-height: 500px;
+      width: 100%;
+      display: flex; 
+      flex-flow: row wrap;
+  }
+
+  #game-viewer {
+      flex-grow: 1;
+      flex-basis: 40%;
+      min-width: 390px;
+  }
+
+  #global-chat-container {
+      height: 100%;
+      flex-grow: 1;
+      flex-basis: 40%;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+thead {
+    background-color: whitesmoke;
+}
+
+.selected-row {
+    background-color: lightgoldenrodyellow;
+}
+
+.joined-row {
+    background-color: lightskyblue;
+}
+
+#game-list-table tbody tr:hover:not(.joined-row){
+    background-color: lightgrey;
+}
+}

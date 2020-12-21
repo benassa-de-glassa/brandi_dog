@@ -6,7 +6,7 @@ export const ConnectionIndicator: FunctionComponent<{
   return (
     <svg
       className="ml-2"
-      height="20"
+      height="15"
       width="20"
       name={
         props.socketConnected
@@ -15,9 +15,9 @@ export const ConnectionIndicator: FunctionComponent<{
       }
     >
       <circle
-        cx="10"
-        cy="10"
-        r="10"
+        cx="7.5"
+        cy="7.5"
+        r="7.5"
         stroke="black"
         strokeWidth="2"
         fill={props.socketConnected ? "green" : "red"}

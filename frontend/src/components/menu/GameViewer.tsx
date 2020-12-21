@@ -20,7 +20,9 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
     if (data.code) {
       // something did not work
       console.warn(data.message);
+      setError(data.message);
     } else {
+      setError("");
       setGameList(data);
     }
   };
@@ -42,6 +44,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
     if (data.game_token) {
       props.joinGameSocket(data.game_token);
       setCreateGame(false);
+      setError("")
     } else {
       setError(data.detail);
     }
@@ -61,11 +64,8 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
 
   return (
     <div id="game-viewer">
-      <span className="subtitle mb-1">Game List</span>
-      <span className="mb-1">
-        Click on a game to join, or create a new game.
-      </span>
-      {error && <p className="error">{error}</p>}
+      <h3>Game List</h3>
+      <p>Click on a game to join, or create a new game.</p>
       <table id="game-list-table">
         <thead>
           <tr>
@@ -114,14 +114,17 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
           ))}
         </tbody>
       </table>
-      <span className="mt-1">
+      {error && <div className="error">{error}</div>}
+      <span className="button-row">
         <button
           className="btn"
-          onClick={() => selectedRow && props.joinGame(gameList[selectedRow].game_id)}
-          disabled={(
-            !props.playerLoggedIn ||
-            selectedRow === undefined ||
-            props.joinedGame) as boolean
+          onClick={() =>
+            selectedRow && props.joinGame(gameList[selectedRow].game_id)
+          }
+          disabled={
+            (!props.playerLoggedIn ||
+              selectedRow === undefined ||
+              props.joinedGame) as boolean
           }
         >
           Join

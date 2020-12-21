@@ -3,6 +3,7 @@
 @import "layout/topbar";
 @import "layout/users";
 @import "layout/menu";
+@import "layout/controls";
 
 body,
 html {
@@ -19,8 +20,9 @@ html {
       text-decoration: none;
   }
 
-  h1, h2, h3, h4, h5 {
+  h1, h2, h3, h4, h5, p {
     margin: 0;
+    margin-bottom: .4em;
   }
 
   .btn {

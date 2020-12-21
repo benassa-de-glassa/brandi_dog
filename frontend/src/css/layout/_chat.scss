@@ -1,0 +1,27 @@
+.chat-container {
+  display: flex;
+  flex-flow: column-reverse nowrap;
+  padding: 0.5em;
+
+  .msg-box {
+    display: flex;
+    flex-flow: column;
+    overflow-y: scroll;
+
+    .msg {
+      background-color: rgb(250, 220, 209);
+
+      &.user {
+        background-color: rgb(204, 222, 247);
+      }
+
+      &.msg-server {
+        background-color: rgb(252, 247, 227);
+      }
+    }
+
+    .msg-time {
+        font-size: .8em;
+    }
+  }
+}

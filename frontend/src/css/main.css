@@ -182,6 +182,10 @@ header #connection-lost {
   }
 }
 
+#menu-container {
+  min-width: calc(450px - 2*1em);
+}
+
 #menu-container button.close {
   width: 28px;
   height: 28px;
@@ -208,7 +212,6 @@ header #connection-lost {
 
 #menu-container #menu-content {
   min-height: 500px;
-  width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -216,51 +219,129 @@ header #connection-lost {
   -webkit-box-direction: normal;
       -ms-flex-flow: row wrap;
           flex-flow: row wrap;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  margin-left: -0.5em;
+  margin-right: -0.5em;
 }
 
-#menu-container #game-viewer {
+#menu-container #menu-content #game-viewer {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
   -ms-flex-preferred-size: 40%;
       flex-basis: 40%;
-  min-width: 390px;
+  min-width: calc(450px - 2*1em);
+  margin: 0 0.5em;
 }
 
-#menu-container #global-chat-container {
-  height: 100%;
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  -ms-flex-preferred-size: 40%;
-      flex-basis: 40%;
-}
-
-#menu-container table {
+#menu-container #menu-content #game-viewer table {
   border-collapse: collapse;
   width: 100%;
 }
 
-#menu-container th, #menu-container td {
+#menu-container #menu-content #game-viewer th,
+#menu-container #menu-content #game-viewer td {
   padding: 8px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-#menu-container thead {
+#menu-container #menu-content #game-viewer thead {
   background-color: whitesmoke;
 }
 
-#menu-container .selected-row {
+#menu-container #menu-content #game-viewer .selected-row {
   background-color: lightgoldenrodyellow;
 }
 
-#menu-container .joined-row {
+#menu-container #menu-content #game-viewer .joined-row {
   background-color: lightskyblue;
 }
 
-#menu-container #game-list-table tbody tr:hover:not(.joined-row) {
+#menu-container #menu-content #game-viewer #game-list-table tbody tr:hover:not(.joined-row) {
   background-color: lightgrey;
+}
+
+#menu-container #menu-content #game-viewer .button-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: -0.25em;
+  margin-right: -0.25em;
+}
+
+#menu-container #menu-content #game-viewer .button-row .btn {
+  margin: 0.25em;
+}
+
+#menu-container #menu-content #global-chat-container {
+  margin: 0 0.5em;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-preferred-size: 40%;
+      flex-basis: 40%;
+  min-width: calc(450px - 2*1em);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+#menu-container #menu-content #global-chat-container #global-message-box {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  min-height: 250px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  overflow-y: scroll;
+}
+
+.controls-box {
+  width: 100%;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  padding: 0.5em;
+}
+
+.controls-box .instruction-text {
+  margin: 0px;
+}
+
+.controls-box .hand {
+  margin: 10px;
+  height: 200px;
+}
+
+.controls-box #fold-buttons {
+  margin: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-flow: row-reverse nowrap;
+          flex-flow: row-reverse nowrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 body,
@@ -282,13 +363,15 @@ html a {
   text-decoration: none;
 }
 
-body h1, body h2, body h3, body h4, body h5,
+body h1, body h2, body h3, body h4, body h5, body p,
 html h1,
 html h2,
 html h3,
 html h4,
-html h5 {
+html h5,
+html p {
   margin: 0;
+  margin-bottom: .4em;
 }
 
 body .btn,

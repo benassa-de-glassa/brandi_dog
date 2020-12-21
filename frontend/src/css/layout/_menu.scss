@@ -1,4 +1,6 @@
 #menu-container {
+  min-width: $min-container-content-width;
+
   button.close {
     width: 28px;
     height: 28px;
@@ -24,48 +26,78 @@
   }
 
   #menu-content {
-      min-height: 500px;
-      width: 100%;
-      display: flex; 
-      flex-flow: row wrap;
-  }
+    $gap: 0.5em;
+    min-height: 500px;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: stretch;
 
-  #game-viewer {
+    margin-left: -$gap;
+    margin-right: -$gap;
+
+    #game-viewer {
       flex-grow: 1;
       flex-basis: 40%;
-      min-width: 390px;
-  }
+      min-width: $min-container-content-width;
+      margin: 0 $gap;
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
 
-  #global-chat-container {
-      height: 100%;
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      thead {
+        background-color: whitesmoke;
+      }
+
+      .selected-row {
+        background-color: lightgoldenrodyellow;
+      }
+
+      .joined-row {
+        background-color: lightskyblue;
+      }
+
+      #game-list-table tbody tr:hover:not(.joined-row) {
+        background-color: lightgrey;
+      }
+
+      .button-row {
+        // simulate gap css property with negative margins on the parent container
+        $btn-margin: 0.25em;
+
+        display: flex;
+        margin-left: -$btn-margin;
+        margin-right: -$btn-margin;
+
+        .btn {
+          margin: $btn-margin;
+        }
+      }
+    }
+
+    #global-chat-container {
+      margin: 0 $gap;
       flex-grow: 1;
       flex-basis: 40%;
+      min-width: $min-container-content-width;
+      display: flex;
+      flex-flow: column;
+      justify-content: space-between;
+
+      #global-message-box {
+        flex-grow: 1;
+        min-height: 250px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+      }
+    }
   }
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-
-th, td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-thead {
-    background-color: whitesmoke;
-}
-
-.selected-row {
-    background-color: lightgoldenrodyellow;
-}
-
-.joined-row {
-    background-color: lightskyblue;
-}
-
-#game-list-table tbody tr:hover:not(.joined-row){
-    background-color: lightgrey;
-}
 }

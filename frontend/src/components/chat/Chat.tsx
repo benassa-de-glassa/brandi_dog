@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-import "./chat.css";
 import { socket } from "../../api/socket";
 import { ChatProps, ChatState, Message } from "../../models/chat.model";
 

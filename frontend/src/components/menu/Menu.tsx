@@ -8,7 +8,7 @@ import GlobalChat from './GlobalChat'
 export default function Menu(props: MenuProps) {
     return (
         <div id="menu-container" className='container'>
-            <h3>Menu</h3>
+            <h2>Menu</h2>
             <button
                 className='close'
                 aria-label="Close"

@@ -40,33 +40,33 @@ export default function GlobalChat(props: GlobalChatProps) {
   }, [props.playerLoggedIn]);
 
   return (
-    <div id="global-chat-container">
-      <span className="subtitle mb-1">Global chat</span>
-      <div id="global-message-box" className="message-box">
+    <div id="global-chat-container" className="chat-container">
+      <h3>Global chat</h3>
+      <div id="global-message-box" className="msg-box">
         {messages.map((msg) => {
           // color server messages differently
           if (msg.sender === "server") {
             return (
-              <div className="message server-message" key={msg.time}>
-                <div className="message-text">
-                  <span className="mr-auto">{msg.text}</span>
-                  <span className="float-right">{msg.time}</span>
+              <div className="msg server-msg" key={msg.time}>
+                <div className="msg-content">
+                  <span className="msg-text">{msg.text}</span>
+                  <span className="msg-time">{msg.time}</span>
                 </div>
               </div>
             );
           } else {
-            let messageClass =
-              msg.sender === props.player.username ? "message user" : "message";
+            let msgClass =
+              msg.sender === props.player.username ? "msg user" : "msg";
             return (
-              <div className={messageClass} key={msg.time}>
-                <div className="message-text">
-                  <p className="message-text">
+              <div className={msgClass} key={msg.time}>
+                <div className="msg-text">
+                  <p className="msg-text">
                     <span>
                       <strong>{msg.sender}</strong>
                     </span>
                     <span className="float-right">{msg.time}</span>
                   </p>
-                  <p className="message-text">{msg.text}</p>
+                  <p className="msg-text">{msg.text}</p>
                 </div>
               </div>
             );

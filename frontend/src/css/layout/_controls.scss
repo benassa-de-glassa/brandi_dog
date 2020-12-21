@@ -1,0 +1,22 @@
+.controls-box {
+  width: 100%;
+  flex-basis: 50%;
+  flex-grow: 0;
+  padding: 0.5em;
+
+  .instruction-text {
+    margin: 0px;
+  }
+
+  .hand {
+    margin: 10px;
+    height: 200px;
+  }
+
+  #fold-buttons {
+    margin: 10px;
+    display: flex;
+    flex-flow: row-reverse nowrap;
+    align-items: center;
+  }
+}

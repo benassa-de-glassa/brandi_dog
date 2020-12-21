@@ -1,7 +1,5 @@
 import React, { useState, Fragment } from "react";
 
-import "./controls.css";
-
 import { possibleActions } from "../../constants/game_config";
 import { ControlProps } from "../../models/control.model";
 import { Card } from "../../models/card.model";
@@ -49,13 +47,22 @@ const possibleMoves = {
   Jo: "Choose a card that the joker imitates.",
 };
 
+/*
+0 Round has not yet started.
+1 Round has started and cards have been dealt but not yet exchanged within the team.
+2 Round has started and cards to be exchanged have been dealt but not yet been shown to the teammate.
+3 Round has started and cards have been exchanged between teammates.
+4 Round has started and cards have not yet been dealt.
+5 Round has finished.
+*/
+
 const roundStateText = [
   "Round has not yet started. ",
-  "Round has started and cards have not yet been dealt. ",
-  "Round has started and cards have been dealt but not yet exchanged within the team. ",
-  "Round has started and cards to be exchanged have been dealt but not yet been shown to the teammate. ",
-  "Round has started and cards have been exchanged between teammates. ",
-  "Round has finished. ",
+  "Round has started and cards have not yet been dealt.",
+  "Exchange a card with your partner.",
+  "Waiting for card exchange.",
+  "Game on.",
+  "Wrapping up.",
 ];
 
 function Controls(props: ControlProps) {
@@ -86,7 +93,7 @@ function Controls(props: ControlProps) {
   return (
     <div className="controls-box">
       <div className="instruction-box">
-        <p className="error">{props.errorMessage}</p>
+        {props.errorMessage && <div className="error">{props.errorMessage}</div>}
         <span className="mb-1">{roundStateText[props.roundState]}</span>
         {props.players.length < 4 && <span>Waiting for players.</span>}
         {props.gameState < 2 && props.players.length === props.numberOfPlayers && (

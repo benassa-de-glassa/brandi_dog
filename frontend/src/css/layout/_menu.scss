@@ -27,7 +27,6 @@
 
   #menu-content {
     $gap: 0.5em;
-    min-height: 500px;
     display: flex;
     flex-flow: row wrap;
     align-items: stretch;
@@ -80,6 +79,32 @@
           margin: $btn-margin;
         }
       }
+
+      #player-create-container {
+        margin-top: .5em;
+
+        div {
+          margin: .3em 0;
+        }
+
+        input {
+          margin: .2em;
+        }
+
+        .create-game-label {
+          display: inline-block;
+          width: 10em;
+        }
+
+        #radio-board-size {
+          $gap: .4em;
+          margin: 0 -$gap;
+
+          .radio-option {
+            margin: 0 $gap;
+          }
+        }
+      }
     }
 
     #global-chat-container {
@@ -87,17 +112,7 @@
       flex-grow: 1;
       flex-basis: 40%;
       min-width: $min-container-content-width;
-      display: flex;
-      flex-flow: column;
-      justify-content: space-between;
-
-      #global-message-box {
-        flex-grow: 1;
-        min-height: 250px;
-        display: flex;
-        flex-direction: column;
-        overflow-y: scroll;
-      }
+      max-height: 40vh;
     }
   }
 }

@@ -4,7 +4,6 @@ import Tooltip from "./Tooltip";
 import Avatar from "./Avatar";
 import Card from "../card/Card";
 
-import "./board.css";
 import {
   BoardPositions,
   BoardProps,

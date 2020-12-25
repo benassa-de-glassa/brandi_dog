@@ -4,13 +4,13 @@ import Tooltip from "./Tooltip";
 import Avatar from "./Avatar";
 import Card from "../card/Card";
 
-import "./board.css";
 import {
   BoardPositions,
   BoardProps,
   BoardTooltipState,
   Position,
 } from "../../models/board.model";
+
 import { Marble } from "../../models/marble.model";
 import { Player } from "../../models/player.model";
 

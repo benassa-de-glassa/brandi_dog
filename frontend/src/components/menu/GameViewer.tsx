@@ -44,7 +44,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
     if (data.game_token) {
       props.joinGameSocket(data.game_token);
       setCreateGame(false);
-      setError("")
+      setError("");
     } else {
       setError(data.detail);
     }
@@ -96,6 +96,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
                   // reduce only works if game.players is not empty
                   game.players &&
                     Object.values(game.players)
+                      // make the players own name bold
                       .map((player: any) =>
                         player.username === props.player.username ? (
                           <strong key={player.username}>
@@ -104,7 +105,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
                         ) : (
                           player.username
                         )
-                      )
+                      ) // recuce the array of names to one single string
                       .reduce((accu, elem) => {
                         return accu === null ? [elem] : [...accu, ", ", elem];
                       }, null)
@@ -112,6 +113,11 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
               </td>
             </tr>
           ))}
+          {!gameList.length && (
+            <tr>
+              <td colSpan={4}>No games found.</td>
+            </tr>
+          )}
         </tbody>
       </table>
       {error && <div className="error">{error}</div>}
@@ -144,21 +150,19 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
           onClick={() => setCreateGame(true)}
           disabled={(props.joinedGame || !props.playerLoggedIn) as boolean}
         >
-          New lobby
+          New game
         </button>
       </span>
       {createGame && (
         <div id="player-create-container">
-          <p className="title">Create game</p>
+          <h3>Create game</h3>
           <form
             id="form-player-create"
             className="mt-1 mr-2"
             onSubmit={handleCreateGameSubmit}
           >
-            <span>
-              <label className="create-game-label w-150 mr-1">
-                Enter a name{" "}
-              </label>
+            <div>
+              <label className="create-game-label">Enter a name</label>
               <input
                 type="text"
                 className="mr-1"
@@ -166,32 +170,37 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
                 onChange={handleCreateGameInput}
                 placeholder="Enter game name"
               />
-            </span>
-            <span>
-              <span className="create-game-label w-150 mr-1">
-                Number of players
+            </div>
+            <div>
+              <span className="create-game-label">Number of players</span>
+              <span id="radio-board-size">
+                <span className="radio-option">
+                  <input
+                    type="radio"
+                    id="4p"
+                    name="n-of-players"
+                    value={4}
+                    defaultChecked
+                    onChange={handleBoardSizeChange}
+                  />
+                  <label htmlFor="4p">4</label>
+                </span>
+                <span className="radio-option">
+                  <input
+                    type="radio"
+                    id="6p"
+                    name="n-of-players"
+                    value={6}
+                    onChange={handleBoardSizeChange}
+                  />
+                  <label htmlFor="6p">6</label>
+                </span>
               </span>
-              <input
-                type="radio"
-                id="4p"
-                name="n-of-players"
-                value={4}
-                defaultChecked
-                onChange={handleBoardSizeChange}
-              />
-              <label htmlFor="4p">4</label>
-              <input
-                type="radio"
-                id="6p"
-                name="n-of-players"
-                value={6}
-                onChange={handleBoardSizeChange}
-              />
-              <label htmlFor="6p">6</label>
-              <br />
-            </span>
+            </div>
 
-            <button type="submit">Create Game</button>
+            <button className="btn" type="submit">
+              Create Game
+            </button>
           </form>
         </div>
       )}

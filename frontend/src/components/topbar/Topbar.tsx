@@ -68,7 +68,7 @@ const TopBar: React.FunctionComponent<TopBarProps & RouteComponentProps> = (
       {!props.socketConnected && props.playerLoggedIn && (
         <div id="connection-lost">
           Connection lost...{" "}
-          <button id="reconnect-btn" onClick={props.clearSocket}>
+          <button id="reconnect-btn" className="btn" onClick={props.clearSocket}>
             Try to reconnect
           </button>
         </div>

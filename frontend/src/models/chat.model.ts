@@ -1,6 +1,7 @@
 import { Player } from "./player.model";
 
 export interface Message {
+  // message_id: string;
   sender: string;
   time: string;
   text: string;

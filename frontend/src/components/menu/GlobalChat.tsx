@@ -44,33 +44,23 @@ export default function GlobalChat(props: GlobalChatProps) {
       <h3>Global chat</h3>
       <div id="global-message-box" className="msg-box">
         {messages.map((msg) => {
-          // color server messages differently
+          let msgClass =
+            msg.sender === props.player.username ? "msg msg-user" : "msg";
           if (msg.sender === "server") {
-            return (
-              <div className="msg server-msg" key={msg.time}>
-                <div className="msg-content">
-                  <span className="msg-text">{msg.text}</span>
-                  <span className="msg-time">{msg.time}</span>
-                </div>
-              </div>
-            );
-          } else {
-            let msgClass =
-              msg.sender === props.player.username ? "msg user" : "msg";
-            return (
-              <div className={msgClass} key={msg.time}>
-                <div className="msg-text">
-                  <p className="msg-text">
-                    <span>
-                      <strong>{msg.sender}</strong>
-                    </span>
-                    <span className="float-right">{msg.time}</span>
-                  </p>
-                  <p className="msg-text">{msg.text}</p>
-                </div>
-              </div>
-            );
+            msgClass = "msg msg-server";
           }
+          return (
+            <div className={msgClass} key={msg.time}>
+              <div className="msg-label">
+                <span>
+                  {msg.sender !== "server" && <strong>{msg.sender}</strong>}
+                </span>
+
+                <span className="msg-time">{msg.time}</span>
+              </div>
+              <p className="msg-text">{msg.text}</p>
+            </div>
+          );
         })}
       </div>
       <div id="global-chat-editor">
@@ -89,7 +79,7 @@ export default function GlobalChat(props: GlobalChatProps) {
             disabled={!props.playerLoggedIn}
           ></textarea>
           <button
-            type="button"
+            className="btn"
             onClick={handleClick}
             disabled={!props.playerLoggedIn}
           >

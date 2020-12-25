@@ -170,7 +170,7 @@ header #connection-lost {
 }
 
 .user-form input {
-  margin: 0 .2em;
+  margin: .2em;
 }
 
 @media (max-width: 768px) {
@@ -211,7 +211,6 @@ header #connection-lost {
 }
 
 #menu-container #menu-content {
-  min-height: 500px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -276,43 +275,45 @@ header #connection-lost {
   margin: 0.25em;
 }
 
+#menu-container #menu-content #game-viewer #player-create-container {
+  margin-top: .5em;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container div {
+  margin: .3em 0;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container input {
+  margin: .2em;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container .create-game-label {
+  display: inline-block;
+  width: 10em;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container #radio-board-size {
+  margin: -0.4em;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container #radio-board-size .radio-option {
+  margin: 0 0.4em;
+}
+
 #menu-container #menu-content #global-chat-container {
-  margin: 0 0.5em;
+  margin: 0 0.4em;
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
   -ms-flex-preferred-size: 40%;
       flex-basis: 40%;
   min-width: calc(450px - 2*1em);
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: column;
-          flex-flow: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-
-#menu-container #menu-content #global-chat-container #global-message-box {
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  min-height: 250px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  overflow-y: scroll;
+  max-height: 40vh;
 }
 
 .controls-box {
   width: 100%;
+  min-width: 400px;
   -ms-flex-preferred-size: 50%;
       flex-basis: 50%;
   -webkit-box-flex: 0;
@@ -342,6 +343,451 @@ header #connection-lost {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.chat-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.chat-container .msg-box {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  overflow-y: scroll;
+}
+
+.chat-container .msg-box .msg {
+  padding: .5em;
+  background-color: #fadcd1;
+}
+
+.chat-container .msg-box .msg.msg-user {
+  background-color: #ccdef7;
+}
+
+.chat-container .msg-box .msg.msg-server {
+  background-color: #fcf7e3;
+}
+
+.chat-container .msg-box .msg .msg-label {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.chat-container .msg-box .msg-time {
+  font-size: 0.8em;
+  margin-left: auto;
+}
+
+.chat-container .text-box {
+  width: 100%;
+  resize: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+#game-container {
+  padding: 0;
+}
+
+#game-container #game-content {
+  background: #e9e9e9;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  margin-left: -1em;
+  margin-right: -1em;
+}
+
+#game-container #game-content #right-container {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+}
+
+#game-container #game-content #right-container #chat-container {
+  padding: .5em;
+  max-height: 50vh;
+}
+
+#board-container {
+  display: inline-block;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
+}
+
+#board-container .svg-container {
+  width: 100%;
+  padding-bottom: 100%;
+  display: inline-block;
+  position: relative;
+  min-width: 500px;
+  height: 0;
+  vertical-align: top;
+}
+
+#board-container .svg-container-6 {
+  padding-bottom: 100%;
+  width: 100%;
+  display: inline-block;
+  position: relative;
+  min-width: 400px;
+  height: 0;
+  vertical-align: top;
+}
+
+#board-container .svg-container-6 .player-box.center-left {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  top: 42.5%;
+  left: 3%;
+}
+
+#board-container .svg-container-6 .player-box.center-right {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  top: 42.5%;
+  right: 3%;
+}
+
+#board-container .svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#board-container .tooltip {
+  position: absolute;
+  z-index: 1100;
+  display: block;
+  margin: 0;
+  opacity: 1;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 4px;
+  padding-right: 30px;
+}
+
+#board-container .tooltip .tooltip-text {
+  font-size: small;
+  margin: 0;
+  margin-left: 2px;
+  margin-bottom: 2px;
+  padding: 0;
+}
+
+#board-container .tooltip .close-tooltip {
+  top: 0px;
+  right: 0px;
+}
+
+#board-container .tooltip .movebutton {
+  padding: 0;
+  margin: 1px 2px;
+  width: 100%;
+  max-width: 30px;
+  max-height: 30px;
+}
+
+#board-container .tooltip.tt-not-visible {
+  opacity: 0;
+}
+
+#board-container .player-name {
+  font-size: 20px;
+  pointer-events: none;
+}
+
+#board-container .player-box {
+  stroke: grey;
+  stroke-width: 2px;
+  fill: white;
+  fill-opacity: 0.5;
+}
+
+#board-container .player-box.active {
+  fill: forestgreen;
+  fill-opacity: 0.3;
+  font-size: 15px;
+}
+
+#board-container .step {
+  stroke: black;
+  stroke-width: 3px;
+  fill-opacity: 0;
+}
+
+#board-container .step:hover {
+  stroke-width: 5px;
+  cursor: pointer;
+}
+
+#board-container .occupied {
+  fill-opacity: 1;
+}
+
+#board-container .occupied-red,
+#board-container .occupied-0 {
+  stroke: black;
+  fill: red;
+}
+
+#board-container .occupied-yellow,
+#board-container .occupied-1 {
+  stroke: black;
+  fill: yellow;
+}
+
+#board-container .occupied-green,
+#board-container .occupied-3 {
+  stroke: black;
+  fill: green;
+}
+
+#board-container .occupied-blue,
+#board-container .occupied-4 {
+  stroke: black;
+  fill: blue;
+}
+
+#board-container .out {
+  fill: none;
+  stroke-width: 4px;
+}
+
+#board-container .out-red,
+#board-container .out-0 {
+  stroke: red;
+}
+
+#board-container .out-blue,
+#board-container .out-3 {
+  stroke: blue;
+}
+
+#board-container .out-green,
+#board-container .out-2 {
+  stroke: green;
+}
+
+#board-container .out-yellow,
+#board-container .out-1 {
+  stroke: yellow;
+}
+
+#board-container .out-4 {
+  stroke: purple;
+}
+
+#board-container .out-5 {
+  stroke: orange;
+}
+
+#board-container #board {
+  background-image: url("img/plywood-background.png");
+  background-size: 120%;
+}
+
+/* default is 4 players for 6 player styles see below */
+.player-box {
+  width: 11%;
+  height: 15%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: absolute;
+  z-index: 10000;
+}
+
+.player-box.top-left {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  top: 3%;
+  left: 3%;
+}
+
+.player-box.top-right {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  top: 3%;
+  right: 3%;
+}
+
+.player-box.bottom-left {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  left: 3%;
+}
+
+.player-box.bottom-right {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  right: 3%;
+}
+
+.player-box .player-name {
+  padding: 3px 10px;
+  margin: 0px;
+  background: whitesmoke;
+}
+
+.player-name.active {
+  border: 4px solid yellowgreen;
+}
+
+#me.player-name {
+  background-color: lightskyblue;
+}
+
+.avatar {
+  display: block;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 50%;
+  border: 3px solid black;
+  pointer-events: none;
+}
+
+.avatar.active {
+  border: 6px solid #62ffea;
+}
+
+.card {
+  position: relative;
+  top: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: inline-block;
+  margin-right: -35px;
+  width: 90px;
+  height: 150px;
+  border-radius: 10px;
+  background: whitesmoke;
+  border: 3px solid black;
+}
+
+.card .card-selected {
+  top: 25px;
+  border: 3px solid grey;
+  z-index: 99;
+}
+
+.card .card-selected:hover {
+  top: 25px;
+}
+
+.card .card-highlighted {
+  top: 25px;
+  background: lightgrey;
+}
+
+.card:hover {
+  top: 10px;
+  z-index: 100;
+}
+
+.card .card-value {
+  font-size: 25px;
+  font-weight: 500;
+  position: absolute;
+  top: 0;
+  left: 3px;
+}
+
+.card .card-color {
+  font-size: 40px;
+  position: absolute;
+  top: 45px;
+  left: 25px;
+}
+
+.card .card-black {
+  color: black;
+}
+
+.card .card-red {
+  color: #d30a0a;
+}
+
+.svg-container .card {
+  /* put the card in the middle of the board */
+  position: absolute;
+  left: calc(50% - 45px);
+  top: calc(50% - 75px);
+}
+
+.svg-container-6 .card {
+  /* put the card in the middle of the board */
+  position: absolute;
+  left: calc(50% - 45px);
+  top: calc(50% - 75px);
 }
 
 body,

@@ -1,8 +1,6 @@
 import React from 'react'
 import { CardProps, colorToUnicode } from '../../models/card.model'
 
-import './card.css'
-
 export default function Card(props: CardProps) {
     let className = props.highlighted
         ? "card card-highlighted"

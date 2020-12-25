@@ -1,8 +1,6 @@
 import React from 'react'
 import { AvatarProps } from '../../models/avatar.model'
 
-import './avatar.css'
-
 export default function Avatar(props: AvatarProps) {
     return (
         <div className={props.className}

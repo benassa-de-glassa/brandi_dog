@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 from typing import Union, List, Optional
 
-from app.models.card import Card
+from app.models.card import Card, CardBase
 
 
 class Action(BaseModel):
-    card: Card
+    card: CardBase
     action: Union[int, str]
     mid: int
     mid_2: Optional[int]

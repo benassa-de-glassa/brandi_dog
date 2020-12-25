@@ -1,1 +1,2 @@
-export type Actions = number[];
+export type Action = number | "switch";
+

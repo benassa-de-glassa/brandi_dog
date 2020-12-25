@@ -7,7 +7,6 @@ class CardBase(BaseModel):
 
 
 class Card(CardBase):
-    uid: int
     value: str
     color: str
     actions: Union[int, str, List]

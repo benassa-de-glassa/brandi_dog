@@ -10,10 +10,20 @@ import { postToBackend } from "../../api/fetch_backend";
 
 import { possibleActions } from "../../constants/game_config";
 
+import {
+  GameComponentProps,
+  GameComponentState,
+  GameState,
+  PlayerState,
+} from "../../models/game.model";
+import { Marble } from "../../models/marble.model";
+import { Card } from "../../models/card.model";
+import { Action } from "../../models/action.model";
+
 const colors = ["red", "yellow", "green", "blue"];
 
-class Game extends Component {
-  constructor(props) {
+class Game extends Component<GameComponentProps, GameComponentState> {
+  constructor(props: GameComponentProps) {
     super(props);
     this.state = {
       //
@@ -33,6 +43,8 @@ class Game extends Component {
       // updated by front-end
       switchingSeats: false,
       selectedCardIndex: null, // card that is selected by the user
+      selectedCardRequiresTooltip: false,
+      marblesToSelect: 0,
       selectedMarble: null,
       tooltipActions: [],
       marbleToSwitch: null,
@@ -61,10 +73,10 @@ class Game extends Component {
   }
 
   componentDidMount() {
-    socket.on("game-state", (data) => {
+    socket.on("game-state", (data: GameState) => {
       this.handleNewGameState(data);
     });
-    socket.on("player-state", (data) => {
+    socket.on("player-state", (data: PlayerState) => {
       this.handleNewPlayerState(data);
     });
   }
@@ -88,17 +100,18 @@ class Game extends Component {
     });
   }
 
-  handleNewGameState(data) {
+  handleNewGameState(data: GameState) {
     if (data.round_state === 4) {
       this.setState({ cardSwapConfirmed: false });
     }
     const players = data.order.map((uid) => data.players[uid]);
-    let marbles = [];
-    data.order.forEach((uid) => {
-      marbles.push(...data.players[uid].marbles);
+    let marbles: Marble[] = [];
+    players.forEach((playerState: PlayerState) => {
+      marbles.push(...playerState.marbles);
     });
+
     marbles = marbles.map((marble) => {
-      return { ...marble, color: colors[parseInt(Math.floor(marble.mid / 4))] };
+      return { ...marble, color: colors[Math.floor(marble.mid / 4)] };
     });
 
     this.setState((prevState) => ({
@@ -116,9 +129,9 @@ class Game extends Component {
     }));
   }
 
-  handleNewPlayerState(data) {
+  handleNewPlayerState(data: PlayerState) {
     const marbles = data.marbles.map((marble) => {
-      return { ...marble, color: colors[parseInt(Math.floor(marble.mid / 4))] };
+      return { ...marble, color: colors[Math.floor(marble.mid / 4)] };
     });
     this.setState({
       cards: data.hand,
@@ -132,7 +145,7 @@ class Game extends Component {
     this.setState({ switchingSeats: true });
   }
 
-  async setNewPosition(index) {
+  async setNewPosition(index: number) {
     const response = await postToBackend(
       `games/${this.props.gameID}/player_position`,
       index
@@ -146,7 +159,7 @@ class Game extends Component {
     }
   }
 
-  cardClicked(index) {
+  cardClicked(index: number) {
     // deselect selected step & reset error message
     this.setState({
       selectedMarble: null,
@@ -163,13 +176,18 @@ class Game extends Component {
       const selectedCard = this.state.cards[index];
       this.setState({
         selectedCardIndex: index,
-        marblesToSelect: selectedCard.value === "switch" ? 2 : 1,
+        marblesToSelect: selectedCard.value === "Ja" ? 2 : 1,
       });
     }
   }
 
   async swapCard() {
     const index = this.state.selectedCardIndex;
+
+    if (!index) {
+      return;
+    }
+
     const selectedCard = this.state.cards[index];
 
     const response = await postToBackend(
@@ -203,37 +221,28 @@ class Game extends Component {
     }
   }
 
-  setJokerCard(val) {
-    this.setState({ jokerCard: val });
+  setJokerCard(value: Card["value"]) {
+    this.setState({ jokerCard: value });
   }
 
-  tooltipClicked(action) {
+  tooltipClicked(action: Action) {
+    if (!this.state.selectedCardIndex || !this.state.selectedMarble) {
+      return;
+    }
     let selectedCard = this.state.cards[this.state.selectedCardIndex];
-    let successCallback = () => {};
 
-    this.performAction(
-      this.state.selectedMarble,
-      selectedCard,
-      action,
-      successCallback,
-      () => {}
-    ); // error callback
+    this.performAction(this.state.selectedMarble, selectedCard, action); // error callback
   }
 
   async performAction(
-    marble,
-    card,
-    action,
-    success = () => {},
-    error = () => {}
+    marble: Marble,
+    card: Card,
+    action: Action,
   ) {
     // performs an action selected marble
     const response = await postToBackend(`games/${this.props.gameID}/action`, {
       card: {
-        uid: card.uid,
-        value: card.value,
-        color: card.color,
-        actions: card.actions,
+        uid: card.uid
       },
       action: action,
       mid: marble.mid,
@@ -241,11 +250,9 @@ class Game extends Component {
 
     if (response.code) {
       // something went wrong
-      error(response.message);
       this.setState({ errorMessage: response.message });
       console.warn(`[${response.code}] ${response.message}`);
     } else {
-      success();
       this.setState({
         tooltipActions: [],
         errorMessage: "",
@@ -258,16 +265,13 @@ class Game extends Component {
     }
   }
 
-  async performSwitch(card, ownMarble, otherMarble) {
+  async performSwitch(card: Card, ownMarble: Marble, otherMarble: Marble) {
     // reset stored marble in case of errors
     this.setState({ marbleToSwitch: null });
 
     const response = await postToBackend(`games/${this.props.gameID}/action`, {
       card: {
-        uid: card.uid,
-        value: card.value,
-        color: card.color,
-        actions: card.actions,
+        uid: card.uid
       },
       action: "switch",
       mid: ownMarble.mid,
@@ -281,7 +285,7 @@ class Game extends Component {
     }
   }
 
-  marbleClicked(marble, homeClicked = false) {
+  marbleClicked(marble: Marble, homeClicked: boolean = false) {
     // check if a card is selected
     if (this.state.selectedCardIndex !== null) {
       let selectedCard = this.state.cards[this.state.selectedCardIndex];
@@ -296,7 +300,7 @@ class Game extends Component {
 
       if (selectedCardValue === "Jo") {
         selectedCardValue = this.state.jokerCard;
-        selectedCardActions = possibleActions[this.state.jokerCard];
+        selectedCardActions = possibleActions[selectedCardValue];
       }
 
       if (selectedCardActions.includes(0) && homeClicked) {

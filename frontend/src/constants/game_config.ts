@@ -4,7 +4,7 @@ import { CardKey } from "../models/card.model";
 export const DEBUG = false;
 
 export const possibleActions: { [key in CardKey]?: (number | string)[] } = {
-  A: [0, 1, 11],
+  "A": [0, 1, 11],
   "2": [2],
   "3": [3],
   "4": [-4, 4],
@@ -14,7 +14,7 @@ export const possibleActions: { [key in CardKey]?: (number | string)[] } = {
   "8": [8],
   "9": [9],
   "10": [10],
-  Ja: ["switch"],
-  Q: [12],
-  K: [0, 13],
+  "Ja": ["switch"],
+  "Q": [12],
+  "K": [0, 13],
 };

@@ -1,3 +1,5 @@
+import { Action } from "./action.model";
+
 export enum Colors {
   spades = "spades",
   hearts = "hearts",
@@ -34,6 +36,7 @@ export interface Card {
   value: keyof typeof CardKey;
   color: keyof typeof Colors;
   uid?: number;
+  actions?: Action[];
 }
 
 export interface CardProps extends Card {

@@ -733,17 +733,17 @@ header #connection-lost {
   border: 3px solid black;
 }
 
-.card .card-selected {
+.card.card-selected {
   top: 25px;
   border: 3px solid grey;
   z-index: 99;
 }
 
-.card .card-selected:hover {
+.card.card-selected:hover {
   top: 25px;
 }
 
-.card .card-highlighted {
+.card.card-highlighted {
   top: 25px;
   background: lightgrey;
 }
@@ -843,6 +843,16 @@ html .btn:disabled {
   cursor: default;
   background-color: rgba(105, 90, 205, 0.5);
   color: lightgrey;
+}
+
+body .btn.btn-green,
+html .btn.btn-green {
+  background-color: darkolivegreen;
+}
+
+body .btn.btn-danger,
+html .btn.btn-danger {
+  background-color: darkred;
 }
 
 body .container,

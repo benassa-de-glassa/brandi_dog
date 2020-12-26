@@ -10,7 +10,7 @@
   background: whitesmoke;
   border: 3px solid black;
 
-  .card-selected {
+  &.card-selected {
     top: 25px;
     border: 3px solid grey;
     z-index: 99;
@@ -20,7 +20,7 @@
     }
   }
 
-  .card-highlighted {
+  &.card-highlighted {
     top: 25px;
     background: lightgrey;
   }

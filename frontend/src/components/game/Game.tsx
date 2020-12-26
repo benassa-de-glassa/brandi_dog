@@ -191,7 +191,11 @@ class Game extends Component<GameComponentProps, GameComponentState> {
 
     const response = await postToBackend(
       `games/${this.props.gameID}/swap_cards`,
-      { uid: selectedCard.uid }
+      {
+        uid: selectedCard.uid,
+        value: selectedCard.value,
+        color: selectedCard.color,
+      }
     );
 
     if (response.code) {
@@ -238,6 +242,8 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     const response = await postToBackend(`games/${this.props.gameID}/action`, {
       card: {
         uid: card.uid,
+        value: card.value,
+        color: card.color,
       },
       action: action,
       mid: marble.mid,
@@ -267,6 +273,8 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     const response = await postToBackend(`games/${this.props.gameID}/action`, {
       card: {
         uid: card.uid,
+        value: card.value,
+        color: card.color,
       },
       action: "switch",
       mid: ownMarble.mid,
@@ -378,25 +386,25 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     return (
       <div id="game-container" className="container">
         <div id="game-content">
-            <Board
-              numberOfPlayers={this.state.numberOfPlayers}
-              player={this.props.player}
-              playerList={this.state.players}
-              activePlayerIndex={this.state.activePlayerIndex}
-              marbleList={this.state.allMarbles}
-              selectedMarble={this.state.selectedMarble}
-              tooltipActions={this.state.tooltipActions}
-              tooltipClicked={this.tooltipClicked}
-              marbleClicked={this.marbleClicked}
-              selectedCard={
-                this.state.selectedCardIndex
-                  ? this.state.cards[this.state.selectedCardIndex]
-                  : null
-              }
-              topCard={this.state.topCard}
-              switchingSeats={this.state.switchingSeats}
-              setNewPosition={this.setNewPosition}
-            />
+          <Board
+            numberOfPlayers={this.state.numberOfPlayers}
+            player={this.props.player}
+            playerList={this.state.players}
+            activePlayerIndex={this.state.activePlayerIndex}
+            marbleList={this.state.allMarbles}
+            selectedMarble={this.state.selectedMarble}
+            tooltipActions={this.state.tooltipActions}
+            tooltipClicked={this.tooltipClicked}
+            marbleClicked={this.marbleClicked}
+            selectedCard={
+              this.state.selectedCardIndex
+                ? this.state.cards[this.state.selectedCardIndex]
+                : null
+            }
+            topCard={this.state.topCard}
+            switchingSeats={this.state.switchingSeats}
+            setNewPosition={this.setNewPosition}
+          />
           <div id="right-container">
             <Controls
               players={this.state.players}

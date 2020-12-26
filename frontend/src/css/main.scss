@@ -48,6 +48,14 @@ html {
       background-color: $primary-disabled;
       color: lightgrey;
     }
+
+    &.btn-green {
+      background-color: $button-green;
+    }
+
+    &.btn-danger {
+      background-color: $danger;
+    }
   }
 
   .container {

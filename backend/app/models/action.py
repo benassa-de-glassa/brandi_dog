@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Union, List, Optional
 
-from app.models.card import Card, CardBase
+from app.models.card import CardBase
 
 
 class Action(BaseModel):

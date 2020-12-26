@@ -125,7 +125,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
         <button
           className="btn"
           onClick={() =>
-            selectedRow && props.joinGame(gameList[selectedRow].game_id)
+            (typeof selectedRow !== "undefined") && props.joinGame(gameList[selectedRow].game_id)
           }
           disabled={
             (!props.playerLoggedIn ||

@@ -92,19 +92,21 @@ export default function Controls(props: ControlProps) {
           <span className="mb-1">{roundStateText[props.roundState]}</span>
         )}
         {props.players.length < 4 && <span>Waiting for players.</span>}
-        {props.gameState &&
-          props.gameState < 2 &&
-          props.players.length === props.numberOfPlayers && (
+        {typeof props.gameState !== "undefined" &&
+          props.gameState !== null &&
+          props.gameState < 2 && (
             <div>
+              <button className="btn" onClick={swapClicked}>
+                Change seat
+              </button>
+              {props.players.length === props.numberOfPlayers && (
+                <button className="btn btn-green" onClick={handleClick}>
+                  Start game
+                </button>
+              )}
               {props.switchingSeats && (
                 <p>Click on another player to change seats.</p>
               )}
-              <button className="green my-1 mr-1" onClick={handleClick}>
-                Start game
-              </button>
-              <button className="elegant my-1" onClick={swapClicked}>
-                Change seat
-              </button>
             </div>
           )}
       </div>
@@ -142,7 +144,7 @@ export default function Controls(props: ControlProps) {
         )}
       {props.roundState === 2 && (
         <button
-          className="button ml-1"
+          className="btn"
           onClick={props.swapCard}
           disabled={props.selectedCardIndex === null || props.cardSwapConfirmed}
         >
@@ -153,7 +155,7 @@ export default function Controls(props: ControlProps) {
         {props.playerIsActive && props.roundState === 4 && !aboutToFold && (
           // allows the player to fold if it's his turn and the cards have been exchanged
           <button
-            className="button ml-1 danger"
+            className="btn btn-danger"
             onClick={() => setAboutToFold(true)}
           >
             Fold
@@ -163,7 +165,7 @@ export default function Controls(props: ControlProps) {
           // allows the player to fold if it's his turn and the cards have been exchanged
           <Fragment>
             <button
-              className="button ml-1 danger"
+              className="btn btn-danger"
               onClick={() => {
                 props.fold();
                 setAboutToFold(false);
@@ -173,7 +175,7 @@ export default function Controls(props: ControlProps) {
             </button>
 
             <button
-              className="button ml-1"
+              className="btn"
               onClick={() => setAboutToFold(false)}
             >
               Cancel

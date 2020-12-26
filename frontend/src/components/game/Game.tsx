@@ -2,13 +2,12 @@ import React, { Component } from "react";
 
 import Chat from "../chat/Chat";
 import Board from "../board/Board";
-import Board6 from "../board/Board6";
 import Controls from "../controls/Controls";
 
 import { socket } from "../../api/socket";
 import { postToBackend } from "../../api/fetch_backend";
 
-import { possibleActions } from "../../constants/game_config";
+import { possibleActions } from "../../constants/constants";
 
 import {
   GameComponentProps,
@@ -17,8 +16,8 @@ import {
   PlayerState,
 } from "../../models/game.model";
 import { Marble } from "../../models/marble.model";
-import { Card } from "../../models/card.model";
-import { Action } from "../../models/action.model";
+import { CardIF } from "../../models/card.model";
+import { Action, ActionNumber } from "../../models/action.model";
 
 const colors = ["red", "yellow", "green", "blue"];
 
@@ -50,7 +49,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       marbleToSwitch: null,
       cardSwapConfirmed: false,
       cardBeingSwapped: 0, // index of the card that is being swapped to highlight it
-      jokerCard: "A", // default, selects which card is imitated by the joker
+      jokerCardValue: "A", // default, selects which card is imitated by the joker
       remainingStepsOf7: 7, // only allow choosing that many steps in the tooltip
 
       errorMessage: "", // display errors related to the game
@@ -69,7 +68,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     this.marbleClicked = this.marbleClicked.bind(this);
     this.tooltipClicked = this.tooltipClicked.bind(this);
     this.fold = this.fold.bind(this);
-    this.setJokerCard = this.setJokerCard.bind(this);
+    this.setJokerCardValue = this.setJokerCardValue.bind(this);
   }
 
   componentDidMount() {
@@ -94,7 +93,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       tooltipActions: [],
       marbleToSwitch: null,
       cardSwapConfirmed: false,
-      jokerCard: "A",
+      jokerCardValue: "A",
       remainingStepsOf7: 7,
       errorMessage: "",
     });
@@ -125,7 +124,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       playerIsActive:
         players[data.active_player_index]?.uid === this.props.player.uid,
       cardSwapConfirmed: data.round_state < 2,
-      numberOfPlayers: data.n_players,
+      numberOfPlayers: data.n_players as 4 | 6,
     }));
   }
 
@@ -221,8 +220,8 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     }
   }
 
-  setJokerCard(value: Card["value"]) {
-    this.setState({ jokerCard: value });
+  setJokerCardValue(value: CardIF["value"]) {
+    this.setState({ jokerCardValue: value });
   }
 
   tooltipClicked(action: Action) {
@@ -234,15 +233,11 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     this.performAction(this.state.selectedMarble, selectedCard, action); // error callback
   }
 
-  async performAction(
-    marble: Marble,
-    card: Card,
-    action: Action,
-  ) {
+  async performAction(marble: Marble, card: CardIF, action: Action) {
     // performs an action selected marble
     const response = await postToBackend(`games/${this.props.gameID}/action`, {
       card: {
-        uid: card.uid
+        uid: card.uid,
       },
       action: action,
       mid: marble.mid,
@@ -265,13 +260,13 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     }
   }
 
-  async performSwitch(card: Card, ownMarble: Marble, otherMarble: Marble) {
+  async performSwitch(card: CardIF, ownMarble: Marble, otherMarble: Marble) {
     // reset stored marble in case of errors
     this.setState({ marbleToSwitch: null });
 
     const response = await postToBackend(`games/${this.props.gameID}/action`, {
       card: {
-        uid: card.uid
+        uid: card.uid,
       },
       action: "switch",
       mid: ownMarble.mid,
@@ -299,7 +294,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       let selectedCardActions = selectedCard.actions;
 
       if (selectedCardValue === "Jo") {
-        selectedCardValue = this.state.jokerCard;
+        selectedCardValue = this.state.jokerCardValue;
         selectedCardActions = possibleActions[selectedCardValue];
       }
 
@@ -316,7 +311,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       );
 
       // if the card is a 7 only show the remaining steps as playable (e.g. [71, 72, 73] if 4 steps were already completed)
-      if (selectedCardValue === "7" && this.state.remainingStepsOf7 !== -1) {
+      if (selectedCardValue === "_7" && this.state.remainingStepsOf7 !== -1) {
         playableActions = playableActions.filter(
           (action) => action <= 70 + this.state.remainingStepsOf7
         );
@@ -357,7 +352,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
         // clicked on a marble on the field for which multiple actions
         // are possible
         this.setState({
-          tooltipActions: playableActions,
+          tooltipActions: playableActions as ActionNumber[],
           selectedMarble: marble,
         });
       }
@@ -383,7 +378,6 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     return (
       <div id="game-container" className="container">
         <div id="game-content">
-          {this.state.numberOfPlayers === 4 ? (
             <Board
               numberOfPlayers={this.state.numberOfPlayers}
               player={this.props.player}
@@ -394,30 +388,15 @@ class Game extends Component<GameComponentProps, GameComponentState> {
               tooltipActions={this.state.tooltipActions}
               tooltipClicked={this.tooltipClicked}
               marbleClicked={this.marbleClicked}
-              selectedCard={this.state.cards[this.state.selectedCardIndex]}
+              selectedCard={
+                this.state.selectedCardIndex
+                  ? this.state.cards[this.state.selectedCardIndex]
+                  : null
+              }
               topCard={this.state.topCard}
               switchingSeats={this.state.switchingSeats}
-              submitNewTeams={this.submitNewTeams}
               setNewPosition={this.setNewPosition}
             />
-          ) : (
-            <Board6
-              numberOfPlayers={this.state.numberOfPlayers}
-              player={this.props.player}
-              playerList={this.state.players}
-              activePlayerIndex={this.state.activePlayerIndex}
-              marbleList={this.state.allMarbles}
-              selectedMarble={this.state.selectedMarble}
-              tooltipActions={this.state.tooltipActions}
-              tooltipClicked={this.tooltipClicked}
-              marbleClicked={this.marbleClicked}
-              selectedCard={this.state.cards[this.state.selectedCardIndex]}
-              topCard={this.state.topCard}
-              switchingSeats={this.state.switchingSeats}
-              submitNewTeams={this.submitNewTeams}
-              setNewPosition={this.setNewPosition}
-            />
-          )}
           <div id="right-container">
             <Controls
               players={this.state.players}
@@ -428,11 +407,15 @@ class Game extends Component<GameComponentProps, GameComponentState> {
               cards={this.state.cards}
               cardClicked={this.cardClicked}
               selectedCardIndex={this.state.selectedCardIndex}
-              selectedCard={this.state.cards[this.state.selectedCardIndex]}
+              selectedCard={
+                this.state.selectedCardIndex
+                  ? this.state.cards[this.state.selectedCardIndex]
+                  : null
+              }
               startGame={this.startGame}
-              possibleMoves={this.state.possibleMoves}
-              setJokerCard={this.setJokerCard}
-              jokerCard={this.state.jokerCard}
+              // possibleMoves={this.state.possibleMoves}
+              setJokerCardValue={this.setJokerCardValue}
+              jokerCardValue={this.state.jokerCardValue}
               swapCard={this.swapCard}
               fold={this.fold}
               cardSwapConfirmed={this.state.cardSwapConfirmed}

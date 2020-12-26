@@ -1,22 +1,23 @@
-import { Card } from "./card.model";
+import { CardIF, CardKey } from "./card.model";
 import { HandProps } from "./hand.model";
 import { Player } from "./player.model";
 
 export interface ControlProps extends HandProps {
-  selectedCard: Card;
-  cards: Card[];
+  selectedCard: CardIF | null;
+  cards: CardIF[];
 
   startGame: () => void;
   switchSeats: () => void;
-  errorMessage: string;
+  errorMessage: string | undefined;
 
-  roundState: number;
-  gameState: number;
+  roundState: number | null;
+  gameState: number | null;
   players: Player[];
   numberOfPlayers: number;
 
   switchingSeats: boolean;
-  setJokerCard: (card: Card) => void;
+  jokerCardValue: keyof typeof CardKey
+  setJokerCardValue: (value: keyof typeof CardKey) => void;
 
   playerIsActive: boolean;
   fold: () => void;

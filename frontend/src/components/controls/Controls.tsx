@@ -1,8 +1,8 @@
 import React, { useState, Fragment } from "react";
 
-import { possibleActions } from "../../constants/game_config";
+import { possibleActions } from "../../constants/constants";
 import { ControlProps } from "../../models/control.model";
-import { Card } from "../../models/card.model";
+import { CardKey } from "../../models/card.model";
 import Hand from "./Hand";
 
 const cards = Object.keys(possibleActions);
@@ -31,8 +31,7 @@ const possibleMoves = {
   A: "Click on a marble to go out, or move either one or eleven steps.",
   _2: "Click on a marble to move two steps.",
   _3: "Click on a marble to move three steps.",
-  _4:
-    "Click on a marble and its destination to move four steps forwards or backwards.",
+  _4: "Click on a marble to select your move.",
   _5: "Click on a marble to move five steps.",
   _6: "Click on a marble to move six steps.",
   _7:
@@ -65,19 +64,12 @@ const roundStateText = [
   "Wrapping up.",
 ];
 
-function Controls(props: ControlProps) {
-  var [aboutToFold, setAboutToFold] = useState(false);
+export default function Controls(props: ControlProps) {
+  const [aboutToFold, setAboutToFold] = useState(false);
 
-  // var selectedCardString,
-  var possibleMoveString;
-
-  if (props.selectedCard !== undefined) {
-    // selectedCardString = props.selectedCard.color + '' + props.selectedCard.value
-    possibleMoveString = possibleMoves[props.selectedCard.value];
-  } else {
-    // selectedCardString = ''
-    possibleMoveString = "";
-  }
+  let possibleMoveString = props.selectedCard
+    ? possibleMoves[props.selectedCard.value]
+    : "";
 
   const handleClick = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -93,22 +85,28 @@ function Controls(props: ControlProps) {
   return (
     <div className="controls-box">
       <div className="instruction-box">
-        {props.errorMessage && <div className="error">{props.errorMessage}</div>}
-        <span className="mb-1">{roundStateText[props.roundState]}</span>
-        {props.players.length < 4 && <span>Waiting for players.</span>}
-        {props.gameState < 2 && props.players.length === props.numberOfPlayers && (
-          <div>
-            {props.switchingSeats && (
-              <p>Click on another player to change seats.</p>
-            )}
-            <button className="green my-1 mr-1" onClick={handleClick}>
-              Start game
-            </button>
-            <button className="elegant my-1" onClick={swapClicked}>
-              Change seat
-            </button>
-          </div>
+        {props.errorMessage && (
+          <div className="error">{props.errorMessage}</div>
         )}
+        {props.roundState && (
+          <span className="mb-1">{roundStateText[props.roundState]}</span>
+        )}
+        {props.players.length < 4 && <span>Waiting for players.</span>}
+        {props.gameState &&
+          props.gameState < 2 &&
+          props.players.length === props.numberOfPlayers && (
+            <div>
+              {props.switchingSeats && (
+                <p>Click on another player to change seats.</p>
+              )}
+              <button className="green my-1 mr-1" onClick={handleClick}>
+                Start game
+              </button>
+              <button className="elegant my-1" onClick={swapClicked}>
+                Change seat
+              </button>
+            </div>
+          )}
       </div>
       <div className="instruction-box">
         {props.roundState === 2 ? (
@@ -132,7 +130,9 @@ function Controls(props: ControlProps) {
           // joker is selected, and it's not to be swapped at the beginning of a round
           <select
             onChange={(event) =>
-              props.setJokerCard((event.target.value as unknown) as Card)
+              props.setJokerCardValue(
+                event.target.value as keyof typeof CardKey
+              )
             }
           >
             {cards.map((card) => (
@@ -185,5 +185,3 @@ function Controls(props: ControlProps) {
     </div>
   );
 }
-
-export default Controls;

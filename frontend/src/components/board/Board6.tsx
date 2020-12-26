@@ -5,17 +5,17 @@ import Avatar from "./Avatar";
 import Card from "../card/Card";
 
 import {
-  BoardPositions,
   BoardProps,
   BoardTooltipState,
-  Position,
+  BoardCoordinates,
+  Step
 } from "../../models/board.model";
 import { Marble } from "../../models/marble.model";
 import { Player } from "../../models/player.model";
 
 // 6 player board
 
-const boardData: BoardPositions = require("./boarddata6.json");
+import boardData from "./boarddata6.json";
 
 export default function Board6(props: BoardProps) {
   const height = 800;
@@ -25,7 +25,7 @@ export default function Board6(props: BoardProps) {
     visible: false,
     x: "0",
     y: "0",
-    anchor: { x: "left", y: "top" } as Position,
+    anchor: { x: "left", y: "top" } as BoardCoordinates,
     text: "",
   });
 
@@ -57,7 +57,7 @@ export default function Board6(props: BoardProps) {
   const radius = 10;
   const outerRadius = 15;
 
-  function onStepClick(data: Position) {
+  function onStepClick(data: Step) {
     let marble;
     let homeClicked = false;
     if (data.id < 0) {
@@ -208,7 +208,6 @@ export default function Board6(props: BoardProps) {
             <circle
               key={"out " + data.x + " " + data.y}
               className={"out out-" + data.color}
-              id={"step-" + data.id}
               cx={data.x}
               cy={data.y}
               r={outerRadius}

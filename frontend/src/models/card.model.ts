@@ -17,30 +17,36 @@ export const colorToUnicode: { [key in Colors]: string } = {
 
 export enum CardKey {
   A = "A",
-  _2 = "2",
-  _3 = "3",
-  _4 = "4",
-  _5 = "5",
-  _6 = "6",
-  _7 = "7",
-  _8 = "8",
-  _9 = "9",
-  _10 = "10",
+  _2 = "_2",
+  _3 = "_3",
+  _4 = "_4",
+  _5 = "_5",
+  _6 = "_6",
+  _7 = "_7",
+  _8 = "_8",
+  _9 = "_9",
+  _10 = "_10",
   Ja = "Ja",
   Q = "Q",
   K = "K",
   Jo = "Jo",
 }
 
-export interface Card {
+/*
+Avoid name clash with the Card react component
+*/
+export interface CardBaseIF {
   value: keyof typeof CardKey;
   color: keyof typeof Colors;
-  uid?: number;
-  actions?: Action[];
 }
 
-export interface CardProps extends Card {
+export interface CardIF extends CardBaseIF {
+  uid: number;
+  actions: Action[];
+}
+
+export interface CardProps extends CardBaseIF {
   selected?: boolean;
   highlighted?: boolean;
-  clickHandler?: () => {};
+  clickHandler?: () => void;
 }

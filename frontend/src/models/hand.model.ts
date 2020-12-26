@@ -1,10 +1,10 @@
-import { Card } from "./card.model";
+import { CardIF } from "./card.model";
 
 export interface HandProps {
-  cards: Card[];
+  cards: CardIF[];
   cardBeingSwapped: number;
   cardSwapConfirmed: boolean;
-  roundState: number;
-  selectedCardIndex: number;
-  cardClicked: (index: number) => {};
+  roundState: number | null;
+  selectedCardIndex: number | null;
+  cardClicked: (index: number) => void;
 }

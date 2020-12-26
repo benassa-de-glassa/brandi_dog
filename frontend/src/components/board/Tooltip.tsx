@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { ActionNumber } from '../../models/action.model'
 import { TooltipProps } from '../../models/tooltip.model'
 
 /* 
@@ -18,7 +19,7 @@ function Tooltip(props: TooltipProps) {
             }}
         >
             <p className='tooltip-text'>Choose a move</p>
-            {props.tooltipActions.map((action: number) =>
+            {props.tooltipActions.map((action: ActionNumber) =>
                 <button id={String(action)} key={action} type="button" className='movebutton'
                     onClick={() => props.tooltipClicked(action)}>
                     <span aria-hidden="true">

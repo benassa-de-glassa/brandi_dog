@@ -1,6 +1,8 @@
 import { Player } from "./player.model";
-import { Card, CardKey } from "./card.model";
+import { CardKey, CardIF } from "./card.model";
 import { Marble } from "./marble.model";
+import { ActionNumber } from "./action.model";
+
 
 export interface GameComponentProps {
     player: Player;
@@ -8,34 +10,35 @@ export interface GameComponentProps {
 }
 
 export interface GameComponentState {
-  numberOfPlayers: number;
+  numberOfPlayers: 4 | 6;
   players: Player[];
   activePlayerIndex: number | null;
   playerIsActive: boolean;
-  cards: Card[];
+  cards: CardIF[];
   allMarbles: Marble[];
   marbles: Marble[];
   gameState: number | null;
   roundState: number | null;
-  topCard: Card | null;
+  topCard: CardIF | null;
   switchingSeats: boolean;
   selectedCardIndex: number | null;
+  // possibleMoves: Action[];
   selectedCardRequiresTooltip: boolean;
   selectedMarble: Marble | null;
-  tooltipActions: number[];
+  tooltipActions: ActionNumber[];
   marbleToSwitch: Marble | null;
   marblesToSelect: number;
   cardSwapConfirmed: boolean;
   cardBeingSwapped: number;
   remainingStepsOf7: number;
   errorMessage: string | undefined;
-  jokerCard: [key in CardKey];
+  jokerCardValue: keyof typeof CardKey;
 }
 
 export interface PlayerState {
   uid: number;
   username: string;
-  hand: Card[];
+  hand: CardIF[];
   marbles: Marble[];
   steps_of_seven: number;
 }
@@ -52,5 +55,5 @@ export interface GameState {
   active_player_index: number;
   players: { [key: number]: PlayerState };
   player_list: Player[];
-  top_card: Card;
+  top_card: CardIF;
 }

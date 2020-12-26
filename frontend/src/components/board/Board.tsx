@@ -5,16 +5,17 @@ import Avatar from "./Avatar";
 import Card from "../card/Card";
 
 import {
-  BoardPositions,
+  // BoardPositions,
   BoardProps,
   BoardTooltipState,
-  Position,
+  BoardCoordinates,
+  Step,
 } from "../../models/board.model";
 
 import { Marble } from "../../models/marble.model";
 import { Player } from "../../models/player.model";
 
-const boardData: BoardPositions = require("./boarddata4.json");
+import boardData from "./boarddata4.json";
 
 function Board(props: BoardProps) {
   const height = 800;
@@ -24,7 +25,7 @@ function Board(props: BoardProps) {
     visible: false,
     x: "0",
     y: "0",
-    anchor: { x: "left", y: "top" } as Position,
+    anchor: { x: "left", y: "top" } as BoardCoordinates,
     text: "",
   });
 
@@ -41,7 +42,7 @@ function Board(props: BoardProps) {
   var houseOccupation = new Array(16);
 
   // place the marbles
-  props.marbleList.forEach((marble) => {
+  props.marbleList.forEach((marble: Marble) => {
     // marble.color = marbleColors[parseInt(Math.floor(marble.mid / 4))]
     // negative positions correspond to home
     if (marble.position < 0) {
@@ -56,7 +57,7 @@ function Board(props: BoardProps) {
   const radius = 12;
   const outerRadius = 18;
 
-  function onStepClick(data: Position) {
+  function onStepClick(data: Step) {
     if (data.id == null) {
       return;
     }
@@ -188,7 +189,7 @@ function Board(props: BoardProps) {
             <circle
               key={"out " + data.x + " " + data.y}
               className={"out out-" + data.color}
-              id={"step-" + data.id}
+              // id={"step-" + data.id}
               cx={data.x}
               cy={data.y}
               r={outerRadius}

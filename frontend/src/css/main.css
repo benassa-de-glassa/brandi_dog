@@ -345,6 +345,10 @@ header #connection-lost {
           align-items: center;
 }
 
+.controls-box #fold-buttons .btn {
+  margin-left: 10px;
+}
+
 .chat-container {
   display: -webkit-box;
   display: -ms-flexbox;

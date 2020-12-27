@@ -19,5 +19,9 @@
     display: flex;
     flex-flow: row-reverse nowrap;
     align-items: center;
+
+    .btn {
+      margin-left: 10px;
+    }
   }
 }

@@ -125,7 +125,8 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
         <button
           className="btn"
           onClick={() =>
-            (typeof selectedRow !== "undefined") && props.joinGame(gameList[selectedRow].game_id)
+            typeof selectedRow !== "undefined" &&
+            props.joinGame(gameList[selectedRow].game_id)
           }
           disabled={
             (!props.playerLoggedIn ||
@@ -146,7 +147,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
           Update
         </button>
         <button
-          className="btn"
+          className="btn btn-green"
           onClick={() => setCreateGame(true)}
           disabled={(props.joinedGame || !props.playerLoggedIn) as boolean}
         >
@@ -198,8 +199,12 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
               </span>
             </div>
 
-            <button className="btn" type="submit">
+            <button className="btn btn-green" type="submit">
               Create Game
+            </button>
+
+            <button className="btn btn-danger ml-1" onClick={() => setCreateGame(false)}>
+              Cancel
             </button>
           </form>
         </div>

@@ -21,18 +21,6 @@
     min-width: 400px;
     height: 0;
     vertical-align: top;
-
-    .player-box.center-left {
-      align-items: flex-end;
-      flex-direction: column-reverse;
-      top: 42.5%;
-      left: 3%;
-    }
-    .player-box.center-right {
-      align-items: flex-start;
-      top: 42.5%;
-      right: 3%;
-    }
   }
 
   .svg-content-responsive {
@@ -90,12 +78,96 @@
     stroke-width: 2px;
     fill: white;
     fill-opacity: 0.5;
-  }
+    width: 11%;
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1000;
+    &.active {
+      fill: forestgreen;
+      fill-opacity: 0.3;
+      font-size: 15px;
+    }
 
-  .player-box.active {
-    fill: forestgreen;
-    fill-opacity: 0.3;
-    font-size: 15px;
+    .player-name {
+      padding: 3px 10px;
+      margin: 0px;
+      background: whitesmoke;
+
+      &.player-name.active {
+        border: 4px solid yellowgreen;
+      }
+    }
+
+    &.players-4 {
+      &.player-0 {
+        align-items: flex-end; /* text right aligned */
+        top: 3%;
+        right: 3%;
+      }
+
+      &.player-1 {
+        align-items: flex-start; /* text left aligned */
+        top: 3%;
+        left: 3%;
+      }
+
+      &.player-2 {
+        align-items: flex-start; /* text left aligned */
+        flex-direction: column-reverse;
+        bottom: 3%;
+        left: 3%;
+      }
+
+      &.player-3 {
+        align-items: flex-end; /* text right aligned */
+        flex-direction: column-reverse;
+        bottom: 3%;
+        right: 3%;
+      }
+    }
+
+    &.players-6 {
+      &.player-0 {
+        align-items: flex-end; /* text right aligned */
+        top: 3%;
+        right: 3%;
+      }
+
+      &.player-1 {
+        align-items: flex-start; /* text left aligned */
+        top: 3%;
+        left: 3%;
+      }
+
+      &.player-2 {
+        align-items: flex-end;
+        flex-direction: column-reverse;
+        top: 42.5%;
+        left: 3%;
+      }
+
+      &.player-3 {
+        align-items: flex-start; /* text left aligned */
+        flex-direction: column-reverse;
+        bottom: 3%;
+        left: 3%;
+      }
+
+      &.player-4 {
+        align-items: flex-end; /* text right aligned */
+        flex-direction: column-reverse;
+        bottom: 3%;
+        right: 3%;
+      }
+
+      &.player-5 {
+        align-items: flex-start;
+        top: 42.5%;
+        right: 3%;
+      }
+    }
   }
 
   .step {
@@ -174,52 +246,6 @@
     background-image: url("img/plywood-background.png");
     background-size: 120%;
   }
-}
-
-/* default is 4 players for 6 player styles see below */
-.player-box {
-  width: 11%;
-  height: 15%;
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  z-index: 10000;
-}
-
-.player-box.top-left {
-  align-items: flex-start; /* text left aligned */
-  top: 3%;
-  left: 3%;
-}
-
-.player-box.top-right {
-  align-items: flex-end; /* text right aligned */
-  top: 3%;
-  right: 3%;
-}
-
-.player-box.bottom-left {
-  align-items: flex-start; /* text left aligned */
-  flex-direction: column-reverse;
-  bottom: 3%;
-  left: 3%;
-}
-
-.player-box.bottom-right {
-  align-items: flex-end; /* text right aligned */
-  flex-direction: column-reverse;
-  bottom: 3%;
-  right: 3%;
-}
-
-.player-box .player-name {
-  padding: 3px 10px;
-  margin: 0px;
-  background: whitesmoke;
-}
-
-.player-name.active {
-  border: 4px solid yellowgreen;
 }
 
 #me.player-name {

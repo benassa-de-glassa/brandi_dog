@@ -5,7 +5,6 @@ import Avatar from "./Avatar";
 import Card from "../card/Card";
 
 import {
-  // BoardPositions,
   BoardProps,
   BoardTooltipState,
   BoardCoordinates,
@@ -13,13 +12,23 @@ import {
 } from "../../models/board.model";
 
 import { Marble } from "../../models/marble.model";
-import { Player } from "../../models/player.model";
 
-import boardData from "./boarddata4.json";
+import boardDataJSON from "./boarddata4.json";
+import boardData6JSON from "./boarddata6.json";
+
+const images = [
+  "avatars/lama.png",
+  "avatars/panda.png",
+  "avatars/lama.png",
+  "avatars/panda.png",
+];
 
 function Board(props: BoardProps) {
   const height = 800;
   const width = 800;
+
+  const boardData =
+    props.numberOfPlayers === 4 ? boardDataJSON : boardData6JSON;
 
   const [tooltip, setTooltip] = useState<BoardTooltipState>({
     visible: false,
@@ -29,17 +38,9 @@ function Board(props: BoardProps) {
     text: "",
   });
 
-  var playerList = [
-    ...props.playerList,
-    {} as Player,
-    {} as Player,
-    {} as Player,
-    {} as Player,
-  ]; // make sure this list is at least 4 long.. players are added to the beginning
-
-  var homeOccupation = new Array(16);
-  var stepOccupation = new Array(64);
-  var houseOccupation = new Array(16);
+  let homeOccupation = new Array(4 * props.numberOfPlayers);
+  let stepOccupation = new Array(16 * props.numberOfPlayers);
+  let houseOccupation = new Array(4 * props.numberOfPlayers);
 
   // place the marbles
   props.marbleList.forEach((marble: Marble) => {
@@ -54,8 +55,8 @@ function Board(props: BoardProps) {
     }
   });
 
-  const radius = 12;
-  const outerRadius = 18;
+  const radius = props.numberOfPlayers === 4 ? 12 : 10;
+  const outerRadius = props.numberOfPlayers === 4 ? 18 : 15;
 
   function onStepClick(data: Step) {
     if (data.id == null) {
@@ -118,51 +119,20 @@ function Board(props: BoardProps) {
 
   return (
     <div id="board-container">
-      <div className="svg-container">
-        {playerList[0] && (
+      <div
+        className={`svg-container${props.numberOfPlayers === 4 ? "" : "-6"}`}
+      >
+        {props.playerList.map((player, i) => (
           <Avatar
-            className="player-box top-right"
-            image="avatars/lama.png"
-            textOnTop={true}
-            playerName={playerList[0].username}
-            isMe={playerList[0].uid === props.player.uid}
-            isActive={props.activePlayerIndex === 0}
-            clickHandler={async () => playerBoxClicked(0)}
+            className={`player-box players-${props.numberOfPlayers} player-${i}`}
+            image={images[i]}
+            textOnTop={i < 2}
+            playerName={player.username}
+            isMe={player.uid === props.player.uid}
+            isActive={i === props.activePlayerIndex}
+            clickHandler={async () => playerBoxClicked(i)}
           />
-        )}{" "}
-        {playerList[1] && (
-          <Avatar
-            className="player-box top-left"
-            image="avatars/penguin.png"
-            textOnTop={true}
-            playerName={playerList[1].username}
-            isMe={playerList[1].uid === props.player.uid}
-            isActive={props.activePlayerIndex === 1}
-            clickHandler={async () => playerBoxClicked(1)}
-          />
-        )}{" "}
-        {playerList[2] && (
-          <Avatar
-            className="player-box bottom-left"
-            image="avatars/squirrel.png"
-            textOnTop={false}
-            playerName={playerList[2].username}
-            isMe={playerList[2].uid === props.player.uid}
-            isActive={props.activePlayerIndex === 2}
-            clickHandler={async () => playerBoxClicked(2)}
-          />
-        )}{" "}
-        {playerList[3] && (
-          <Avatar
-            className="player-box bottom-right"
-            image="avatars/panda.png"
-            textOnTop={false}
-            playerName={playerList[3].username}
-            isMe={playerList[3].uid === props.player.uid}
-            isActive={props.activePlayerIndex === 3}
-            clickHandler={async () => playerBoxClicked(3)}
-          />
-        )}
+        ))}
         <svg
           id="board"
           className="svg-content-responsive"

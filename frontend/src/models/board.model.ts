@@ -21,6 +21,13 @@ export interface BoardProps {
   topCard: CardIF | null;
 }
 
+export interface BoardData {
+  steps: Step[],
+  outer: BoardCoordinates[],
+  homes: Step[],
+  houses: Step[],
+}
+
 export interface BoardTooltipState extends Tooltip {
   visible: boolean;
   text: string;
@@ -29,6 +36,7 @@ export interface BoardTooltipState extends Tooltip {
 export interface BoardCoordinates {
   x: string;
   y: string;
+  color?: string;
 };
 
 export interface Step extends BoardCoordinates {

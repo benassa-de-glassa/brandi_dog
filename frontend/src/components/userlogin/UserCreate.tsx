@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 import { UserCreateProps, UserCreateState } from "../../models/user.model";
 
+import { avatars } from "../../constants/constants";
+
 function UserCreate(props: UserCreateProps) {
   const [state, setState] = useState({
     username: "",
@@ -10,7 +12,7 @@ function UserCreate(props: UserCreateProps) {
     error: "",
   } as UserCreateState);
 
-  const [avatar, setAvatar] = useState("lama.png")
+  const [avatarIndex, setAvatarIndex] = useState<number | null>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [event.target.name]: event.target.value });
@@ -18,11 +20,17 @@ function UserCreate(props: UserCreateProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!avatarIndex) {
+      setError("Please select your spirit animal")
+      return;
+    }
+
     // supply callback in case of error
     props.createUser(
       state.username,
       state.password,
-      avatar,
+      avatars[avatarIndex],
       () => setState({ success: true } as UserCreateState), // success callback
       setError // error callback
     );
@@ -48,7 +56,7 @@ function UserCreate(props: UserCreateProps) {
           <div>
             {state.error && <div className="error"> {state.error}</div>}
             <form className="user-form" onSubmit={handleSubmit}>
-              <label>Create user account: </label>
+              <label><h3>Create user account</h3></label>
               <input
                 name="username"
                 // label='USERNAME'
@@ -65,6 +73,17 @@ function UserCreate(props: UserCreateProps) {
                 onChange={handleChange}
                 placeholder="Password"
               />
+              <span>Choose your spirit animal</span>
+              <div id="avatar-selection">
+                {avatars.map((avatar, i) => (
+                  <img
+                    className={i === avatarIndex ? "selected" : ""}
+                    onClick={() => setAvatarIndex(i)}
+                    src={`avatars/${avatar}.png`}
+                    alt={`avatar-${i}`}
+                  ></img>
+                ))}
+              </div>
               <input type="submit" className="btn" value="Create user" />
             </form>
           </div>

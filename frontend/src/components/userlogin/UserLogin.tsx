@@ -38,7 +38,7 @@ function UserLogin(props: UserLoginProps) {
           <div className="success">Login successful.</div>
         ) : (
           <form className="user-form" onSubmit={handleSubmit}>
-            <label>Log in: </label>
+            <label><h3>Log in</h3></label>
             <input
               name="username"
               title="USERNAME"

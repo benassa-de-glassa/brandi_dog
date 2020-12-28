@@ -146,6 +146,25 @@ header #connection-lost {
   display: flex;
 }
 
+.user-container #avatar-selection {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: -0.2em;
+  margin-right: -0.2em;
+}
+
+.user-container #avatar-selection img {
+  margin: 0 0.2em;
+  width: 5em;
+  border-radius: 5em;
+  border: 4px solid black;
+}
+
+.user-container #avatar-selection img.selected {
+  border: 4px solid salmon;
+}
+
 .form-container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -164,6 +183,10 @@ header #connection-lost {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column wrap;
+          flex-flow: column wrap;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -757,7 +780,7 @@ header #connection-lost {
 }
 
 .avatar.active {
-  border: 6px solid #62ffea;
+  border: 6px solid salmon;
 }
 
 .card {

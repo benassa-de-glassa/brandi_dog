@@ -120,7 +120,7 @@ function Board(props: BoardProps) {
         {props.playerList.map((player, i) => (
           <Avatar
             className={`player-box players-${props.numberOfPlayers} player-${i}`}
-            image={`${avatarPath}/${player.avatar}`}
+            image={`${avatarPath}/${player.avatar}.png`}
             textOnTop={i < 2}
             playerName={player.username}
             isMe={player.uid === props.player?.uid}

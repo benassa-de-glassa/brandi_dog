@@ -1,11 +1,14 @@
 .user-container {
   display: flex;
+  text-align: center;
+  justify-content: center;
 }
 
 #avatar-selection {
   padding: 0.5em;
   display: flex;
   flex-flow: column;
+  align-items: center;
 
   $gap: 0.2em;
   margin-left: -$gap;
@@ -36,13 +39,11 @@
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  text-align: center;
 }
 
 .user-form {
   // margin: 0.4em;
   padding: 0.5em 0;
-  text-align: center;
   display: flex;
   flex-flow: column wrap;
   align-items: center;

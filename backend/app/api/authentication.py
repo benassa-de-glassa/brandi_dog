@@ -46,7 +46,7 @@ from datetime import datetime, timedelta
 from loguru import logger
 import jwt  # json web tokens
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
@@ -332,10 +332,11 @@ async def clear_socket(current_user: models.user.User = Depends(get_current_user
 
 # TODO
     
-@router.post('/users/me/avatar')
-async def change_avatar(current_user: models.user.User = Depends(get_current_user)):
-    pass
+@router.post('/users/me/avatar', tags=["player info"])
+async def change_avatar(new_avatar: str = Body(...), current_user: models.user.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    crud.update_avatar(db, current_user.uid, new_avatar)
 
-@router.post('/users/me/password')
+@router.post('/users/me/password', tags=["player info"])
 async def change_password(current_user: models.user.User = Depends(get_current_user)):
+    # crud.update_password(db, current_user.uid, new_hashed_password)
     pass

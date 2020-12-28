@@ -10,10 +10,12 @@ export default function UserSettings(props: UserSettingsProps) {
     null
   );
 
-  const handleClick = () => {};
+  const handleClick = () => {
+    (selectedAvatarIndex !== null) && props.changeAvatar(avatars[selectedAvatarIndex]);
+  };
 
   return (
-    <div className="container">
+    <div className="container user-container">
       {props.player ? (
         <div>
           <img

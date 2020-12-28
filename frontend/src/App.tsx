@@ -74,6 +74,7 @@ class App extends Component<MainAppProps, MainAppState> {
     this.clearSocket = this.clearSocket.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
     this.getPlayer = this.getPlayer.bind(this);
+    this.changeAvatar = this.changeAvatar.bind(this);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.joinGame = this.joinGame.bind(this);
@@ -154,6 +155,18 @@ class App extends Component<MainAppProps, MainAppState> {
         this.joinGameSocket(data.game_token);
         this.setState({ showMenu: false });
       }
+    }
+  }
+
+  async changeAvatar(avatar: string) {
+    if (!this.state.player) return;
+
+    const data = (await postToBackend("users/me/avatar", avatar)) as ResponseData
+
+    if (!data.code) {
+      const me = (await getFromBackend("users/me")) as GetPlayerResponse;
+
+      this.setState({ player: { ...this.state.player, avatar: me.avatar } });
     }
   }
 
@@ -299,10 +312,7 @@ class App extends Component<MainAppProps, MainAppState> {
               path="/users/login"
               exact
               render={() => (
-                <UserLogin
-                  player={this.state.player}
-                  login={this.login}
-                />
+                <UserLogin player={this.state.player} login={this.login} />
               )}
             />
             <Route
@@ -313,7 +323,7 @@ class App extends Component<MainAppProps, MainAppState> {
             <Route
               path="/users/settings"
               exact
-              component={() => <UserSettings player={this.state.player} />}
+              component={() => <UserSettings player={this.state.player} changeAvatar={this.changeAvatar} />}
             />
             <Route path="/about" exact render={() => <About />} />
           </Switch>

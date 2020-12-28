@@ -28,6 +28,7 @@ export interface UserCreateState {
 
 export interface UserSettingsProps {
   player: Player | null;
+  changeAvatar: (avatar: string) => void;
 }
 
 export interface AvatarSelectionProps {

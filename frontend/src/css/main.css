@@ -602,8 +602,8 @@ header #connection-lost {
   background: whitesmoke;
 }
 
-#board-container .player-box .player-name.player-name.active {
-  border: 4px solid yellowgreen;
+#board-container .player-box .player-name.me {
+  background-color: lightskyblue;
 }
 
 #board-container .player-box.players-4.player-0 {
@@ -789,10 +789,6 @@ header #connection-lost {
 #board-container #board {
   background-image: url("img/plywood-background.png");
   background-size: 120%;
-}
-
-#me.player-name {
-  background-color: lightskyblue;
 }
 
 .avatar {

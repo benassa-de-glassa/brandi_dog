@@ -7,8 +7,7 @@ export default function Avatar(props: AvatarProps) {
             onClick={props.clickHandler}
         >
             <p
-                id={props.isMe ? 'me' : ''}
-                className='player-name'
+                className={props.isMe ? 'player-name me' : 'player-name'}
                 onClick={props.clickHandler}
             >{props.isHost ? `! ${props.playerName}` : props.playerName}</p>
             <img

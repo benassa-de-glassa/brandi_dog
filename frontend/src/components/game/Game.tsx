@@ -229,7 +229,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
   }
 
   tooltipClicked(action: Action) {
-    if (!this.state.selectedCardIndex || !this.state.selectedMarble) {
+    if (this.state.selectedCardIndex === null || !this.state.selectedMarble) {
       return;
     }
     let selectedCard = this.state.cards[this.state.selectedCardIndex];
@@ -397,7 +397,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
             tooltipClicked={this.tooltipClicked}
             marbleClicked={this.marbleClicked}
             selectedCard={
-              this.state.selectedCardIndex
+              this.state.selectedCardIndex !== null 
                 ? this.state.cards[this.state.selectedCardIndex]
                 : null
             }
@@ -416,7 +416,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
               cardClicked={this.cardClicked}
               selectedCardIndex={this.state.selectedCardIndex}
               selectedCard={
-                this.state.selectedCardIndex
+                this.state.selectedCardIndex !== null
                   ? this.state.cards[this.state.selectedCardIndex]
                   : null
               }

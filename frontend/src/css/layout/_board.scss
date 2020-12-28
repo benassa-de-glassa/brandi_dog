@@ -95,8 +95,8 @@
       margin: 0px;
       background: whitesmoke;
 
-      &.player-name.active {
-        border: 4px solid yellowgreen;
+      &.me {
+        background-color: lightskyblue;
       }
     }
 
@@ -246,10 +246,6 @@
     background-image: url("img/plywood-background.png");
     background-size: 120%;
   }
-}
-
-#me.player-name {
-  background-color: lightskyblue;
 }
 
 .avatar {

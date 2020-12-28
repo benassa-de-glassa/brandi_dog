@@ -138,7 +138,7 @@ export default function Controls(props: ControlProps) {
             }
           >
             {cards.map((card) => (
-              <option value={card}>{card}</option>
+              <option key={card} value={card}>{card}</option>
             ))}
           </select>
         )}

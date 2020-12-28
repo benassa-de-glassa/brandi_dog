@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 from typing import List, Optional
 
 from app.models.card import Card
@@ -6,14 +6,15 @@ from app.models.marble import Marble
 
 
 class UserBase(BaseModel):
-    username: str
+    username: constr(min_length=3, max_length=14)
+    avatar: str
 
 class UserCreate(UserBase):
     # different class to never have the plain-text password accessible
-    password: str
+    password: constr(min_length=1, max_length=64)
 
 class User(UserBase):
-    uid: str
+    uid: int
 
     class Config:
         orm_mode = True

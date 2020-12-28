@@ -1,0 +1,26 @@
+#game-container {
+  padding: 0;
+
+  #game-content {
+    // $gap: 1em;
+
+    background: rgb(233, 233, 233);
+    display: flex;
+    flex-flow: row wrap;
+    // margin-left: -$gap;
+    // margin-right: -$gap;
+
+    #right-container {
+        flex-grow: 1;
+        flex-basis: 25%;
+
+        display: flex;
+        flex-flow: column nowrap;
+
+        #chat-container {
+            padding: .5em;
+            max-height: 50vh;
+        }
+    }
+  }
+}

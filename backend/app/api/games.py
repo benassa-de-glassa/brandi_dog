@@ -410,7 +410,7 @@ async def perform_action(game_id: str, action: Action, user: User = Depends(get_
     else:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST, detail=res["note"])
-        return
+
     return game.public_state()
 
 

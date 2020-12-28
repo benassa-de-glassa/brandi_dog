@@ -4,10 +4,9 @@ from typing import List, Union
 
 class CardBase(BaseModel):
     uid: int
+    value: str
+    color: str
 
 
 class Card(CardBase):
-    uid: int
-    value: str
-    color: str
     actions: Union[int, str, List]

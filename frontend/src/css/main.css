@@ -1,0 +1,995 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
+header {
+  background-color: #380000;
+  -webkit-box-shadow: 0px 11px 50px -5px grey;
+          box-shadow: 0px 11px 50px -5px grey;
+  color: white;
+  font-size: calc(14px + 0.4vw);
+}
+
+header #title {
+  font-size: calc(14px + 1vw);
+}
+
+header #topbar {
+  margin: 0 auto;
+  min-width: 300px;
+  max-width: calc(1400px - 2em);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 1em;
+}
+
+header #title {
+  font-weight: bold;
+}
+
+header .nav-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  color: inherit;
+  font-size: 100%;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+header .nav-btn:after {
+  display: block;
+  content: "";
+  width: 100%;
+  height: 0.1em;
+  margin-top: 0.1em;
+  background-color: transparent;
+}
+
+header .nav-btn:hover:after {
+  background-color: white;
+}
+
+header nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  height: 2em;
+  padding-top: 0.3em;
+}
+
+header nav .nav-btn {
+  padding: 0 2em;
+}
+
+header nav .subnav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+header #login-signup {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+header .menu-btn {
+  color: white;
+  display: none;
+  height: 1em;
+  cursor: pointer;
+}
+
+header #player-icon {
+  width: 0.7em;
+  margin-right: 0.2em;
+}
+
+header #connection-lost {
+  background-color: #550000;
+  padding: 0.5em;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  header .menu-btn {
+    display: block;
+  }
+  header nav {
+    height: auto;
+    display: none;
+  }
+  header nav.open {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: column nowrap;
+            flex-flow: column nowrap;
+  }
+  header nav .nav-btn {
+    padding: 0.5em;
+    margin: 0.5em;
+    display: block;
+  }
+  header nav .subnav {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: column nowrap;
+            flex-flow: column nowrap;
+  }
+}
+
+.user-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  text-align: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#avatar-selection {
+  padding: 0.5em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-left: -0.2em;
+  margin-right: -0.2em;
+}
+
+#avatar-selection #avatar-display {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  padding: .5em;
+  max-width: 600px;
+}
+
+#avatar-selection #avatar-display img {
+  margin: 0.2em;
+  width: 5em;
+  border-radius: 5em;
+  border: 4px solid black;
+}
+
+#avatar-selection #avatar-display img.selected {
+  border: 4px solid salmon;
+}
+
+.form-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 0 auto;
+}
+
+.user-form {
+  padding: 0.5em 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column wrap;
+          flex-flow: column wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.user-form input {
+  margin: 0.3em;
+}
+
+@media (max-width: 768px) {
+  .user-form {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+}
+
+.avatar-large {
+  width: 10em;
+}
+
+#menu-container {
+  min-width: calc(450px - 2*1em);
+}
+
+#menu-container button.close {
+  width: 28px;
+  height: 28px;
+  z-index: 1500;
+  color: grey;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 1px 0 #fff;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  display: block;
+}
+
+#menu-container button.close:hover {
+  color: #000;
+  cursor: pointer;
+  background-color: lightgrey;
+}
+
+#menu-container #menu-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  margin-left: -0.5em;
+  margin-right: -0.5em;
+}
+
+#menu-container #menu-content #game-viewer {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-preferred-size: 40%;
+      flex-basis: 40%;
+  min-width: calc(450px - 2*1em);
+  margin: 0 0.5em;
+}
+
+#menu-container #menu-content #game-viewer table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#menu-container #menu-content #game-viewer th,
+#menu-container #menu-content #game-viewer td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+#menu-container #menu-content #game-viewer thead {
+  background-color: whitesmoke;
+}
+
+#menu-container #menu-content #game-viewer .selected-row {
+  background-color: lightgoldenrodyellow;
+}
+
+#menu-container #menu-content #game-viewer .joined-row {
+  background-color: lightskyblue;
+}
+
+#menu-container #menu-content #game-viewer #game-list-table tbody tr:hover:not(.joined-row) {
+  background-color: lightgrey;
+}
+
+#menu-container #menu-content #game-viewer .button-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: -0.25em;
+  margin-right: -0.25em;
+}
+
+#menu-container #menu-content #game-viewer .button-row .btn {
+  margin: 0.25em;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container {
+  margin-top: .5em;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container div {
+  margin: .3em 0;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container input {
+  margin: .2em;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container .create-game-label {
+  display: inline-block;
+  width: 10em;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container #radio-board-size {
+  margin: -0.4em;
+}
+
+#menu-container #menu-content #game-viewer #player-create-container #radio-board-size .radio-option {
+  margin: 0 0.4em;
+}
+
+#menu-container #menu-content #global-chat-container {
+  margin: 0 0.4em;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-preferred-size: 40%;
+      flex-basis: 40%;
+  min-width: calc(450px - 2*1em);
+  max-height: 40vh;
+}
+
+.controls-box {
+  min-width: 400px;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  padding: 0.5em;
+}
+
+.controls-box .instruction-text {
+  margin: 0px;
+}
+
+.controls-box .hand {
+  margin: 10px;
+  height: 200px;
+}
+
+.controls-box #fold-buttons {
+  margin: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-flow: row-reverse nowrap;
+          flex-flow: row-reverse nowrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.controls-box #fold-buttons .btn {
+  margin-left: 10px;
+}
+
+.chat-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.chat-container .msg-box {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  overflow-y: scroll;
+}
+
+.chat-container .msg-box .msg {
+  padding: .5em;
+  background-color: #fadcd1;
+}
+
+.chat-container .msg-box .msg.msg-user {
+  background-color: #ccdef7;
+}
+
+.chat-container .msg-box .msg.msg-server {
+  background-color: #fcf7e3;
+}
+
+.chat-container .msg-box .msg .msg-label {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.chat-container .msg-box .msg-time {
+  font-size: 0.8em;
+  margin-left: auto;
+}
+
+.chat-container .text-box {
+  width: 100%;
+  resize: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+#game-container {
+  padding: 0;
+}
+
+#game-container #game-content {
+  background: #e9e9e9;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+}
+
+#game-container #game-content #right-container {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+}
+
+#game-container #game-content #right-container #chat-container {
+  padding: .5em;
+  max-height: 50vh;
+}
+
+#board-container {
+  display: inline-block;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
+}
+
+#board-container .svg-container {
+  width: 100%;
+  padding-bottom: 100%;
+  display: inline-block;
+  position: relative;
+  min-width: 500px;
+  height: 0;
+  vertical-align: top;
+}
+
+#board-container .svg-container-6 {
+  padding-bottom: 100%;
+  width: 100%;
+  display: inline-block;
+  position: relative;
+  min-width: 400px;
+  height: 0;
+  vertical-align: top;
+}
+
+#board-container .svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#board-container .tooltip {
+  position: absolute;
+  z-index: 1100;
+  display: block;
+  margin: 0;
+  opacity: 1;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 4px;
+  padding-right: 30px;
+}
+
+#board-container .tooltip .tooltip-text {
+  font-size: small;
+  margin: 0;
+  margin-left: 2px;
+  margin-bottom: 2px;
+  padding: 0;
+}
+
+#board-container .tooltip .close-tooltip {
+  top: 0px;
+  right: 0px;
+}
+
+#board-container .tooltip .movebutton {
+  padding: 0;
+  margin: 1px 2px;
+  width: 100%;
+  max-width: 30px;
+  max-height: 30px;
+}
+
+#board-container .tooltip.tt-not-visible {
+  opacity: 0;
+}
+
+#board-container .player-name {
+  font-size: 20px;
+  pointer-events: none;
+}
+
+#board-container .player-box {
+  stroke: grey;
+  stroke-width: 2px;
+  fill: white;
+  fill-opacity: 0.5;
+  width: 11%;
+  height: 15%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: absolute;
+  z-index: 1000;
+}
+
+#board-container .player-box.active {
+  fill: forestgreen;
+  fill-opacity: 0.3;
+  font-size: 15px;
+}
+
+#board-container .player-box .player-name {
+  padding: 3px 10px;
+  margin: 0px;
+  background: whitesmoke;
+}
+
+#board-container .player-box .player-name.me {
+  background-color: lightskyblue;
+}
+
+#board-container .player-box.players-4.player-0 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  top: 3%;
+  right: 3%;
+}
+
+#board-container .player-box.players-4.player-1 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  top: 3%;
+  left: 3%;
+}
+
+#board-container .player-box.players-4.player-2 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  left: 3%;
+}
+
+#board-container .player-box.players-4.player-3 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  right: 3%;
+}
+
+#board-container .player-box.players-6.player-0 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  top: 3%;
+  right: 3%;
+}
+
+#board-container .player-box.players-6.player-1 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  top: 3%;
+  left: 3%;
+}
+
+#board-container .player-box.players-6.player-2 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  top: 42.5%;
+  left: 3%;
+}
+
+#board-container .player-box.players-6.player-3 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  left: 3%;
+}
+
+#board-container .player-box.players-6.player-4 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  right: 3%;
+}
+
+#board-container .player-box.players-6.player-5 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  top: 42.5%;
+  right: 3%;
+}
+
+#board-container .step {
+  stroke: black;
+  stroke-width: 3px;
+  fill-opacity: 0;
+}
+
+#board-container .step:hover {
+  stroke-width: 5px;
+  cursor: pointer;
+}
+
+#board-container .occupied {
+  fill-opacity: 1;
+}
+
+#board-container .occupied-red,
+#board-container .occupied-0 {
+  stroke: black;
+  fill: red;
+}
+
+#board-container .occupied-yellow,
+#board-container .occupied-1 {
+  stroke: black;
+  fill: yellow;
+}
+
+#board-container .occupied-green,
+#board-container .occupied-3 {
+  stroke: black;
+  fill: green;
+}
+
+#board-container .occupied-blue,
+#board-container .occupied-4 {
+  stroke: black;
+  fill: blue;
+}
+
+#board-container .out {
+  fill: none;
+  stroke-width: 4px;
+}
+
+#board-container .out-red,
+#board-container .out-0 {
+  stroke: red;
+}
+
+#board-container .out-blue,
+#board-container .out-3 {
+  stroke: blue;
+}
+
+#board-container .out-green,
+#board-container .out-2 {
+  stroke: green;
+}
+
+#board-container .out-yellow,
+#board-container .out-1 {
+  stroke: yellow;
+}
+
+#board-container .out-4 {
+  stroke: purple;
+}
+
+#board-container .out-5 {
+  stroke: orange;
+}
+
+#board-container #board {
+  background-image: url("img/plywood-background.png");
+  background-size: 120%;
+}
+
+.avatar {
+  display: block;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 50%;
+  border: 3px solid black;
+  pointer-events: none;
+}
+
+.avatar.active {
+  border: 6px solid salmon;
+}
+
+.card {
+  position: relative;
+  top: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: inline-block;
+  margin-right: -35px;
+  width: 90px;
+  height: 150px;
+  border-radius: 10px;
+  background: whitesmoke;
+  border: 3px solid black;
+}
+
+.card.card-selected {
+  top: 25px;
+  border: 3px solid grey;
+  z-index: 99;
+}
+
+.card.card-selected:hover {
+  top: 25px;
+}
+
+.card.card-highlighted {
+  top: 25px;
+  background: lightgrey;
+}
+
+.card:hover {
+  top: 10px;
+  z-index: 100;
+}
+
+.card .card-value {
+  font-size: 25px;
+  font-weight: 500;
+  position: absolute;
+  top: 0;
+  left: 3px;
+}
+
+.card .card-color {
+  font-size: 40px;
+  position: absolute;
+  top: 45px;
+  left: 25px;
+}
+
+.card .card-black {
+  color: black;
+}
+
+.card .card-red {
+  color: #d30a0a;
+}
+
+.svg-container .card {
+  /* put the card in the middle of the board */
+  position: absolute;
+  left: calc(50% - 45px);
+  top: calc(50% - 75px);
+}
+
+.svg-container-6 .card {
+  /* put the card in the middle of the board */
+  position: absolute;
+  left: calc(50% - 45px);
+  top: calc(50% - 75px);
+}
+
+body,
+html {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: "Montserrat";
+  margin: 0;
+  background-color: whitesmoke;
+}
+
+body button,
+html button {
+  cursor: pointer;
+}
+
+body a,
+html a {
+  text-decoration: none;
+}
+
+body h1, body h2, body h3, body h4, body h5, body p,
+html h1,
+html h2,
+html h3,
+html h4,
+html h5,
+html p {
+  margin: 0;
+  margin-bottom: .4em;
+}
+
+body .ml-1,
+html .ml-1 {
+  margin-left: .4em;
+}
+
+body .btn,
+html .btn {
+  font-weight: 450;
+  color: white;
+  background-color: slateblue;
+  cursor: pointer;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 6px 20px;
+  border: 2px solid transparent;
+  border-radius: 3px;
+}
+
+body .btn:hover:not(:disabled),
+html .btn:hover:not(:disabled) {
+  border: 2px solid lightgrey;
+}
+
+body .btn:disabled,
+html .btn:disabled {
+  cursor: default;
+  background-color: rgba(105, 90, 205, 0.5);
+  color: lightgrey;
+}
+
+body .btn.btn-green,
+html .btn.btn-green {
+  background-color: darkolivegreen;
+}
+
+body .btn.btn-danger,
+html .btn.btn-danger {
+  background-color: darkred;
+}
+
+body .container,
+html .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1em;
+  background-color: white;
+  position: relative;
+}
+
+body div.error,
+html div.error {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-color: #660000;
+  color: white;
+  text-align: center;
+  height: 2em;
+  padding: 0.2em 1em;
+}
+
+body div.success,
+html div.success {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-color: #00441c;
+  color: white;
+  text-align: center;
+  height: 2em;
+  padding: 0.2em 1em;
+}
+/*# sourceMappingURL=main.css.map */

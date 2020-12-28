@@ -16,7 +16,8 @@ def create_user(db: Session, new_user: user.UserCreate):
     hashed_password = get_password_hash(new_user.password)
     db_user = db_models.User(
         username=new_user.username, 
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        avatar=new_user.avatar
     )
     db.add(db_user)
     db.commit()
@@ -25,3 +26,12 @@ def create_user(db: Session, new_user: user.UserCreate):
     db.refresh(db_user)
     return db_user
 
+def update_avatar(db: Session, uid: int, avatar: str):
+    user = get_user(db, uid)
+    user.avatar = avatar
+    db.commit()
+
+def update_password(db: Session, uid: int, new_hashed_password: str):
+    user = get_user(db, uid)
+    user.hashed_password = new_hashed_password
+    db.commit()

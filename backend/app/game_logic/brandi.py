@@ -86,7 +86,7 @@ class Brandi:
         self.field: Field = None
 
         # add the host to the game
-        self.host: Player = Player(host.uid, host.username)
+        self.host: Player = Player(host.uid, host.username, host.avatar)
         self.player_join(self.host)  # add the host as the first player
 
         self.game_state: int = 0  # start in the initialized state
@@ -130,7 +130,7 @@ class Brandi:
         # assign the lowest non taken position
         position: int = next(filterfalse(
             set(player_positions).__contains__, count(0)))
-        self.players[user.uid] = Player(user.uid, user.username, position)
+        self.players[user.uid] = Player(user.uid, user.username, user.avatar, position)
 
         self.calculate_order()
         return {

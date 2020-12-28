@@ -1,0 +1,11 @@
+$content-width: 1400px;
+$min-width: 450px;
+
+$container-padding: 1em;
+
+$min-container-content-width: calc(#{$min-width} - 2*#{$container-padding});
+
+$primary-color: slateblue; 
+$primary-disabled: rgba(105, 90, 205, 0.5);
+$button-green: darkolivegreen;
+$danger: darkred;

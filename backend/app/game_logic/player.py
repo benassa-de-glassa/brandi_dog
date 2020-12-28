@@ -14,9 +14,10 @@ class Player:
     Player.hand is an instance of the Players Hand
     """
 
-    def __init__(self, uid: str, username: str, position: int = None):
+    def __init__(self, uid: str, username: str, avatar: str, position: int = None):
         self._uid: str = uid
         self.username: str = username
+        self.avatar: str = avatar
         self._position: int = position
         self.hand: Hand = Hand()
         self.marbles: Dict[str, Marble] = {}
@@ -75,6 +76,7 @@ class Player:
         return {
             "uid": self._uid,
             "username": self.username,
+            "avatar": self.avatar,
             "hand": self.hand.to_json(),
             "marbles": [marble.to_json() for marble in self.marbles.values()],
             "steps_of_seven": self.steps_of_seven_remaining,
@@ -84,5 +86,6 @@ class Player:
         return {
             "uid": self._uid,
             "username": self.username,
+            "avatar": self.avatar,
             "marbles": [marble.to_json() for marble in self.marbles.values()],
         }

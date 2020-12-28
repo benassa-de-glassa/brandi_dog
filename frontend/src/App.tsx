@@ -56,6 +56,7 @@ import { userLogin } from "./api/userlogin";
 import { getFromBackend, postToBackend } from "./api/fetch_backend";
 import { MainAppProps, MainAppState } from "./models/app.model";
 import { ResponseData, GetPlayerResponse } from "./models/response-data.model";
+import UserSettings from "./components/userlogin/UserSettings";
 
 class App extends Component<MainAppProps, MainAppState> {
   constructor(props: MainAppProps) {
@@ -308,6 +309,11 @@ class App extends Component<MainAppProps, MainAppState> {
               path="/users/create"
               exact
               component={() => <UserCreate createUser={this.createUser} />}
+            />
+            <Route
+              path="/users/settings"
+              exact
+              component={() => <UserSettings player={this.state.player} />}
             />
             <Route path="/about" exact render={() => <About />} />
           </Switch>

@@ -27,5 +27,10 @@ export interface UserCreateState {
 }
 
 export interface UserSettingsProps {
-  player: Player;
+  player: Player | null;
+}
+
+export interface AvatarSelectionProps {
+  selectedAvatarIndex: number | null;
+  setSelectedAvatarIndex: (i: number) => void;
 }

@@ -1,50 +1,63 @@
 .user-container {
+  display: flex;
+}
+
+#avatar-selection {
+  padding: 0.5em;
+  display: flex;
+  flex-flow: column;
+
+  $gap: 0.2em;
+  margin-left: -$gap;
+  margin-right: -$gap;
+
+  #avatar-display {
     display: flex;
+    flex-flow: row wrap;
 
-    #avatar-selection {
-        padding: .5em;
-        display: flex;
+    padding: .5em;
+    max-width: 600px;
 
-        $gap: .2em;
-        margin-left: -$gap;
-        margin-right: -$gap;
+    img {
+      margin: 0 $gap;
+      $width: 5em;
+      width: $width;
+      border-radius: $width;
+      border: 4px solid black;
 
-        img {
-            margin: 0 $gap;
-            $width: 5em;
-            width: $width;
-            border-radius: $width;
-            border: 4px solid black;
-
-            &.selected {
-                border: 4px solid salmon;
-            }
-        }
+      &.selected {
+        border: 4px solid salmon;
+      }
     }
+  }
 }
 
 .form-container {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .user-form {
-    // margin: 0.4em;
-    padding: 0.5em 0;
-    text-align: center;
-    display: flex;
-    flex-flow: column wrap;
-    align-items: center;
+  // margin: 0.4em;
+  padding: 0.5em 0;
+  text-align: center;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
 
-    input {
-        margin: .3em;
-    }
+  input {
+    margin: 0.3em;
+  }
 }
 
 @media (max-width: 768px) {
-    .user-form {
-        flex-direction: column;
-    }
+  .user-form {
+    flex-direction: column;
   }
+}
+
+.avatar-large {
+  width: 10em;
+}

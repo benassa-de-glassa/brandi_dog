@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { UserCreateProps, UserCreateState } from "../../models/user.model";
 
+import AvatarSelection from "./AvatarSelection";
 import { avatars } from "../../constants/constants";
 
 function UserCreate(props: UserCreateProps) {
@@ -12,7 +13,9 @@ function UserCreate(props: UserCreateProps) {
     error: "",
   } as UserCreateState);
 
-  const [avatarIndex, setAvatarIndex] = useState<number | null>(null);
+  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState<number | null>(
+    null
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [event.target.name]: event.target.value });
@@ -21,8 +24,8 @@ function UserCreate(props: UserCreateProps) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (avatarIndex === null) {
-      setError("Please select your spirit animal")
+    if (selectedAvatarIndex === null) {
+      setError("Please select your spirit animal");
       return;
     }
 
@@ -30,14 +33,14 @@ function UserCreate(props: UserCreateProps) {
     props.createUser(
       state.username,
       state.password,
-      avatars[avatarIndex],
+      avatars[selectedAvatarIndex],
       () => setState({ success: true } as UserCreateState), // success callback
       setError // error callback
     );
   };
 
   const setError = (message: string) => {
-    setState({ 
+    setState({
       ...state,
       success: false,
       error: message,
@@ -55,7 +58,9 @@ function UserCreate(props: UserCreateProps) {
           <div>
             {state.error && <div className="error"> {state.error}</div>}
             <form className="user-form" onSubmit={handleSubmit}>
-              <label><h3>Create user account</h3></label>
+              <label>
+                <h3>Create user account</h3>
+              </label>
               <input
                 name="username"
                 // label='USERNAME'
@@ -72,18 +77,10 @@ function UserCreate(props: UserCreateProps) {
                 onChange={handleChange}
                 placeholder="Password"
               />
-              <span>Choose your spirit animal</span>
-              <div id="avatar-selection">
-                {avatars.map((avatar, i) => (
-                  <img
-                    key={`avatar-${i}`}
-                    className={i === avatarIndex ? "selected" : ""}
-                    onClick={() => setAvatarIndex(i)}
-                    src={`avatars/${avatar}.png`}
-                    alt={`avatar-${i}`}
-                  ></img>
-                ))}
-              </div>
+              <AvatarSelection
+                selectedAvatarIndex={selectedAvatarIndex}
+                setSelectedAvatarIndex={setSelectedAvatarIndex}
+              />
               <input type="submit" className="btn" value="Create user" />
             </form>
           </div>

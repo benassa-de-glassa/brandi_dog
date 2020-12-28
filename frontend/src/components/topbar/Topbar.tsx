@@ -40,10 +40,10 @@ const TopBar: React.FunctionComponent<TopBarProps & RouteComponentProps> = (
           </span>
           {props.player ? (
             <span id="player-logout" className="subnav">
-              <button id="player-btn" className="nav-btn">
+              <Link id="player-btn" className="nav-btn" to="/users/settings">
                 <img src="/player-icon.svg" id="player-icon" alt="p-icon" />
                 {props.player.username}
-              </button>
+              </Link>
               <button className="nav-btn" onClick={props.logout}>
                 Logout
               </button>

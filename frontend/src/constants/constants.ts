@@ -23,5 +23,5 @@ export const possibleActions: { [key in CardKey]: Action[] } = {
     Jo: [], // has to be included due to reasons, should never be accessed
   };
   
-  export const avatarPath = 'users/avatars'
+  export const avatarPath = '/users/avatars'
   export const avatars = ["lama", "panda", "squirrel", "penguin"];

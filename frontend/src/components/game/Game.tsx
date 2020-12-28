@@ -183,7 +183,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
   async swapCard() {
     const index = this.state.selectedCardIndex;
 
-    if (!index) {
+    if (index === null) {
       return;
     }
 

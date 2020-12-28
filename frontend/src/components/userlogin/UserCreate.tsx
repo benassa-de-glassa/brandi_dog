@@ -21,7 +21,7 @@ function UserCreate(props: UserCreateProps) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!avatarIndex) {
+    if (avatarIndex === null) {
       setError("Please select your spirit animal")
       return;
     }
@@ -37,9 +37,8 @@ function UserCreate(props: UserCreateProps) {
   };
 
   const setError = (message: string) => {
-    setState({
-      username: "",
-      password: "",
+    setState({ 
+      ...state,
       success: false,
       error: message,
     });
@@ -77,6 +76,7 @@ function UserCreate(props: UserCreateProps) {
               <div id="avatar-selection">
                 {avatars.map((avatar, i) => (
                   <img
+                    key={`avatar-${i}`}
                     className={i === avatarIndex ? "selected" : ""}
                     onClick={() => setAvatarIndex(i)}
                     src={`avatars/${avatar}.png`}

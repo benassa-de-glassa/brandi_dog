@@ -119,6 +119,7 @@ function Board(props: BoardProps) {
       >
         {props.playerList.map((player, i) => (
           <Avatar
+            key={`avatar-${i}`}
             className={`player-box players-${props.numberOfPlayers} player-${i}`}
             image={`${avatarPath}/${player.avatar}.png`}
             textOnTop={i < 2}

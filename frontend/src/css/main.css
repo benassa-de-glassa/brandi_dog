@@ -147,6 +147,7 @@ header #connection-lost {
 }
 
 .user-container #avatar-selection {
+  padding: .5em;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -193,7 +194,7 @@ header #connection-lost {
 }
 
 .user-form input {
-  margin: .2em;
+  margin: .3em;
 }
 
 @media (max-width: 768px) {

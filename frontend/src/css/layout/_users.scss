@@ -2,6 +2,7 @@
     display: flex;
 
     #avatar-selection {
+        padding: .5em;
         display: flex;
 
         $gap: .2em;
@@ -38,7 +39,7 @@
     align-items: center;
 
     input {
-        margin: .2em;
+        margin: .3em;
     }
 }
 

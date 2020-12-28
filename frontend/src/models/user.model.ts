@@ -25,3 +25,7 @@ export interface UserCreateState {
   success: boolean;
   error: string;
 }
+
+export interface UserSettingsProps {
+  player: Player;
+}

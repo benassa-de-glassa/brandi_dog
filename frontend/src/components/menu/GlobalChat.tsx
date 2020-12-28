@@ -3,43 +3,54 @@ import React, { useEffect, useState } from "react";
 import { GlobalChatProps } from "../../models/menu.model";
 
 import { socket } from "../../api/socket";
+import { GlobalMessage } from "../../models/chat.model";
 
 export default function GlobalChat(props: GlobalChatProps) {
   const [textValue, setTextValue] = useState("");
-  const [messages, setMessages] = useState([
-    { sender: "server", time: "", text: "Welcome to Boomer Dog" },
+  const [messages, setMessages] = useState<GlobalMessage[]>([
+    { sender: "server", time: "", message_id: -1, text: "Welcome to Boomer Dog" },
   ]);
 
-  const handleChange = (event: any) => {
-    setTextValue(event.target.value);
-  };
-
-  const handleClick = () => {
-    if (!props.player) return;
-    socket.emit("global_chat_message", {
-      sender: props.player.username,
-      text: textValue,
-    });
-    setTextValue("");
-  };
-
-  const onEnterKey = (event: any) => {
-    if (event.key === "Enter" && event.shiftKey === false) {
-      handleClick();
-    }
-  };
-
   useEffect(() => {
+    // scroll to bottom of the chat to display any new messages 
     let objDiv: any = document.getElementById("global-message-box");
     objDiv.scrollTop = objDiv.scrollHeight;
   }, [messages]);
 
   useEffect(() => {
-    socket.on("global_chat_message", (data: any) => {
+    // subscribe to the socket.io for global chat messages
+    socket.on("global_chat_message", (data: GlobalMessage) => {
+      console.log(data)
       setMessages((m) => [...m, data]);
     });
-  }, [props.player]);
 
+    return () => {socket.off("global_chat_message")}
+  }, [] /* subscribe only once */);
+
+  const handleChange = (event: any) => {
+    setTextValue(event.target.value);
+  };
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    submit();
+  };
+
+  const onEnterKey = (event: any) => {
+    if (event.key === "Enter" && event.shiftKey === false) {
+      submit();
+    }
+  };
+
+  const submit = () => {
+    if (!props.player || !textValue) return;
+    socket.emit("global_chat_message", {
+      sender: props.player.username,
+      text: textValue,
+    });
+    setTextValue("");
+  }
+  
   return (
     <div id="global-chat-container" className="chat-container">
       <h3>Global chat</h3>
@@ -51,7 +62,7 @@ export default function GlobalChat(props: GlobalChatProps) {
             msgClass = "msg msg-server";
           }
           return (
-            <div className={msgClass} key={msg.time}>
+            <div className={msgClass} key={msg.message_id}>
               <div className="msg-label">
                 <span>
                   {msg.sender !== "server" && <strong>{msg.sender}</strong>}
@@ -65,7 +76,7 @@ export default function GlobalChat(props: GlobalChatProps) {
         })}
       </div>
       <div id="global-chat-editor">
-        <form>
+        <form onSubmit={handleSubmit}>
           <textarea
             className="text-box"
             value={textValue}
@@ -80,8 +91,8 @@ export default function GlobalChat(props: GlobalChatProps) {
             disabled={!props.player}
           ></textarea>
           <button
+            type="submit"
             className="btn"
-            onClick={handleClick}
             disabled={!props.player}
           >
             Send

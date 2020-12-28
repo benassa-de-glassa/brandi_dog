@@ -8,35 +8,46 @@ export default function Chat(props: ChatProps) {
   const [textValue, setTextValue] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const handleChange = (event: any) => {
-    setTextValue(event.target.value);
-  };
-
-  const handleClick = () => {
-    socket.emit("chat_message", {
-      sender: props.player?.username,
-      text: textValue,
-      game_id: props.gameID
-    });
-    setTextValue("");
-  };
-
-  const onEnterKey = (event: any) => {
-    if (event.key === "Enter" && event.shiftKey === false) {
-      handleClick();
-    }
-  };
-
   useEffect(() => {
+    // scroll to bottom of the chat to display any new messages
     let objDiv: any = document.getElementById("message-box");
     objDiv.scrollTop = objDiv.scrollHeight;
   }, [messages]);
 
-  useEffect(() => {
-    socket.on("chat_message", (data: any) => {
-      setMessages((m) => [...m, data]);
+  useEffect(
+    () => {
+      // subscribe to the socket.io for game specific chat messages
+      socket.on("chat_message", (data: Message) => {
+        setMessages((m) => [...m, data]);
+      });
+    },
+    [] /* subscribe only once*/
+  );
+
+  const handleChange = (event: any) => {
+    setTextValue(event.target.value);
+  };
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    submit();
+  };
+
+  const onEnterKey = (event: any) => {
+    if (event.key === "Enter" && event.shiftKey === false) {
+      submit();
+    }
+  };
+
+  const submit = () => {
+    if (!textValue) return;
+    socket.emit("chat_message", {
+      sender: props.player?.username,
+      text: textValue,
+      game_id: props.gameID,
     });
-  }, [props.player]);
+    setTextValue("");
+  };
 
   return (
     <div id="chat-container" className="chat-container">
@@ -49,7 +60,7 @@ export default function Chat(props: ChatProps) {
             msgClass = "msg msg-server";
           }
           return (
-            <div className={msgClass} key={msg.time}>
+            <div className={msgClass} key={msg.message_id}>
               <div className="msg-label">
                 <span>
                   {msg.sender !== "server" && <strong>{msg.sender}</strong>}
@@ -63,17 +74,19 @@ export default function Chat(props: ChatProps) {
         })}
       </div>
       <div id="chat-editor">
-        <textarea
-          className="text-box"
-          value={textValue}
-          onChange={handleChange}
-          onKeyUp={onEnterKey}
-          rows={2}
-          placeholder={"Type here..."}
-        ></textarea>
-        <button className="btn" onClick={handleClick}>
-          Send
-        </button>
+        <form onSubmit={handleSubmit}>
+          <textarea
+            className="text-box"
+            value={textValue}
+            onChange={handleChange}
+            onKeyUp={onEnterKey}
+            rows={2}
+            placeholder={"Type here..."}
+          ></textarea>
+          <button type="submit" className="btn">
+            Send
+          </button>
+        </form>
       </div>
     </div>
   );

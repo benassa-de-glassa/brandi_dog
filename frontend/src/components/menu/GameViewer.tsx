@@ -44,6 +44,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
     if (data.game_token) {
       props.joinGameSocket(data.game_token);
       setCreateGame(false);
+      setBoardSize(4); // back to default value
       setError("");
     } else {
       setError(data.detail);
@@ -203,7 +204,10 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
               Create Game
             </button>
 
-            <button className="btn btn-danger ml-1" onClick={() => setCreateGame(false)}>
+            <button
+              className="btn btn-danger ml-1"
+              onClick={() => setCreateGame(false)}
+            >
               Cancel
             </button>
           </form>

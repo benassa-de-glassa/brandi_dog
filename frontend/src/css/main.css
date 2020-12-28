@@ -179,7 +179,7 @@ header #connection-lost {
 }
 
 #avatar-selection #avatar-display img {
-  margin: 0 0.2em;
+  margin: 0.2em;
   width: 5em;
   border-radius: 5em;
   border: 4px solid black;

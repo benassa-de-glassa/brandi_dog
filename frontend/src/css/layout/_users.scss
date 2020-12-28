@@ -22,7 +22,7 @@
     max-width: 600px;
 
     img {
-      margin: 0 $gap;
+      margin: $gap;
       $width: 5em;
       width: $width;
       border-radius: $width;

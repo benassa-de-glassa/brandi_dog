@@ -1,8 +1,7 @@
 import { Player } from "./player.model";
 
 export interface MenuProps {
-  playerLoggedIn: boolean;
-  player: Player;
+  player: Player | null;
   joinGame: (gameID: string) => Promise<void>;
   joinedGame: string | null;
   joinGameSocket: (gameToken: string) => Promise<void>;
@@ -11,8 +10,7 @@ export interface MenuProps {
 }
 
 export interface GameViewerProps {
-  playerLoggedIn: boolean;
-  player: Player;
+  player: Player | null;
   joinGame: (gameID: string) => Promise<void>;
   joinedGame: string | null;
   joinGameSocket: (gameToken: string) => Promise<void>;
@@ -20,6 +18,5 @@ export interface GameViewerProps {
 }
 
 export interface GlobalChatProps {
-  playerLoggedIn: boolean;
-  player: Player;
+  player: Player | null;
 }

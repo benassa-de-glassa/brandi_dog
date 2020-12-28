@@ -55,18 +55,14 @@ import UserCreate from "./components/userlogin/UserCreate";
 import { userLogin } from "./api/userlogin";
 import { getFromBackend, postToBackend } from "./api/fetch_backend";
 import { MainAppProps, MainAppState } from "./models/app.model";
-import { Data } from "./models/response-data.model";
+import { ResponseData, GetPlayerResponse } from "./models/response-data.model";
 
 class App extends Component<MainAppProps, MainAppState> {
   constructor(props: MainAppProps) {
     super(props);
     this.state = {
       socketConnected: false, // connection to socket.io of the backend
-      playerLoggedIn: false, // player has signed in with a name
-      player: {
-        username: "",
-        uid: null,
-      },
+      player: null,
       gameID: null, // currently joined game
       gameToken: "", // JSON web token encoding current game
 
@@ -128,7 +124,7 @@ class App extends Component<MainAppProps, MainAppState> {
     this.setState({
       showMenu: !this.state.showMenu,
       errorMessage: "",
-    } as any);
+    });
   }
 
   async getPlayer() {
@@ -139,17 +135,17 @@ class App extends Component<MainAppProps, MainAppState> {
         game. If that is the case, join the game socket instance using the
         game_token that was received. */
 
-    const data = await getFromBackend("users/me");
+    const data = (await getFromBackend("users/me")) as GetPlayerResponse;
     if (data.code) {
       console.log("Unable to get player data | " + data.message);
     } else {
       // successfully obtained player data
       socket.open();
       this.setState({
-        playerLoggedIn: true,
         player: {
-          username: data.username ?? "",
+          username: data.username,
           uid: data.uid,
+          avatar: data.avatar,
         },
       });
       // check if the player is currently playing
@@ -163,6 +159,7 @@ class App extends Component<MainAppProps, MainAppState> {
   async createUser(
     username: string,
     password: string,
+    avatar: string,
     successCallback: () => void,
     errorCallback: (message: string) => void
   ) {
@@ -170,6 +167,7 @@ class App extends Component<MainAppProps, MainAppState> {
     const data = await postToBackend("create_user", {
       username: username,
       password: password,
+      avatar: avatar,
     });
 
     if (data.code) {
@@ -191,7 +189,7 @@ class App extends Component<MainAppProps, MainAppState> {
         The player name and password are sent to API_URL/token. If the credentials
         are valid, an acces token is issued by the backend.
         */
-    const data = await userLogin(username, password);
+    const data = (await userLogin(username, password)) as ResponseData;
 
     if (data.code) {
       // something went wrong
@@ -211,8 +209,7 @@ class App extends Component<MainAppProps, MainAppState> {
       console.warn("Unable to logout | " + data.message);
     } else {
       this.setState({
-        playerLoggedIn: false,
-        player: { username: "", uid: null },
+        player: null,
         gameID: null,
       });
     }
@@ -236,7 +233,7 @@ class App extends Component<MainAppProps, MainAppState> {
       player: this.state.player,
       game_token: gameToken,
     });
-    socket.on("join_game_success", (data: Data) => {
+    socket.on("join_game_success", (data: any) => {
       this.setState({
         gameID: data.game_id ?? "",
       });
@@ -247,10 +244,11 @@ class App extends Component<MainAppProps, MainAppState> {
   }
 
   async leaveGame() {
-    socket.emit("leave_game", {
-      game_id: this.state.gameID,
-      player_id: this.state.player.uid,
-    });
+    this.state.player &&
+      socket.emit("leave_game", {
+        game_id: this.state.gameID,
+        player_id: this.state.player.uid,
+      });
     socket.on("leave_game_success", () => {
       this.setState({ gameID: null });
     });
@@ -262,7 +260,6 @@ class App extends Component<MainAppProps, MainAppState> {
         <div className="App">
           <TopBar
             socketConnected={this.state.socketConnected}
-            playerLoggedIn={this.state.playerLoggedIn}
             player={this.state.player}
             logout={this.logout}
             clearSocket={this.clearSocket}
@@ -280,7 +277,6 @@ class App extends Component<MainAppProps, MainAppState> {
                 <div id="main-page">
                   {this.state.showMenu && (
                     <Menu
-                      playerLoggedIn={this.state.playerLoggedIn}
                       player={this.state.player}
                       joinGame={this.joinGame}
                       joinedGame={this.state.gameID}
@@ -289,7 +285,7 @@ class App extends Component<MainAppProps, MainAppState> {
                       closeMenu={() => this.setState({ showMenu: false })}
                     />
                   )}{" "}
-                  {this.state.playerLoggedIn && this.state.gameID !== null && (
+                  {this.state.player && this.state.gameID !== null && (
                     <Game
                       player={this.state.player}
                       gameID={this.state.gameID}
@@ -303,7 +299,7 @@ class App extends Component<MainAppProps, MainAppState> {
               exact
               render={() => (
                 <UserLogin
-                  playerLoggedIn={this.state.playerLoggedIn}
+                  player={this.state.player}
                   login={this.login}
                 />
               )}

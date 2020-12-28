@@ -1,10 +1,13 @@
-export interface Data {
+export interface ResponseData {
   detail?: any;
   code?: number;
   message?: string;
-  username?: string;
-  uid?: string;
+}
+
+export interface GetPlayerResponse extends ResponseData{
+  username: string;
+  avatar: string;
+  uid: number;
   current_game?: string;
   game_token?: string;
-  game_id?: string;
 }

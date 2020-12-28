@@ -18,6 +18,7 @@ if DATABASE_URL:
     engine = create_engine(DATABASE_URL)
     logger.info('Connect to heroku database...')
 else:
+    # fall back to local SQLite database
     logger.info('Unable to get DATABASE_URL environment variable. Connecting to local SQLite database instead.')
     engine = create_engine(SQLITE_DATABASE_URL, connect_args={'check_same_thread': False})
     

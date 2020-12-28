@@ -14,5 +14,6 @@ class User(database.Base):
     
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    # current_game = Column(String, default="")
-    
+
+    # name of the avatar selected by the user
+    avatar = Column(String)

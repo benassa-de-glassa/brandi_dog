@@ -14,7 +14,9 @@ const TopBar: React.FunctionComponent<TopBarProps & RouteComponentProps> = (
     <header>
       <div id="topbar">
         <span>
-          <ConnectionIndicator socketConnected={props.socketConnected} />
+          {props.player && (
+            <ConnectionIndicator socketConnected={props.socketConnected} />
+          )}
           <Link id="title" className="nav-btn" to="/">
             Boomer Dog{"\u2122"}
           </Link>
@@ -36,7 +38,7 @@ const TopBar: React.FunctionComponent<TopBarProps & RouteComponentProps> = (
               About
             </Link>
           </span>
-          {props.playerLoggedIn ? (
+          {props.player ? (
             <span id="player-logout" className="subnav">
               <button id="player-btn" className="nav-btn">
                 <img src="/player-icon.svg" id="player-icon" alt="p-icon" />
@@ -65,10 +67,14 @@ const TopBar: React.FunctionComponent<TopBarProps & RouteComponentProps> = (
           onClick={() => setCollapseNav(!collapseNav)}
         />
       </div>
-      {!props.socketConnected && props.playerLoggedIn && (
+      {!props.socketConnected && props.player && (
         <div id="connection-lost">
           Connection lost...{" "}
-          <button id="reconnect-btn" className="btn" onClick={props.clearSocket}>
+          <button
+            id="reconnect-btn"
+            className="btn"
+            onClick={props.clearSocket}
+          >
             Try to reconnect
           </button>
         </div>

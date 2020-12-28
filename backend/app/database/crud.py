@@ -16,7 +16,8 @@ def create_user(db: Session, new_user: user.UserCreate):
     hashed_password = get_password_hash(new_user.password)
     db_user = db_models.User(
         username=new_user.username, 
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        avatar=new_user.avatar
     )
     db.add(db_user)
     db.commit()

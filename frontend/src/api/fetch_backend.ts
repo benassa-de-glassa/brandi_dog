@@ -1,7 +1,6 @@
 import { API_URL } from "../constants/constants";
-import { Data } from "../models/response-data.model";
 
-export async function getFromBackend(relURL: string): Promise<Data> {
+export async function getFromBackend(relURL: string) {
   /*
     Returns
     -------
@@ -25,13 +24,13 @@ export async function getFromBackend(relURL: string): Promise<Data> {
     };
   }
 
-  return (data || {}) as Data;
+  return (data || {});
 }
 
 export async function postToBackend(
   relURL: string = "",
   body: any = {}
-): Promise<Data> {
+) {
   let url = new URL(relURL, API_URL).toString();
   const response = await fetch(url, {
     method: "POST",
@@ -41,7 +40,7 @@ export async function postToBackend(
     body: JSON.stringify(body),
   }).catch(handleError);
 
-  const data = (await response.json()) as Data;
+  const data = (await response.json());
 
   if (!response.ok) {
     return {

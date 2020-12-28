@@ -5,7 +5,7 @@ import { ActionNumber } from "./action.model";
 
 
 export interface GameComponentProps {
-    player: Player;
+    player: Player | null;
     gameID: string;
 }
 
@@ -35,9 +35,7 @@ export interface GameComponentState {
   jokerCardValue: keyof typeof CardKey;
 }
 
-export interface PlayerState {
-  uid: number;
-  username: string;
+export interface PlayerState extends Player {
   hand: CardIF[];
   marbles: Marble[];
   steps_of_seven: number;

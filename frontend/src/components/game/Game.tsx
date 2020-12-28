@@ -122,7 +122,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       activePlayerIndex: data.active_player_index,
       topCard: data.top_card,
       playerIsActive:
-        players[data.active_player_index]?.uid === this.props.player.uid,
+        players[data.active_player_index]?.uid === this.props.player?.uid,
       cardSwapConfirmed: data.round_state < 2,
       numberOfPlayers: data.n_players as 4 | 6,
     }));

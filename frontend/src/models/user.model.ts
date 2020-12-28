@@ -1,5 +1,7 @@
+import { Player } from "./player.model";
+
 export interface UserLoginProps {
-  playerLoggedIn: boolean;
+  player: Player | null;
   login: (
     username: string,
     password: string,
@@ -11,6 +13,7 @@ export interface UserCreateProps {
   createUser: (
     username: string,
     password: string,
+    avatar: string,
     setStateCallBack: () => void,
     errorCallback: (message: string) => void
   ) => void;

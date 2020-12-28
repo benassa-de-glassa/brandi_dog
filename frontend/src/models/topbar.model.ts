@@ -2,9 +2,8 @@ import { Player } from "./player.model";
 
 export interface TopBarProps {
   socketConnected: boolean;
-  playerLoggedIn: boolean;
   location: any;
-  player: Player;
+  player: Player | null;
   showMenu: boolean;
   toggleMenu: () => void;
   logout: () => void;

@@ -15,6 +15,7 @@ export default function GlobalChat(props: GlobalChatProps) {
   };
 
   const handleClick = () => {
+    if (!props.player) return;
     socket.emit("global_chat_message", {
       sender: props.player.username,
       text: textValue,
@@ -37,7 +38,7 @@ export default function GlobalChat(props: GlobalChatProps) {
     socket.on("global_chat_message", (data: any) => {
       setMessages((m) => [...m, data]);
     });
-  }, [props.playerLoggedIn]);
+  }, [props.player]);
 
   return (
     <div id="global-chat-container" className="chat-container">
@@ -45,7 +46,7 @@ export default function GlobalChat(props: GlobalChatProps) {
       <div id="global-message-box" className="msg-box">
         {messages.map((msg) => {
           let msgClass =
-            msg.sender === props.player.username ? "msg msg-user" : "msg";
+            msg.sender === props.player?.username ? "msg msg-user" : "msg";
           if (msg.sender === "server") {
             msgClass = "msg msg-server";
           }
@@ -72,16 +73,16 @@ export default function GlobalChat(props: GlobalChatProps) {
             onKeyUp={onEnterKey}
             rows={2}
             placeholder={
-              props.playerLoggedIn
+              props.player
                 ? "Type your message here..."
                 : "Log in to send message."
             }
-            disabled={!props.playerLoggedIn}
+            disabled={!props.player}
           ></textarea>
           <button
             className="btn"
             onClick={handleClick}
-            disabled={!props.playerLoggedIn}
+            disabled={!props.player}
           >
             Send
           </button>

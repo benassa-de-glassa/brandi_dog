@@ -6,7 +6,7 @@ import { Tooltip } from "./tooltip.model";
 
 export interface BoardProps {
   numberOfPlayers: 4 | 6;
-  player: Player;
+  player: Player | null;
   playerList: Player[];
   marbleList: Marble[];
   selectedCard: CardIF | null; 

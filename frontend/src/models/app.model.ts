@@ -4,8 +4,7 @@ export interface MainAppProps {}
 
 export interface MainAppState {
   showMenu: boolean;
-  playerLoggedIn: boolean;
-  player: Player;
+  player: Player | null;
   gameID: string | null;
   socketConnected: boolean;
   errorMessage: string;

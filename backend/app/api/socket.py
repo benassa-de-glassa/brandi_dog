@@ -62,10 +62,10 @@ async def authenticate_user(token: str):
         # obtain user from database
         user = crud.get_user_by_username(db, username=username)
     except jwt.PyJWTError:
-        logger.warn('PyJWTError')
+        logger.warning('PyJWTError')
         raise credentials_exception
     except:
-        logger.warn('Unknown error')
+        logger.warning('Unknown error')
         raise credentials_exception
     finally:
         db.close()      # close database session

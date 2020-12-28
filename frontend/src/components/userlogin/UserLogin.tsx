@@ -34,7 +34,7 @@ function UserLogin(props: UserLoginProps) {
     <div className="container user-container">
       <div className="form-container">
         {state.error && <div className="error"> {state.error}</div>}
-        {props.playerLoggedIn ? (
+        {props.player ? (
           <div className="success">Login successful.</div>
         ) : (
           <form className="user-form" onSubmit={handleSubmit}>

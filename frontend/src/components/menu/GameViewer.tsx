@@ -98,7 +98,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
                     Object.values(game.players)
                       // make the players own name bold
                       .map((player: any) =>
-                        player.username === props.player.username ? (
+                        player.username === props.player?.username ? (
                           <strong key={player.username}>
                             {player.username}
                           </strong>
@@ -129,7 +129,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
             props.joinGame(gameList[selectedRow].game_id)
           }
           disabled={
-            (!props.playerLoggedIn ||
+            (!props.player ||
               selectedRow === undefined ||
               props.joinedGame) as boolean
           }
@@ -149,7 +149,7 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
         <button
           className="btn btn-green"
           onClick={() => setCreateGame(true)}
-          disabled={(props.joinedGame || !props.playerLoggedIn) as boolean}
+          disabled={(props.joinedGame || !props.player) as boolean}
         >
           New game
         </button>

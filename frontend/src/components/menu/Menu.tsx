@@ -18,7 +18,6 @@ export default function Menu(props: MenuProps) {
             </button>
             <div id='menu-content'>
                 <GameViewer
-                    playerLoggedIn={props.playerLoggedIn}
                     player={props.player}
                     joinGame={props.joinGame}
                     joinedGame={props.joinedGame}
@@ -26,7 +25,6 @@ export default function Menu(props: MenuProps) {
                     leaveGame={props.leaveGame}
                 />
                 <GlobalChat
-                    playerLoggedIn={props.playerLoggedIn}
                     player={props.player}
                 />
             </div>

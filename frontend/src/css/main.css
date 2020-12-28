@@ -312,7 +312,6 @@ header #connection-lost {
 }
 
 .controls-box {
-  width: 100%;
   min-width: 400px;
   -ms-flex-preferred-size: 50%;
       flex-basis: 50%;
@@ -423,8 +422,6 @@ header #connection-lost {
   -webkit-box-direction: normal;
       -ms-flex-flow: row wrap;
           flex-flow: row wrap;
-  margin-left: -1em;
-  margin-right: -1em;
 }
 
 #game-container #game-content #right-container {

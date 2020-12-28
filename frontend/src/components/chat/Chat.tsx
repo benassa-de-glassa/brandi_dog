@@ -14,7 +14,7 @@ export default function Chat(props: ChatProps) {
 
   const handleClick = () => {
     socket.emit("chat_message", {
-      sender: props.player.username,
+      sender: props.player?.username,
       text: textValue,
       game_id: props.gameID
     });
@@ -44,7 +44,7 @@ export default function Chat(props: ChatProps) {
       <div id="message-box" className="msg-box">
         {messages.map((msg) => {
           let msgClass =
-            msg.sender === props.player.username ? "msg msg-user" : "msg";
+            msg.sender === props.player?.username ? "msg msg-user" : "msg";
           if (msg.sender === "server") {
             msgClass = "msg msg-server";
           }

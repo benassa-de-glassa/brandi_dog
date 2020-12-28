@@ -16,12 +16,7 @@ import { Marble } from "../../models/marble.model";
 import boardDataJSON from "./boarddata4.json";
 import boardData6JSON from "./boarddata6.json";
 
-const images = [
-  "avatars/lama.png",
-  "avatars/panda.png",
-  "avatars/lama.png",
-  "avatars/panda.png",
-];
+import { avatarPath } from "../../constants/constants"
 
 function Board(props: BoardProps) {
   const height = 800;
@@ -125,10 +120,10 @@ function Board(props: BoardProps) {
         {props.playerList.map((player, i) => (
           <Avatar
             className={`player-box players-${props.numberOfPlayers} player-${i}`}
-            image={images[i]}
+            image={`${avatarPath}/${player.avatar}`}
             textOnTop={i < 2}
             playerName={player.username}
-            isMe={player.uid === props.player.uid}
+            isMe={player.uid === props.player?.uid}
             isActive={i === props.activePlayerIndex}
             clickHandler={async () => playerBoxClicked(i)}
           />

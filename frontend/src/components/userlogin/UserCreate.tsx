@@ -10,6 +10,8 @@ function UserCreate(props: UserCreateProps) {
     error: "",
   } as UserCreateState);
 
+  const [avatar, setAvatar] = useState("lama.png")
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [event.target.name]: event.target.value });
   };
@@ -20,6 +22,7 @@ function UserCreate(props: UserCreateProps) {
     props.createUser(
       state.username,
       state.password,
+      avatar,
       () => setState({ success: true } as UserCreateState), // success callback
       setError // error callback
     );

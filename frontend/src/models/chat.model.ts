@@ -9,7 +9,7 @@ export interface Message {
 }
 
 export interface ChatProps {
-  player: Player;
+  player: Player | null;
   gameID: string;
 }
 

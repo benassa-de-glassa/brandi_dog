@@ -244,6 +244,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
         uid: card.uid,
         value: card.value,
         color: card.color,
+        actions: card.actions
       },
       action: action,
       mid: marble.mid,

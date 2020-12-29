@@ -233,6 +233,7 @@ header #connection-lost {
 
 #menu-container {
   min-width: calc(450px - 2*1em);
+  max-width: calc(1400px - 2em);
 }
 
 #menu-container button.close {

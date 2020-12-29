@@ -1,5 +1,6 @@
 #menu-container {
   min-width: $min-container-content-width;
+  max-width: calc(#{$content-width} - 2em);
 
   button.close {
     width: 28px;

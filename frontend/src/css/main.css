@@ -232,7 +232,7 @@ header #connection-lost {
 }
 
 #menu-container {
-  min-width: calc(450px - 2*1em);
+  min-width: calc(400px - 2*1em);
   max-width: calc(1400px - 2em);
 }
 
@@ -281,7 +281,7 @@ header #connection-lost {
           flex-grow: 1;
   -ms-flex-preferred-size: 40%;
       flex-basis: 40%;
-  min-width: calc(450px - 2*1em);
+  min-width: calc(400px - 2*1em);
   margin: 0 0.5em;
 }
 
@@ -357,7 +357,7 @@ header #connection-lost {
           flex-grow: 1;
   -ms-flex-preferred-size: 40%;
       flex-basis: 40%;
-  min-width: calc(450px - 2*1em);
+  min-width: calc(400px - 2*1em);
   max-height: 40vh;
 }
 
@@ -508,7 +508,6 @@ header #connection-lost {
   padding-bottom: 100%;
   display: inline-block;
   position: relative;
-  min-width: 500px;
   height: 0;
   vertical-align: top;
 }
@@ -879,6 +878,7 @@ header #connection-lost {
 
 body,
 html {
+  min-width: 400px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   font-family: "Montserrat";

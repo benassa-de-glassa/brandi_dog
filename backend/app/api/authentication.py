@@ -279,10 +279,9 @@ async def login_for_access_token(
         path='/',
         domain=COOKIE_DOMAIN,
         expires=COOKIE_EXPIRES,
-        # domain='localtest.me',
         httponly=True,
-        secure=False,
-        # samesite='none'
+        secure=True,
+        samesite='none'
     )
     return {"access_token": access_token, "token_type": "bearer"}
 

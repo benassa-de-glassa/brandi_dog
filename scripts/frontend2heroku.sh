@@ -6,4 +6,4 @@
 # heroko repo:reset -a heroku-backend 
 # before
 
-git subtree push --prefix backend heroku-backend main
+git subtree push --prefix frontend heroku-frontend main

@@ -715,7 +715,12 @@ header #connection-lost {
 }
 
 #board-container .step.selected {
-  stroke: cornflowerblue;
+  stroke: whitesmoke;
+}
+
+#board-container .step.selected:hover {
+  cursor: pointer;
+  stroke-width: 3px;
 }
 
 #board-container .occupied {

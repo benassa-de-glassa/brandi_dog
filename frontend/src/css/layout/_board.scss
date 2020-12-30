@@ -185,7 +185,12 @@
     }
 
     &.selected {
-      stroke: cornflowerblue;
+      stroke: whitesmoke;
+
+      &:hover {
+        cursor: pointer;
+        stroke-width: 3px;
+      }
     }
   }
 

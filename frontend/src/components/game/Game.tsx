@@ -25,7 +25,6 @@ class Game extends Component<GameComponentProps, GameComponentState> {
   constructor(props: GameComponentProps) {
     super(props);
     this.state = {
-      //
       numberOfPlayers: 4, // default to 4 players
 
       // updated by socket.io
@@ -41,6 +40,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
 
       // updated by front-end
       switchingSeats: false,
+      tooltipVisible: false,
       selectedCardIndex: null, // card that is selected by the user
       selectedCardRequiresTooltip: false,
       marblesToSelect: 0,
@@ -228,13 +228,13 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     this.setState({ jokerCardValue: value });
   }
 
-  tooltipClicked(action: Action) {
+  async tooltipClicked(action: Action) {
     if (this.state.selectedCardIndex === null || !this.state.selectedMarble) {
-      return;
+      return
     }
     let selectedCard = this.state.cards[this.state.selectedCardIndex];
 
-    this.performAction(this.state.selectedMarble, selectedCard, action); // error callback
+    this.performAction(this.state.selectedMarble, selectedCard, action);
   }
 
   async performAction(marble: Marble, card: CardIF, action: Action) {
@@ -244,7 +244,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
         uid: card.uid,
         value: card.value,
         color: card.color,
-        actions: card.actions
+        actions: card.actions,
       },
       action: action,
       mid: marble.mid,
@@ -254,16 +254,18 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       // something went wrong
       this.setState({ errorMessage: response.message });
       console.warn(`[${response.code}] ${response.message}`);
-    } else {
-      this.setState({
-        tooltipActions: [],
-        errorMessage: "",
-      });
+     
+    }
+    // else
+    this.setState({
+      tooltipActions: [],
+      tooltipVisible: false,
+      errorMessage: "",
+    });
 
-      // don't deselect the selected card if there are still sevens to be played
-      if (this.state.remainingStepsOf7 === -1) {
-        this.setState({ selectedCardIndex: null });
-      }
+    // don't deselect the selected card if there are still sevens to be played
+    if (this.state.remainingStepsOf7 === -1) {
+      this.setState({ selectedCardIndex: null });
     }
   }
 
@@ -276,6 +278,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
         uid: card.uid,
         value: card.value,
         color: card.color,
+        actions: card.actions,
       },
       action: "switch",
       mid: ownMarble.mid,
@@ -320,7 +323,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       );
 
       // if the card is a 7 only show the remaining steps as playable (e.g. [71, 72, 73] if 4 steps were already completed)
-      if (selectedCardValue === "_7" && this.state.remainingStepsOf7 !== -1) {
+      if (selectedCardValue === "7" && this.state.remainingStepsOf7 !== -1) {
         playableActions = playableActions.filter(
           (action) => action <= 70 + this.state.remainingStepsOf7
         );
@@ -363,6 +366,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
         this.setState({
           tooltipActions: playableActions as ActionNumber[],
           selectedMarble: marble,
+          tooltipVisible: true,
         });
       }
     }
@@ -396,9 +400,11 @@ class Game extends Component<GameComponentProps, GameComponentState> {
             selectedMarble={this.state.selectedMarble}
             tooltipActions={this.state.tooltipActions}
             tooltipClicked={this.tooltipClicked}
+            tooltipVisible={this.state.tooltipVisible}
+            showTooltip={ b => this.setState({tooltipVisible: b})}
             marbleClicked={this.marbleClicked}
             selectedCard={
-              this.state.selectedCardIndex !== null 
+              this.state.selectedCardIndex !== null
                 ? this.state.cards[this.state.selectedCardIndex]
                 : null
             }

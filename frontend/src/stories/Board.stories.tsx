@@ -42,6 +42,6 @@ Primary.args = {
   setNewPosition: async () => {},
   switchingSeats: false,
   activePlayerIndex: 0,
-  tooltipClicked: () => {},
-  topCard: {value: "_9", color: "spades", uid: 0, actions: [9]},
+  tooltipClicked: async () => false,
+  topCard: {value: "9", color: "spades", uid: 0, actions: [9]},
 };

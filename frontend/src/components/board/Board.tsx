@@ -65,7 +65,6 @@ function Board(props: BoardProps) {
       homeClicked = true;
       marble = homeOccupation[-data.id - 1];
     } else if (data.id >= 1000) {
-      // Test
       // need to be able to move the marbles in the house too
       marble = houseOccupation[data.id - 1000];
     } else {
@@ -84,8 +83,8 @@ function Board(props: BoardProps) {
       // depending on the location, e.g. show it to the right if a step in the
       // left half of the board is clicked
       setTooltip({
+        ...tooltip,
         stepPosition: data.id,
-        visible: true,
         x:
           xPercent < 50
             ? "calc(" + data.x + " + 10px)"
@@ -98,7 +97,7 @@ function Board(props: BoardProps) {
           x: parseInt(data.x) < 50 ? "left" : "right",
           y: parseInt(data.y) < 50 ? "top" : "bottom",
         },
-      } as BoardTooltipState);
+      });
     }
   }
 
@@ -110,16 +109,12 @@ function Board(props: BoardProps) {
     }
   }
 
-  function closeTooltip() {
-    setTooltip({ visible: false } as BoardTooltipState);
-  }
-
   const boardClicked = (event: any) => {
     // close tooltip if the user clicks somewhere else on the board
     if (!tooltip.visible) return;
 
     let board = document.getElementById("board");
-    event.target === board && closeTooltip();
+    event.target === board && props.showTooltip(false);
   };
 
   return (
@@ -216,12 +211,13 @@ function Board(props: BoardProps) {
         {props.topCard !== null && (
           <Card value={props.topCard.value} color={props.topCard.color} />
         )}
-        {props.tooltipActions.length && tooltip.visible && (
+        {props.tooltipVisible && (
           <Tooltip
             tooltip={tooltip}
             tooltipActions={props.tooltipActions}
             tooltipClicked={props.tooltipClicked}
-            closeTooltip={closeTooltip}
+            tooltipVisible={props.tooltipVisible}
+            closeTooltip={() => props.showTooltip(false)}
           />
         )}
       </div>

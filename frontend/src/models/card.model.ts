@@ -32,11 +32,27 @@ export enum CardKey {
   Jo = "Jo",
 }
 
+export type CardValue =
+  | "A"
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
+  | "10"
+  | "Ja"
+  | "Q"
+  | "K"
+  | "Jo";
+
 /*
 Avoid name clash with the Card react component
 */
 export interface CardBaseIF {
-  value: keyof typeof CardKey;
+  value: CardValue;
   color: keyof typeof Colors;
 }
 

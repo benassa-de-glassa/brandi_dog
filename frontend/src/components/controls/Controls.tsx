@@ -2,7 +2,7 @@ import React, { useState, Fragment } from "react";
 
 import { possibleActions } from "../../constants/constants";
 import { ControlProps } from "../../models/control.model";
-import { CardKey } from "../../models/card.model";
+import { CardValue } from "../../models/card.model";
 import Hand from "./Hand";
 
 const cards = Object.keys(possibleActions);
@@ -29,18 +29,16 @@ action_options values can be the following:
 
 const possibleMoves = {
   A: "Click on a marble to go out, or move either one or eleven steps.",
-  _2: "Click on a marble to move two steps.",
-  _3: "Click on a marble to move three steps.",
-  _4: "Click on a marble to select your move.",
-  _5: "Click on a marble to move five steps.",
-  _6: "Click on a marble to move six steps.",
-  _7:
-    "Click on a marble to move seven steps. Each step needs to be performed individually on your marbles.",
-  _8: "Click on a marble to move eight steps.",
-  _9: "Click on a marble to move nine steps.",
-  _10: "Click on a marble to move ten steps.",
-  Ja:
-    "Choose an arbitrary marble to switch with one of yours. You cannot exchange locked marbles.",
+  2: "Click on a marble to move two steps.",
+  3: "Click on a marble to move three steps.",
+  4: "Click on a marble to select your move.",
+  5: "Click on a marble to move five steps.",
+  6: "Click on a marble to move six steps.",
+  7: "Click on a marble to move seven steps. Each step needs to be performed individually on your marbles.",
+  8: "Click on a marble to move eight steps.",
+  9: "Click on a marble to move nine steps.",
+  10: "Click on a marble to move ten steps.",
+  Ja: "Choose an arbitrary marble to switch with one of yours. You cannot exchange locked marbles.",
   Q: "Click on a marble to move 12 steps.",
   K: "Click on a marble to go out, or move 13 steps.",
   Jo: "Choose a card that the joker imitates.",
@@ -133,12 +131,14 @@ export default function Controls(props: ControlProps) {
           <select
             onChange={(event) =>
               props.setJokerCardValue(
-                event.target.value as keyof typeof CardKey
+                event.target.value as CardValue
               )
             }
           >
             {cards.map((card) => (
-              <option key={card} value={card}>{card}</option>
+              <option key={card} value={card}>
+                {card}
+              </option>
             ))}
           </select>
         )}
@@ -174,10 +174,7 @@ export default function Controls(props: ControlProps) {
               Confirm
             </button>
 
-            <button
-              className="btn"
-              onClick={() => setAboutToFold(false)}
-            >
+            <button className="btn" onClick={() => setAboutToFold(false)}>
               Cancel
             </button>
             <span id="fold-confirmation">Do you really want to fold?</span>

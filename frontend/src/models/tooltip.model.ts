@@ -11,5 +11,6 @@ export interface TooltipProps {
   tooltip: Tooltip;
   tooltipActions: ActionNumber[];
   tooltipClicked: (action: ActionNumber) => void;
+  tooltipVisible: boolean;
   closeTooltip: () => void;
 }

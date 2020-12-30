@@ -1,5 +1,5 @@
 import { Player } from "./player.model";
-import { CardKey, CardIF } from "./card.model";
+import { CardValue, CardIF } from "./card.model";
 import { Marble } from "./marble.model";
 import { ActionNumber } from "./action.model";
 
@@ -26,13 +26,14 @@ export interface GameComponentState {
   selectedCardRequiresTooltip: boolean;
   selectedMarble: Marble | null;
   tooltipActions: ActionNumber[];
+  tooltipVisible: boolean,
   marbleToSwitch: Marble | null;
   marblesToSelect: number;
   cardSwapConfirmed: boolean;
   cardBeingSwapped: number;
   remainingStepsOf7: number;
   errorMessage: string | undefined;
-  jokerCardValue: keyof typeof CardKey;
+  jokerCardValue: CardValue;
 }
 
 export interface PlayerState extends Player {

@@ -17,6 +17,8 @@ export interface BoardProps {
   switchingSeats: boolean;
   activePlayerIndex: number | null;
   tooltipClicked: (action: ActionNumber) => void;
+  tooltipVisible: boolean;
+  showTooltip: (b: boolean) => void;
 
   topCard: CardIF | null;
 }

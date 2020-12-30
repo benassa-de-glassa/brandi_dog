@@ -1,5 +1,5 @@
 import React from 'react'
-import { CardProps, colorToUnicode, CardKey } from '../../models/card.model'
+import { CardProps, colorToUnicode } from '../../models/card.model'
 
 export default function Card(props: CardProps) {
     let className = props.highlighted
@@ -16,7 +16,7 @@ export default function Card(props: CardProps) {
             className={className}
             onClick={props.clickHandler}
         >
-            <span className={`card-value card-${textColor}`}>{CardKey[props.value]}</span>
+            <span className={`card-value card-${textColor}`}>{props.value}</span>
             <span className={`card-color card-${textColor}`}>{colorToUnicode[props.color]}</span>
         </div>
     )

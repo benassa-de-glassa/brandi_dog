@@ -25,7 +25,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy:frontend:heroku": "heroku repo:reset --remote heroku-frontend && cd .. && git subtree push --prefix frontend heroku-frontend main",
-    "deploy:backend:heroku": "heroku repo:reset --remote heroku-backend && cd .. && git subtree push --prefix backend heroku-backend main"
+    "deploy:backend:heroku": "heroku repo:reset --remote heroku-backend && cd .. && git subtree push --prefix backend heroku-backend main",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,6 +45,16 @@
     ]
   },
   "devDependencies": {
-    "node-sass": "^5.0.0"
+    "@storybook/addon-actions": "^6.1.11",
+    "@storybook/addon-essentials": "^6.1.11",
+    "@storybook/addon-links": "^6.1.11",
+    "@storybook/node-logger": "^6.1.11",
+    "@storybook/preset-create-react-app": "^3.1.5",
+    "@storybook/preset-scss": "^1.0.3",
+    "@storybook/react": "^6.1.11",
+    "css-loader": "^5.0.1",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^10.1.0",
+    "style-loader": "^2.0.0"
   }
 }

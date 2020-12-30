@@ -29,6 +29,7 @@ export interface BoardData {
 }
 
 export interface BoardTooltipState extends Tooltip {
+  stepPosition: number | null;
   visible: boolean;
   text: string;
 }

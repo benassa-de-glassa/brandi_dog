@@ -19,22 +19,22 @@ function Tooltip(props: TooltipProps) {
             }}
         >
             <p className='tooltip-text'>Choose a move</p>
+            <div id="tooltip-options">
             {props.tooltipActions.map((action: ActionNumber) =>
-                <button id={String(action)} key={action} type="button" className='movebutton'
+                <button id={String(action)} key={action} className='movebutton btn'
                     onClick={() => props.tooltipClicked(action)}>
-                    <span aria-hidden="true">
                         {action % 70 /* see comment above */}
-                    </span>
+                    
                 </button>
             )}
+            </div>
             <button
                 id="close-tooltip"
-                type="button"
                 className='close'
                 aria-label="Close"
                 onClick={props.closeTooltip}
             >
-                <span aria-hidden="true">&times;</span>
+                <img aria-hidden={true} src="/close.svg" id="close-tooltip-icon" alt="p-icon" />
             </button>
         </div>
     )

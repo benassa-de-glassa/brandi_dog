@@ -2,30 +2,6 @@
   min-width: $min-container-content-width;
   max-width: calc(#{$content-width} - 2em);
 
-  button.close {
-    width: 28px;
-    height: 28px;
-    z-index: 1500;
-    color: grey;
-    font-size: 25px;
-    font-weight: 700;
-    line-height: 1;
-    text-shadow: 0 1px 0 #fff;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    display: block;
-  }
-
-  button.close:hover {
-    color: #000;
-    cursor: pointer;
-    background-color: lightgrey;
-  }
-
   #menu-content {
     $gap: 0.5em;
     display: flex;

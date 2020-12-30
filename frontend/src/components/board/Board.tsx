@@ -16,7 +16,7 @@ import { Marble } from "../../models/marble.model";
 import boardDataJSON from "./boarddata4.json";
 import boardData6JSON from "./boarddata6.json";
 
-import { avatarPath } from "../../constants/constants"
+import { avatarPath } from "../../constants/constants";
 
 function Board(props: BoardProps) {
   const height = 800;
@@ -26,6 +26,7 @@ function Board(props: BoardProps) {
     props.numberOfPlayers === 4 ? boardDataJSON : boardData6JSON;
 
   const [tooltip, setTooltip] = useState<BoardTooltipState>({
+    stepPosition: null,
     visible: false,
     x: "0",
     y: "0",
@@ -83,6 +84,7 @@ function Board(props: BoardProps) {
       // depending on the location, e.g. show it to the right if a step in the
       // left half of the board is clicked
       setTooltip({
+        stepPosition: data.id,
         visible: true,
         x:
           xPercent < 50
@@ -112,6 +114,14 @@ function Board(props: BoardProps) {
     setTooltip({ visible: false } as BoardTooltipState);
   }
 
+  const boardClicked = (event: any) => {
+    // close tooltip if the user clicks somewhere else on the board
+    if (!tooltip.visible) return;
+
+    let board = document.getElementById("board");
+    event.target === board && closeTooltip();
+  };
+
   return (
     <div id="board-container">
       <div
@@ -130,6 +140,7 @@ function Board(props: BoardProps) {
           />
         ))}
         <svg
+          onClick={boardClicked}
           id="board"
           className="svg-content-responsive"
           viewBox={"0 0 " + width + " " + height}
@@ -138,11 +149,17 @@ function Board(props: BoardProps) {
           {boardData.steps.map((data) => (
             <circle
               key={data.id}
-              className={
+              className={[
+                "step",
                 stepOccupation[data.id]
-                  ? "step occupied occupied-" + stepOccupation[data.id].color
-                  : "step"
-              }
+                  ? `occupied occupied-${stepOccupation[data.id].color}`
+                  : false,
+                tooltip.visible && data.id === tooltip.stepPosition
+                  ? "selected"
+                  : false,
+              ]
+                .filter((e) => e) // remove false entries
+                .join(" ")}
               id={"step-" + data.id}
               cx={data.x}
               cy={data.y}

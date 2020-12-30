@@ -236,30 +236,6 @@ header #connection-lost {
   max-width: calc(1400px - 2em);
 }
 
-#menu-container button.close {
-  width: 28px;
-  height: 28px;
-  z-index: 1500;
-  color: grey;
-  font-size: 25px;
-  font-weight: 700;
-  line-height: 1;
-  text-shadow: 0 1px 0 #fff;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  display: block;
-}
-
-#menu-container button.close:hover {
-  color: #000;
-  cursor: pointer;
-  background-color: lightgrey;
-}
-
 #menu-container #menu-content {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -532,35 +508,48 @@ header #connection-lost {
 #board-container .tooltip {
   position: absolute;
   z-index: 1100;
-  display: block;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
   margin: 0;
   opacity: 1;
   background-color: white;
   border: 1px solid grey;
-  border-radius: 5px;
-  padding: 4px;
-  padding-right: 30px;
+  padding: 0.5rem;
 }
 
 #board-container .tooltip .tooltip-text {
-  font-size: small;
-  margin: 0;
-  margin-left: 2px;
-  margin-bottom: 2px;
-  padding: 0;
+  margin-right: 1.5rem;
 }
 
-#board-container .tooltip .close-tooltip {
-  top: 0px;
-  right: 0px;
+#board-container .tooltip #tooltip-options {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#board-container .tooltip #close-tooltip {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+}
+
+#board-container .tooltip #close-tooltip #close-tooltip-icon {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  top: 10%;
+  right: 10%;
 }
 
 #board-container .tooltip .movebutton {
-  padding: 0;
-  margin: 1px 2px;
+  margin: 0.1em;
+  padding: 0 0.5em;
   width: 100%;
-  max-width: 30px;
-  max-height: 30px;
 }
 
 #board-container .tooltip.tt-not-visible {
@@ -723,6 +712,10 @@ header #connection-lost {
 #board-container .step:hover {
   stroke-width: 5px;
   cursor: pointer;
+}
+
+#board-container .step.selected {
+  stroke: cornflowerblue;
 }
 
 #board-container .occupied {
@@ -992,5 +985,31 @@ html div.success {
   text-align: center;
   height: 2em;
   padding: 0.2em 1em;
+}
+
+body button.close,
+html button.close {
+  width: 28px;
+  height: 28px;
+  z-index: 1500;
+  color: grey;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 1px 0 #fff;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  display: block;
+}
+
+body button.close:hover,
+html button.close:hover {
+  color: #000;
+  cursor: pointer;
+  background-color: lightgrey;
 }
 /*# sourceMappingURL=main.css.map */

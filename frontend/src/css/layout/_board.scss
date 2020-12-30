@@ -32,34 +32,40 @@
   .tooltip {
     position: absolute;
     z-index: 1100;
-    display: block;
+    display: flex;
+    flex-flow: column nowrap;
     margin: 0;
     opacity: 1;
     background-color: white;
     border: 1px solid grey;
-    border-radius: 5px;
-    padding: 4px;
-    padding-right: 30px;
+    padding: 0.5rem;
 
     .tooltip-text {
-      font-size: small;
-      margin: 0;
-      margin-left: 2px;
-      margin-bottom: 2px;
-      padding: 0;
+      margin-right: 1.5rem;
     }
 
-    .close-tooltip {
-      top: 0px;
-      right: 0px;
+    #tooltip-options {
+      display: flex;
+    }
+
+    #close-tooltip {
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+
+      #close-tooltip-icon {
+        width: 80%;
+        height: 80%;
+        position: absolute;
+        top: 10%;
+        right: 10%;
+      }
     }
 
     .movebutton {
-      padding: 0;
-      margin: 1px 2px;
+      margin: 0.1em;
+      padding: 0 0.5em;
       width: 100%;
-      max-width: 30px;
-      max-height: 30px;
     }
 
     &.tt-not-visible {
@@ -173,11 +179,14 @@
     stroke: black;
     stroke-width: 3px;
     fill-opacity: 0;
-  }
+    &:hover {
+      stroke-width: 5px;
+      cursor: pointer;
+    }
 
-  .step:hover {
-    stroke-width: 5px;
-    cursor: pointer;
+    &.selected {
+      stroke: cornflowerblue;
+    }
   }
 
   .occupied {

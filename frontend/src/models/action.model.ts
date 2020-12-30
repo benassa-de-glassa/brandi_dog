@@ -7,6 +7,7 @@ export type ActionNumber =
   | -4
   | 5
   | 6
+  | 7
   | 71
   | 72
   | 73

@@ -178,10 +178,10 @@ class Brandi:
                 "note": f"Player {user.username} is not part of this game",
             }
 
-        if position >= self.field_player_count:
+        if position >= self.n_players:
             return {
                 "requestValid": False,
-                "note": f"Please select a position between 0 and {self.field_player_count - 1}",
+                "note": f"Please select a position between 0 and {self.n_players - 1}",
             }
 
         player_requesting_new_position: Player = self.players.get(user.uid)
@@ -213,13 +213,13 @@ class Brandi:
             - players are assigned their starting position based on self.order
             - first round is started
         """
-        if len(self.players.values()) != self.field_player_count:
+        if len(self.players.values()) != self.n_players:
             return {"requestValid": False, "note": "Not all players are present."}
         if not self.game_state == 0:
             return {"requestValid": False, "note": "Game has already started."}
 
         # create a new field instance for the game
-        self.field: Field = Field(self.field_player_count)  # field of players
+        self.field: Field = Field(self.n_players)  # field of players
 
         self.assign_starting_positions()
         self.start_round()
@@ -248,7 +248,7 @@ class Brandi:
         self.deal_cards()
 
         # update the players order
-        self.active_player_index = self.round_turn % self.field_player_count
+        self.active_player_index = self.round_turn % self.n_players
         for uid in self.order:
             self.players[uid].has_folded = False
 
@@ -292,7 +292,7 @@ class Brandi:
 
         player = self.players.get(user.uid)
         team_member = self.get_player_by_position(
-            (player.position + self.field_player_count // 2) % self.field_player_count
+            (player.position + self.n_players // 2) % self.n_players
         )
 
         swapped_card = self.players[user.uid].hand.play_card(card)
@@ -303,7 +303,7 @@ class Brandi:
         # make sure the players only swap one card
         self.players[user.uid].may_swap_cards = False
         # when all players have sent their card to swap
-        if self.card_swap_count % self.field_player_count == 0:
+        if self.card_swap_count % self.n_players == 0:
             self.round_state += 1
 
             # reset swapping ability for next round
@@ -327,10 +327,10 @@ class Brandi:
         """
 
         victory_dict: Dict[int, bool] = {}
-        for i in range(self.field_player_count // 2):
+        for i in range(self.n_players // 2):
             team_member_1 = self.get_player_by_position(i)
             team_member_2 = self.get_player_by_position(
-                i + self.field_player_count // 2)
+                i + self.n_players // 2)
             victory_dict[i] = team_member_1.has_finished_marbles() \
                 and team_member_2.has_finished_marbles()
 
@@ -339,19 +339,19 @@ class Brandi:
                 self.game_state = 3
                 return {
                     "requestValid": True,
-                    "note": f"Team 1 of players {self.get_player_by_position(team_number).username} and {self.get_player_by_position((team_number + self.field_player_count//2)).username} have won.",
+                    "note": f"Team 1 of players {self.get_player_by_position(team_number).username} and {self.get_player_by_position((team_number + self.n_players//2)).username} have won.",
                     "gameOver": True,
                 }
 
         self.active_player_index = (
-            self.active_player_index + 1) % self.field_player_count
+            self.active_player_index + 1) % self.n_players
 
-        skipped_self.field_player_count: int = 0
+        skipped_player_count: int = 0
         while self.players[self.order[self.active_player_index]].has_finished_cards():
             self.active_player_index = (
-                self.active_player_index + 1) % self.field_player_count
+                self.active_player_index + 1) % self.n_players
             # if all players have been skipped then the round has finished and a new round starts
-            if skipped_self.field_player_count == self.field_player_count:
+            if skipped_player_count == self.n_players:
                 self.round_state = 5
                 self.start_round()
                 return {
@@ -360,7 +360,7 @@ class Brandi:
                     "new_round": True,
                 }
 
-            skipped_self.field_player_count += 1
+            skipped_player_count += 1
 
     """
     Game play events: 
@@ -430,8 +430,7 @@ class Brandi:
 
         if self.players[user.uid].has_finished_marbles():
             team_member: Player = self.get_player_by_position(
-                (current_player.position + self.field_player_count //
-                 2) % self.field_player_count
+                (current_player.position + self.n_players // 2) % self.n_players
             )
             marble: Marble = self.players[team_member.uid].marbles.get(
                 action.mid)

@@ -1,9 +1,3 @@
-# TODO
-#   1)
-#   make the PLAYER_COUNT constant dynamic per Brandi instance. 
-#   n_players is already supplied as an argument to the constructor. 
-
-
 from typing import Dict, List
 
 from itertools import count, filterfalse
@@ -18,11 +12,6 @@ from app.game_logic.card import Card
 from app.models.action import Action
 
 from app.models.user import User
-
-
-NODES_BETWEEN_PLAYERS = 16
-PLAYER_COUNT = 4
-FIELD_SIZE = PLAYER_COUNT * 16
 
 
 class Brandi:
@@ -108,6 +97,8 @@ class Brandi:
 
         self.discarded_cards = []
 
+        self.field_self.field_player_count = n_players
+
     def get_player_by_position(self, position: int) -> Player:
         for player in self.players.values():
             if player.position == position:
@@ -130,7 +121,8 @@ class Brandi:
         # assign the lowest non taken position
         position: int = next(filterfalse(
             set(player_positions).__contains__, count(0)))
-        self.players[user.uid] = Player(user.uid, user.username, user.avatar, position)
+        self.players[user.uid] = Player(
+            user.uid, user.username, user.avatar, position)
 
         self.calculate_order()
         return {
@@ -186,10 +178,10 @@ class Brandi:
                 "note": f"Player {user.username} is not part of this game",
             }
 
-        if position >= PLAYER_COUNT:
+        if position >= self.field_player_count:
             return {
                 "requestValid": False,
-                "note": f"Please select a position between 0 and {PLAYER_COUNT - 1}",
+                "note": f"Please select a position between 0 and {self.field_player_count - 1}",
             }
 
         player_requesting_new_position: Player = self.players.get(user.uid)
@@ -221,13 +213,13 @@ class Brandi:
             - players are assigned their starting position based on self.order
             - first round is started
         """
-        if len(self.players.values()) != PLAYER_COUNT:
+        if len(self.players.values()) != self.field_player_count:
             return {"requestValid": False, "note": "Not all players are present."}
         if not self.game_state == 0:
             return {"requestValid": False, "note": "Game has already started."}
 
         # create a new field instance for the game
-        self.field: Field = Field(PLAYER_COUNT)  # field of players
+        self.field: Field = Field(self.field_player_count)  # field of players
 
         self.assign_starting_positions()
         self.start_round()
@@ -256,7 +248,7 @@ class Brandi:
         self.deal_cards()
 
         # update the players order
-        self.active_player_index = self.round_turn % PLAYER_COUNT
+        self.active_player_index = self.round_turn % self.field_player_count
         for uid in self.order:
             self.players[uid].has_folded = False
 
@@ -300,7 +292,7 @@ class Brandi:
 
         player = self.players.get(user.uid)
         team_member = self.get_player_by_position(
-            (player.position + PLAYER_COUNT // 2) % PLAYER_COUNT
+            (player.position + self.field_player_count // 2) % self.field_player_count
         )
 
         swapped_card = self.players[user.uid].hand.play_card(card)
@@ -311,7 +303,7 @@ class Brandi:
         # make sure the players only swap one card
         self.players[user.uid].may_swap_cards = False
         # when all players have sent their card to swap
-        if self.card_swap_count % PLAYER_COUNT == 0:
+        if self.card_swap_count % self.field_player_count == 0:
             self.round_state += 1
 
             # reset swapping ability for next round
@@ -335,9 +327,10 @@ class Brandi:
         """
 
         victory_dict: Dict[int, bool] = {}
-        for i in range(PLAYER_COUNT // 2):
+        for i in range(self.field_player_count // 2):
             team_member_1 = self.get_player_by_position(i)
-            team_member_2 = self.get_player_by_position(i + PLAYER_COUNT // 2)
+            team_member_2 = self.get_player_by_position(
+                i + self.field_player_count // 2)
             victory_dict[i] = team_member_1.has_finished_marbles() \
                 and team_member_2.has_finished_marbles()
 
@@ -346,19 +339,19 @@ class Brandi:
                 self.game_state = 3
                 return {
                     "requestValid": True,
-                    "note": f"Team 1 of players {self.get_player_by_position(team_number).username} and {self.get_player_by_position((team_number + PLAYER_COUNT//2)).username} have won.",
+                    "note": f"Team 1 of players {self.get_player_by_position(team_number).username} and {self.get_player_by_position((team_number + self.field_player_count//2)).username} have won.",
                     "gameOver": True,
                 }
 
         self.active_player_index = (
-            self.active_player_index + 1) % PLAYER_COUNT
+            self.active_player_index + 1) % self.field_player_count
 
-        skipped_player_count: int = 0
+        skipped_self.field_player_count: int = 0
         while self.players[self.order[self.active_player_index]].has_finished_cards():
             self.active_player_index = (
-                self.active_player_index + 1) % PLAYER_COUNT
+                self.active_player_index + 1) % self.field_player_count
             # if all players have been skipped then the round has finished and a new round starts
-            if skipped_player_count == PLAYER_COUNT:
+            if skipped_self.field_player_count == self.field_player_count:
                 self.round_state = 5
                 self.start_round()
                 return {
@@ -367,7 +360,7 @@ class Brandi:
                     "new_round": True,
                 }
 
-            skipped_player_count += 1
+            skipped_self.field_player_count += 1
 
     """
     Game play events: 
@@ -437,7 +430,8 @@ class Brandi:
 
         if self.players[user.uid].has_finished_marbles():
             team_member: Player = self.get_player_by_position(
-                (current_player.position + PLAYER_COUNT // 2) % PLAYER_COUNT
+                (current_player.position + self.field_player_count //
+                 2) % self.field_player_count
             )
             marble: Marble = self.players[team_member.uid].marbles.get(
                 action.mid)

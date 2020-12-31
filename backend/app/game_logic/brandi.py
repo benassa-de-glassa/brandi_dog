@@ -97,8 +97,6 @@ class Brandi:
 
         self.discarded_cards = []
 
-        self.field_self.field_player_count = n_players
-
     def get_player_by_position(self, position: int) -> Player:
         for player in self.players.values():
             if player.position == position:

@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from itertools import count, filterfalse
 
@@ -97,7 +97,7 @@ class Brandi:
 
         self.discarded_cards = []
 
-    def get_player_by_position(self, position: int) -> Player:
+    def get_player_by_position(self, position: int) -> Union[Player, None]:
         for player in self.players.values():
             if player.position == position:
                 return player

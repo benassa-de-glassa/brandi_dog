@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import Tooltip from "./Tooltip";
 import Avatar from "./Avatar";
@@ -18,9 +18,26 @@ import boardData6JSON from "./boarddata6.json";
 
 import { avatarPath } from "../../constants/constants";
 
+// Hook
+const usePrevious = (value) => {
+  // The ref object is a generic container whose current property is mutable
+  // and can hold any value, similar to an instance property on a class
+  const ref = useRef();
+
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
+}
+
 const BoardAnimation = (props: BoardProps) => {
   const height = 800;
   const width = 800;
+
+  const prevMarbles = usePrevious(props.marbleList);
 
   const boardData =
     props.numberOfPlayers === 4 ? boardDataJSON : boardData6JSON;
@@ -38,10 +55,12 @@ const BoardAnimation = (props: BoardProps) => {
   let stepOccupation = new Array(16 * props.numberOfPlayers);
   let houseOccupation = new Array(4 * props.numberOfPlayers);
 
-  console.log("component called")
   useEffect(() => {
     console.log("marble-list changed")
-  }, [props.marbleList])
+    console.log(props.marbleList)
+    console.log(prevMarbles)
+    let change = props.marbleList.filter( el => el)
+  }, [props.marbleList, prevMarbles])
 
   // place the marbles
   props.marbleList.forEach((marble: Marble) => {

@@ -16,11 +16,11 @@ export default params;
 const store = new Store({
   marbleList: [
     { position: 0, mid: 1, color: "0" },
-    { position: 1, mid: 1, color: "0" },
-    { position: 2, mid: 1, color: "0" },
-    { position: 3, mid: 1, color: "0" },
-    { position: 1002, mid: 1, color: "0" },
-    { position: -1, mid: 1, color: "0" },
+    { position: 1, mid: 2, color: "0" },
+    { position: 2, mid: 3, color: "0" },
+    { position: 3, mid: 4, color: "0" },
+    { position: 1002, mid: 5, color: "0" },
+    { position: -1, mid: 7, color: "0" },
   ],
   tooltipVisible: false,
 });
@@ -48,9 +48,7 @@ Primary.args = {
   selectedCard: null,
   selectedMarble: null,
   marbleClicked: (marble: Marble, homeClicked: boolean) => {
-    console.log(marble)
     let marbles = store.get("marbleList").filter((m) => m !== marble);
-    console.log([...marbles, { ...marble, position: (marble.position + 4) % 64 }])
     store.set({
       marbleList: [...marbles, { ...marble, position: (marble.position + 4) % 64 }],
     });

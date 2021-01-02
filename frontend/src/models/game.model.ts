@@ -14,6 +14,7 @@ export interface GameComponentState {
   players: Player[];
   activePlayerIndex: number | null;
   playerIsActive: boolean;
+  playerHasFinished: boolean;
   cards: CardIF[];
   allMarbles: Marble[];
   marbles: Marble[];

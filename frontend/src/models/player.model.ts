@@ -3,3 +3,8 @@ export interface Player {
   uid: number;
   avatar: string;
 }
+
+export interface PlayerInGame extends Player { 
+  playerHasFinished: boolean;
+  
+}

@@ -2,8 +2,8 @@ import React from "react";
 import { AvatarProps } from "../../models/avatar.model";
 
 export default function Avatar(props: AvatarProps) {
-  const size = 70,
-    strokeWidth = 7;
+  const size = 100,
+    strokeWidth = 6;
 
   const radius = size / 2 - strokeWidth;
 
@@ -15,39 +15,34 @@ export default function Avatar(props: AvatarProps) {
       >
         {props.isHost ? `! ${props.playerName}` : props.playerName}
       </p>
-      {/* <img
-                alt='avatar'
-                className={props.isActive ? 'avatar active' : 'avatar'}
-                src={props.image}
-            ></img> */}
-      <svg width={size} height={size}>
-        <defs>
-          <clipPath id="circleView">
-            <circle cx={size / 2} cy={size / 2} r={radius} fill="#FFFFFF" />
-          </clipPath>
-        </defs>
+      <div className="svg-container">
+        <svg viewBox={`0 0 ${size} ${size}`} className="svg-content-responsive">
+          <defs>
+            <clipPath id="circleView">
+              <circle cx={size / 2} cy={size / 2} r={radius} />
+            </clipPath>
+          </defs>
 
-        <circle
-          className={
-            props.isActive
-              ? "avatar-image-border active"
-              : "avatar-image-border"
-          }
-          //   stroke={"black"}
-          //   stroke-width={strokeWidth}
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-        />
-        <image
-          x={strokeWidth}
-          y={strokeWidth}
-          width={size - 2 * strokeWidth}
-          height={size - 2 * strokeWidth}
-          href={props.image}
-          clip-path="url(#circleView)"
-        />
-      </svg>
+          <circle
+            className={
+              props.isActive
+                ? "avatar-image-border active"
+                : "avatar-image-border"
+            }
+            stroke={"black"}
+            strokeWidth={strokeWidth}
+            cx={size / 2}
+            cy={size / 2}
+            r={radius+strokeWidth/2}
+          />
+          <image
+            width={size}
+            height={size}
+            href={props.image}
+            clipPath="url(#circleView)" // make it round
+          />
+        </svg>
+      </div>
     </div>
   );
 }

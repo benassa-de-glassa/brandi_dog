@@ -1,19 +1,31 @@
-@keyframes spin{
-    to {
-        stroke-dashoffset: -175.9;
-    }
+$pathlength: 295.31; // 2 * pi * 47
+
+@keyframes spin {
+  to {
+    stroke-dashoffset: -$pathlength;
+  }
 }
 
 .avatar-image-border {
-    stroke: black;
-    stroke-width: 3;
-    stroke-linecap: round;
+  stroke-linecap: round;
 
-    &.active {
-        stroke-width: 7;
-        stroke: salmon;
-        stroke-dasharray: 0, 0, 62.96, 25;
-        stroke-dashoffset: 0;
-        animation: spin 5s infinite linear; 
-    }
+  &.active {
+    stroke: salmon;
+    stroke-dasharray: 0 0 $pathlength/4 $pathlength/12;
+    stroke-dashoffset: 0;
+    animation: spin 5s infinite linear;
+  }
+}
+
+.avatar {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 3px solid black;
+  pointer-events: none;
+}
+
+.avatar.active {
+  border: 6px solid salmon;
 }

@@ -28,7 +28,7 @@ const AnimatedMarble = (props: {
       return (
         <circle
           key={`marble-${props.marble.mid}`}
-          className={`step occupied occupied-${props.marble.color}`}
+          className={`marble marble-${props.marble.color}`}
           cx={pos.x}
           cy={pos.y}
           r={props.radius}

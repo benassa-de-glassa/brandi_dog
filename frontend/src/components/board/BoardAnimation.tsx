@@ -110,7 +110,7 @@ const BoardAnimation = (props: BoardProps) => {
   return (
     <div id="board-container">
       <div
-        className={`svg-container${props.numberOfPlayers === 4 ? "" : "-6"}`}
+        className="svg-container"
       >
         {props.playerList.map((player, i) => (
           <Avatar
@@ -129,7 +129,7 @@ const BoardAnimation = (props: BoardProps) => {
             onClick={boardClicked}
             id="board"
             className="svg-content-responsive"
-            viewBox={"0 0 " + boardSize.width + " " + boardSize.height}
+            viewBox={`0 0 ${boardSize.width} ${boardSize.height}`}
           >
             {/* build steps for the path around the board */}
             {boardData.steps.map((data) => (
@@ -176,6 +176,7 @@ const BoardAnimation = (props: BoardProps) => {
             ))}
             {Object.values(props.marbles).map((marble) => (
               <AnimatedMarble
+                key={marble.mid}
                 marble={marble}
                 radius={radius.inner}
                 position={getStepPosition(marble.position)}

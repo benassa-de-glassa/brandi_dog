@@ -10,23 +10,13 @@
     position: relative;
     height: 0;
     vertical-align: top;
-  }
 
-  .svg-container-6 {
-    padding-bottom: 100%;
-    width: 100%;
-    display: inline-block;
-    position: relative;
-    min-width: 400px;
-    height: 0;
-    vertical-align: top;
-  }
-
-  .svg-content-responsive {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 0;
+    .svg-content-responsive {
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
 
   .tooltip {
@@ -79,95 +69,79 @@
     fill-opacity: 0;
     &:hover {
       stroke-width: 5px;
+    }
+  }
+
+  .marble {
+    stroke: black;
+    stroke-width: 2px;
+
+    &:hover {
+      stroke-width: 5px;
       cursor: pointer;
     }
 
     &.selected {
       stroke: whitesmoke;
-
       &:hover {
+        stroke-width: 5px;
         cursor: pointer;
-        stroke-width: 3px;
       }
     }
-  }
 
-  .occupied {
-    fill-opacity: 1;
-  }
+    &.marble-0 {
+      fill: red;
+    }
 
-  .occupied-red,
-  .occupied-0 {
-    stroke: black;
-    fill: red;
-  }
+    &.marble-1 {
+      fill: yellow;
+    }
 
-  .occupied-yellow,
-  .occupied-1 {
-    stroke: black;
-    fill: yellow;
-  }
-
-  .occupied-green,
-  .occupied-3 {
-    stroke: black;
-    fill: green;
-  }
-
-  .occupied-blue,
-  .occupied-4 {
-    stroke: black;
-    fill: blue;
+    &.marble-2 {
+      fill: green;
+    }
+    &.marble-3 {
+      fill: blue;
+    }
+    &.marble-5 {
+      fill: purple;
+    }
+    &.marble-6 {
+      fill: orange;
+    }
   }
 
   .out {
     fill: none;
     stroke-width: 4px;
-  }
 
-  .out-red,
-  .out-0 {
-    stroke: red;
-  }
+    &.out-0 {
+      stroke: red;
+    }
 
-  .out-blue,
-  .out-3 {
-    stroke: blue;
-  }
+    &.out-1 {
+      stroke: yellow;
+    }
 
-  .out-green,
-  .out-2 {
-    stroke: green;
-  }
+    &.out-2 {
+      stroke: green;
+    }
 
-  .out-yellow,
-  .out-1 {
-    stroke: yellow;
-  }
+    &.out-3 {
+      stroke: blue;
+    }
 
-  .out-4 {
-    stroke: purple;
-  }
+    &.out-4 {
+      stroke: purple;
+    }
 
-  .out-5 {
-    stroke: orange;
+    &.out-5 {
+      stroke: orange;
+    }
   }
 
   #board {
     background-image: url("img/plywood-background.png");
     background-size: 120%;
   }
-}
-
-.avatar {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 50%;
-  border: 3px solid black;
-  pointer-events: none;
-}
-
-.avatar.active {
-  border: 6px solid salmon;
 }

@@ -30,20 +30,15 @@ const BoardAnimation = (props: BoardProps) => {
   // dynamically load relevant board data
   useEffect(() => {
     async function loadBoardData() {
-      const data = await import(
-        `./boarddata${props.numberOfPlayers}-numbers.json`
-      );
+      const data = await import(`./boarddata${props.numberOfPlayers}.json`);
       setBoardData(data);
 
       // make the steps smaller for more players
       !(props.numberOfPlayers === 4) && setRadius({ inner: 10, outer: 15 });
     }
-
     loadBoardData();
   }, [props.numberOfPlayers]);
 
-  // const boardData =
-  // props.numberOfPlayers === 4 ? boardDataJSON : boardData6JSON;
 
   const getStepPosition = (id: number) => {
     let step;
@@ -66,6 +61,7 @@ const BoardAnimation = (props: BoardProps) => {
   });
 
   const marbleClicked = (marble: Marble) => {
+    // second argument is homeClicked, all homes have negative ids
     props.marbleClicked(marble, marble.position < 0);
 
     // show tooltip
@@ -128,65 +124,66 @@ const BoardAnimation = (props: BoardProps) => {
             clickHandler={async () => playerBoxClicked(i)}
           />
         ))}
-        <svg
-          onClick={boardClicked}
-          id="board"
-          className="svg-content-responsive"
-          viewBox={"0 0 " + boardSize.width + " " + boardSize.height}
-        >
-          {/* build steps for the path around the board */}
-          {boardData.steps.map((data) => (
-            <circle
-              key={data.id}
-              className="step"
-              id={"step-" + data.id}
-              cx={data.x}
-              cy={data.y}
-              r={radius.inner}
-            />
-          ))}
-          {/* draw homes */}
-          {boardData.homes.map((data) => (
-            <circle
-              key={"home " + data.x + " " + data.y}
-              className="step"
-              id={"home" + data.color + "-" + data.id}
-              cx={data.x}
-              cy={data.y}
-              r={radius.inner}
-            />
-          ))}
-          {/* draw houses */}
-          {boardData.houses.map((data) => (
-            <circle
-              key={"house " + data.x + " " + data.y}
-              className="step"
-              id={"house" + data.color + "-" + data.id}
-              cx={data.x}
-              cy={data.y}
-              r={radius.inner}
-            />
-          ))}
-          {/* draw outer circles */}
-          {boardData.outer.map((data) => (
-            <circle
-              key={"out " + data.x + " " + data.y}
-              className={"out out-" + data.color}
-              cx={data.x}
-              cy={data.y}
-              r={radius.outer}
-            />
-          ))}
-
-          {Object.values(props.marbles).map((marble) => (
-            <AnimatedMarble
-              marble={marble}
-              radius={radius.inner}
-              position={getStepPosition(marble.position)}
-              marbleClicked={() => marbleClicked(marble)}
-            />
-          ))}
-        </svg>
+        {boardData.steps && (
+          <svg
+            onClick={boardClicked}
+            id="board"
+            className="svg-content-responsive"
+            viewBox={"0 0 " + boardSize.width + " " + boardSize.height}
+          >
+            {/* build steps for the path around the board */}
+            {boardData.steps.map((data) => (
+              <circle
+                key={data.id}
+                className="step"
+                id={"step-" + data.id}
+                cx={data.x}
+                cy={data.y}
+                r={radius.inner}
+              />
+            ))}
+            {/* draw homes */}
+            {boardData.homes.map((data) => (
+              <circle
+                key={"home " + data.x + " " + data.y}
+                className="step"
+                id={"home" + data.color + "-" + data.id}
+                cx={data.x}
+                cy={data.y}
+                r={radius.inner}
+              />
+            ))}
+            {/* draw houses */}
+            {boardData.houses.map((data) => (
+              <circle
+                key={"house " + data.x + " " + data.y}
+                className="step"
+                id={"house" + data.color + "-" + data.id}
+                cx={data.x}
+                cy={data.y}
+                r={radius.inner}
+              />
+            ))}
+            {/* draw outer circles */}
+            {boardData.outer.map((data) => (
+              <circle
+                key={"out " + data.x + " " + data.y}
+                className={"out out-" + data.color}
+                cx={data.x}
+                cy={data.y}
+                r={radius.outer}
+              />
+            ))}
+            {Object.values(props.marbles).map((marble) => (
+              <AnimatedMarble
+                marble={marble}
+                radius={radius.inner}
+                position={getStepPosition(marble.position)}
+                marbleClicked={() => marbleClicked(marble)}
+              />
+            ))}
+          </svg>
+        )}
         {props.topCard !== null && (
           <Card value={props.topCard.value} color={props.topCard.color} />
         )}

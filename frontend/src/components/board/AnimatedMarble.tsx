@@ -11,11 +11,11 @@ const AnimatedMarble = (props: {
   <Animate
     show={true}
     start={{ x: [props.position.x], y: [props.position.y] }}
-    // enter={{ x: [100], y: [100] }}
     update={{
       x: [props.position.x],
       y: [props.position.y],
       timing: { duration: 1000, ease: (x: number) => {
+        // easing function
         const c1 = 1.70158;
         const c2 = c1 * 1.525;
         
@@ -25,7 +25,6 @@ const AnimatedMarble = (props: {
     }}
   >
     {(pos) => {
-      console.log(pos);
       return (
         <circle
           key={`marble-${props.marble.mid}`}

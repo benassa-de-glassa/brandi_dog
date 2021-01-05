@@ -480,9 +480,9 @@ class Brandi:
                 return {
                     "requestValid": True,
                     "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
-                    "positions": {"old": old_position, "new": marble.currentNode.position}
-
+                    # "positions": {"old": old_position, "new": marble.currentNode.position}
                 }
+
         # normal actions
         elif action.action in [
             1,
@@ -554,7 +554,7 @@ class Brandi:
             return {
                 "requestValid": True,
                 "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
-                "positions": {"old": old_position, "new": marble.currentNode.position}
+                # "positions": {"old": old_position, "new": marble.currentNode.position}
             }
 
         elif action.action == -4:  # go backwards 4
@@ -596,7 +596,7 @@ class Brandi:
             return {
                 "requestValid": True,
                 "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
-                "positions": {"old": old_position, "new": marble.currentNode.position}
+                # "positions": {"old": old_position, "new": marble.currentNode.position}
             }
 
         elif action.action == "switch":
@@ -640,10 +640,10 @@ class Brandi:
             return {
                 "requestValid": True,
                 "note": f"switched {action.mid} and {action.mid_2} successfully",
-                "positions": {
-                    "old": old_position,
-                    "new": marble.currentNode.position,
-                }
+                # "positions": {
+                #     "old": old_position,
+                #     "new": marble.currentNode.position,
+                # }
             }
 
         # in case either a joker or a seven is played. all other cases are covered by the options above
@@ -747,7 +747,7 @@ class Brandi:
             return {
                 "requestValid": True,
                 "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
-                "positions": {"old": old_position, "new": marble.currentNode.position}
+                # "positions": {"old": old_position, "new": marble.currentNode.position}
             }
 
     """

@@ -11,6 +11,13 @@
 @import "layout/players";
 @import "layout/avatar";
 
+$color-0: red;
+$color-1: yellow;
+$color-2: green;
+$color-3: blue;
+$color-4: purple;
+$color-5: orange;
+
 body,
 html {
   min-width: $min-width;

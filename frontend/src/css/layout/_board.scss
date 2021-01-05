@@ -90,24 +90,24 @@
     }
 
     &.marble-0 {
-      fill: red;
+      fill: $color-0;
     }
 
     &.marble-1 {
-      fill: yellow;
+      fill: $color-1;
     }
 
     &.marble-2 {
-      fill: green;
+      fill: $color-2;
     }
     &.marble-3 {
-      fill: blue;
+      fill: $color-3;
     }
     &.marble-5 {
-      fill: purple;
+      fill: $color-4;
     }
     &.marble-6 {
-      fill: orange;
+      fill: $color-5;
     }
   }
 
@@ -116,27 +116,27 @@
     stroke-width: 4px;
 
     &.out-0 {
-      stroke: red;
+      stroke: $color-0;
     }
 
     &.out-1 {
-      stroke: yellow;
+      stroke: $color-1;
     }
 
     &.out-2 {
-      stroke: green;
+      stroke:$color-2;
     }
 
     &.out-3 {
-      stroke: blue;
+      stroke: $color-3;
     }
 
     &.out-4 {
-      stroke: purple;
+      stroke: $color-4;
     }
 
     &.out-5 {
-      stroke: orange;
+      stroke: $color-5;
     }
   }
 

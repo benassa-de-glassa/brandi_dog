@@ -35,7 +35,8 @@ router = APIRouter()
 # dictionary of game_id: game instance
 games: Dict[str, Brandi] = {}
 
-GAME_NOT_FOUND = HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f"Game does not exist.")
+GAME_NOT_FOUND = HTTPException(
+    status_code=HTTP_400_BAD_REQUEST, detail=f"Game does not exist.")
 
 
 async def emit_error(sid, msg: str):
@@ -70,6 +71,27 @@ async def sio_emit_player_state(game_id, player_id):
             'player-state',
             games[game_id].players[player_id].private_state(),
             room=room
+        )
+
+
+async def sio_emit_move(game_id: str, move, positions=None):
+    """
+    Emit an action (only if it is valid). 
+    
+    move: str
+        either "move", "fold", or "switch".
+    """
+    room = socket_connections.get(int(player_id))
+
+    arg = {"move": move}
+    if positions:
+        arg["positions": positions]
+
+    if room is not None:
+        await sio.emit(
+            'action',
+            arg,
+            room=room,
         )
 
 
@@ -208,7 +230,7 @@ async def initialize_new_game(
                           for i in range(4))
 
     games[game_id] = Brandi(game_id, game_name=game_name,
-                            host=player, n_players=n_players, seed=seed, 
+                            host=player, n_players=n_players, seed=seed,
                             debug=debug)
 
     await sio_emit_game_list()
@@ -269,7 +291,7 @@ async def player_position(game_id: str,  position: int = Body(...),  user: User 
     """
     Changes the position on the board of the player to choose new teams.
     """
-    # verify game_id 
+    # verify game_id
     if not game_id in games:
         raise GAME_NOT_FOUND
 
@@ -364,13 +386,13 @@ async def swap_card(game_id: str,  card: CardBase, user: User = Depends(get_curr
 async def fold_round(game_id: str, user: User = Depends(get_current_user)):
     """
     make the card swap before starting the round
-    
+
     """
     game = games.get(game_id)
 
     if not game:  # ensure the game exists
         raise GAME_NOT_FOUND
-    
+
     if user.uid not in game.players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"Player {user.uid} not in Game.")
@@ -379,8 +401,10 @@ async def fold_round(game_id: str, user: User = Depends(get_current_user)):
 
     if res['requestValid']:
         await sio_emit_game_state(game_id)
+        await sio_emit_move(game_id, "fold")
         for uid in game.order:
             await sio_emit_player_state(game_id, uid)
+
     return game.get_cards(user)
 
 
@@ -407,6 +431,7 @@ async def perform_action(game_id: str, action: Action, user: User = Depends(get_
     if res['requestValid']:
         await sio_emit_game_state(game_id)
         await sio_emit_player_state(game_id, user.uid)
+        await sio_emit_move(game_id, "switch" if action.action == "switch" else "move", res.get("positions"))
     else:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST, detail=res["note"])

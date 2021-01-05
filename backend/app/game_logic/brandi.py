@@ -1,7 +1,7 @@
 # TODO
 #   1)
-#   make the PLAYER_COUNT constant dynamic per Brandi instance. 
-#   n_players is already supplied as an argument to the constructor. 
+#   make the PLAYER_COUNT constant dynamic per Brandi instance.
+#   n_players is already supplied as an argument to the constructor.
 
 
 from typing import Dict, List
@@ -130,7 +130,8 @@ class Brandi:
         # assign the lowest non taken position
         position: int = next(filterfalse(
             set(player_positions).__contains__, count(0)))
-        self.players[user.uid] = Player(user.uid, user.username, user.avatar, position)
+        self.players[user.uid] = Player(
+            user.uid, user.username, user.avatar, position)
 
         self.calculate_order()
         return {
@@ -435,6 +436,9 @@ class Brandi:
 
         marble: Marble = self.players[user.uid].marbles.get(action.mid, None)
 
+        # store the old position
+        old_position = marble.currentNode.position
+
         if self.players[user.uid].has_finished_marbles():
             team_member: Player = self.get_player_by_position(
                 (current_player.position + PLAYER_COUNT // 2) % PLAYER_COUNT
@@ -479,6 +483,8 @@ class Brandi:
                 return {
                     "requestValid": True,
                     "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
+                    "positions": {"old": old_position, "new": marble.currentNode.position}
+
                 }
         # normal actions
         elif action.action in [
@@ -551,6 +557,7 @@ class Brandi:
             return {
                 "requestValid": True,
                 "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
+                "positions": {"old": old_position, "new": marble.currentNode.position}
             }
 
         elif action.action == -4:  # go backwards 4
@@ -592,6 +599,7 @@ class Brandi:
             return {
                 "requestValid": True,
                 "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
+                "positions": {"old": old_position, "new": marble.currentNode.position}
             }
 
         elif action.action == "switch":
@@ -635,6 +643,10 @@ class Brandi:
             return {
                 "requestValid": True,
                 "note": f"switched {action.mid} and {action.mid_2} successfully",
+                "positions": {
+                    "old": old_position,
+                    "new": marble.currentNode.position,
+                }
             }
 
         # in case either a joker or a seven is played. all other cases are covered by the options above
@@ -738,6 +750,7 @@ class Brandi:
             return {
                 "requestValid": True,
                 "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
+                "positions": {"old": old_position, "new": marble.currentNode.position}
             }
 
     """

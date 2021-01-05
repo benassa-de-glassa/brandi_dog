@@ -1,8 +1,7 @@
 import { ActionNumber} from "./action.model";
-import { BoardCoordinates } from "./board.model";
 
 export interface Tooltip {
-  anchor: BoardCoordinates;
+  anchor: {x: "left" | "right", y: "top" | "bottom"};
   x: string;
   y: string;
 }

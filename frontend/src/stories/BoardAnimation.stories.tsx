@@ -2,6 +2,7 @@ import React from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { State, Store } from "@sambego/storybook-state";
 import { BoardProps } from "../models/board.model";
+import { Move } from "../models/action.model";
 
 import "../css/main.css";
 import BoardAnimation from "../components/board/BoardAnimation";
@@ -14,15 +15,16 @@ const params = {
 export default params;
 
 const store = new Store({
-  marbleList: [
-    { position: 0, mid: 1, color: "0" },
-    { position: 1, mid: 2, color: "0" },
-    { position: 2, mid: 3, color: "0" },
-    { position: 3, mid: 4, color: "0" },
-    { position: 1002, mid: 5, color: "0" },
-    { position: -1, mid: 7, color: "0" },
-  ],
+  marbles: {
+    0: { position: 50, mid: 0, color: 0 },
+    1: { position: 0, mid: 1, color: 0 },
+    2: { position: 1, mid: 2, color: 0 },
+    3: { position: 2, mid: 3, color: 0 },
+    4: { position: 3, mid: 4, color: 0 },
+    6: { position: 1003, mid: 4, color: 0 },
+  },
   tooltipVisible: false,
+  moves: [] as Move[],
 });
 
 const Template: Story<BoardProps> = (args) => (
@@ -44,13 +46,27 @@ Primary.args = {
     { username: "Thilo", uid: 2, avatar: "tiger" },
     { username: "Alex", uid: 3, avatar: "eagle" },
   ],
-  marbleList: store.get("marbleList"),
+  marbles: store.get("marbles"),
   selectedCard: null,
   selectedMarble: null,
   marbleClicked: (marble: Marble, homeClicked: boolean) => {
-    let marbles = store.get("marbleList").filter((m) => m !== marble);
+    let marbles = store.get("marbles");
     store.set({
-      marbleList: [...marbles, { ...marble, position: (marble.position + 4) % 64 }],
+    marbles: {
+        ...marbles,
+        [marble.mid]: { ...marble, position: (marble.position + 4) % 64 },
+    },
+      moves: [
+        ...store.get("moves"), 
+        {
+          action: 4,
+          player: { username: "Bene", uid: 0, avatar: "dolphin" },
+          positions: {
+            old: marble.position,
+            new: (marble.position + 4) % 64,
+          },
+        },
+      ],
     });
   },
   tooltipActions: [1, 2, 3, 4, 5, 6, 7],

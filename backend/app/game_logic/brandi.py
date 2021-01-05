@@ -436,9 +436,6 @@ class Brandi:
 
         marble: Marble = self.players[user.uid].marbles.get(action.mid, None)
 
-        # store the old position
-        old_position = marble.currentNode.position
-
         if self.players[user.uid].has_finished_marbles():
             team_member: Player = self.get_player_by_position(
                 (current_player.position + PLAYER_COUNT // 2) % PLAYER_COUNT

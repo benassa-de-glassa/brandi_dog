@@ -74,25 +74,26 @@ async def sio_emit_player_state(game_id, player_id):
         )
 
 
-async def sio_emit_move(game_id: str, move, positions=None):
+async def sio_emit_move(game_id: str, player_id: str, move, positions=None):
     """
     Emit an action (only if it is valid). 
     
     move: str
         either "move", "fold", or "switch".
     """
-    room = socket_connections.get(int(player_id))
+    pass
+    # room = socket_connections.get(int(player_id))
 
-    arg = {"move": move}
-    if positions:
-        arg["positions": positions]
+    # arg = {"move": move}
+    # if positions:
+    #     arg["positions": positions]
 
-    if room is not None:
-        await sio.emit(
-            'action',
-            arg,
-            room=room,
-        )
+    # if room is not None:
+    #     await sio.emit(
+    #         'action',
+    #         arg,
+    #         room=room,
+    #     )
 
 
 async def sio_emit_game_list():
@@ -401,7 +402,7 @@ async def fold_round(game_id: str, user: User = Depends(get_current_user)):
 
     if res['requestValid']:
         await sio_emit_game_state(game_id)
-        await sio_emit_move(game_id, "fold")
+        await sio_emit_move(game_id, user.uid,  "fold")
         for uid in game.order:
             await sio_emit_player_state(game_id, uid)
 
@@ -431,7 +432,7 @@ async def perform_action(game_id: str, action: Action, user: User = Depends(get_
     if res['requestValid']:
         await sio_emit_game_state(game_id)
         await sio_emit_player_state(game_id, user.uid)
-        await sio_emit_move(game_id, "switch" if action.action == "switch" else "move", res.get("positions"))
+        await sio_emit_move(game_id, user.uid, "switch" if action.action == "switch" else "move", res.get("positions"))
     else:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST, detail=res["note"])

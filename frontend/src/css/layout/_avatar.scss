@@ -1,0 +1,19 @@
+@keyframes spin{
+    to {
+        stroke-dashoffset: -175.9;
+    }
+}
+
+.avatar-image-border {
+    stroke: black;
+    stroke-width: 3;
+    stroke-linecap: round;
+
+    &.active {
+        stroke-width: 7;
+        stroke: salmon;
+        stroke-dasharray: 0, 0, 62.96, 25;
+        stroke-dashoffset: 0;
+        animation: spin 5s infinite linear; 
+    }
+}

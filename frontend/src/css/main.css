@@ -556,153 +556,6 @@ header #connection-lost {
   opacity: 0;
 }
 
-#board-container .player-name {
-  font-size: 20px;
-  pointer-events: none;
-}
-
-#board-container .player-box {
-  stroke: grey;
-  stroke-width: 2px;
-  fill: white;
-  fill-opacity: 0.5;
-  width: 11%;
-  height: 15%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  position: absolute;
-  z-index: 1000;
-}
-
-#board-container .player-box.active {
-  fill: forestgreen;
-  fill-opacity: 0.3;
-  font-size: 15px;
-}
-
-#board-container .player-box .player-name {
-  padding: 3px 10px;
-  margin: 0px;
-  background: whitesmoke;
-}
-
-#board-container .player-box .player-name.me {
-  background-color: lightskyblue;
-}
-
-#board-container .player-box.players-4.player-0 {
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
-  /* text right aligned */
-  top: 3%;
-  right: 3%;
-}
-
-#board-container .player-box.players-4.player-1 {
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  /* text left aligned */
-  top: 3%;
-  left: 3%;
-}
-
-#board-container .player-box.players-4.player-2 {
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  /* text left aligned */
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: reverse;
-      -ms-flex-direction: column-reverse;
-          flex-direction: column-reverse;
-  bottom: 3%;
-  left: 3%;
-}
-
-#board-container .player-box.players-4.player-3 {
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
-  /* text right aligned */
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: reverse;
-      -ms-flex-direction: column-reverse;
-          flex-direction: column-reverse;
-  bottom: 3%;
-  right: 3%;
-}
-
-#board-container .player-box.players-6.player-0 {
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
-  /* text right aligned */
-  top: 3%;
-  right: 3%;
-}
-
-#board-container .player-box.players-6.player-1 {
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  /* text left aligned */
-  top: 3%;
-  left: 3%;
-}
-
-#board-container .player-box.players-6.player-2 {
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: reverse;
-      -ms-flex-direction: column-reverse;
-          flex-direction: column-reverse;
-  top: 42.5%;
-  left: 3%;
-}
-
-#board-container .player-box.players-6.player-3 {
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  /* text left aligned */
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: reverse;
-      -ms-flex-direction: column-reverse;
-          flex-direction: column-reverse;
-  bottom: 3%;
-  left: 3%;
-}
-
-#board-container .player-box.players-6.player-4 {
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
-  /* text right aligned */
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: reverse;
-      -ms-flex-direction: column-reverse;
-          flex-direction: column-reverse;
-  bottom: 3%;
-  right: 3%;
-}
-
-#board-container .player-box.players-6.player-5 {
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  top: 42.5%;
-  right: 3%;
-}
-
 #board-container .step {
   stroke: black;
   stroke-width: 3px;
@@ -872,6 +725,173 @@ header #connection-lost {
   position: absolute;
   left: calc(50% - 45px);
   top: calc(50% - 75px);
+}
+
+.player-box {
+  stroke: grey;
+  stroke-width: 2px;
+  fill: white;
+  fill-opacity: 0.5;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: absolute;
+  z-index: 1000;
+}
+
+.player-box.active {
+  fill: forestgreen;
+  fill-opacity: 0.3;
+  font-size: 15px;
+}
+
+.player-box .player-name {
+  padding: 3px 10px;
+  margin: 0px;
+  background: whitesmoke;
+}
+
+.player-box .player-name.me {
+  background-color: lightskyblue;
+}
+
+.player-box.players-4.player-0 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  top: 3%;
+  right: 3%;
+}
+
+.player-box.players-4.player-1 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  top: 3%;
+  left: 3%;
+}
+
+.player-box.players-4.player-2 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  left: 3%;
+}
+
+.player-box.players-4.player-3 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  right: 3%;
+}
+
+.player-box.players-6.player-0 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  top: 3%;
+  right: 3%;
+}
+
+.player-box.players-6.player-1 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  top: 3%;
+  left: 3%;
+}
+
+.player-box.players-6.player-2 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  top: 42.5%;
+  left: 3%;
+}
+
+.player-box.players-6.player-3 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  /* text left aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  left: 3%;
+}
+
+.player-box.players-6.player-4 {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  /* text right aligned */
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  bottom: 3%;
+  right: 3%;
+}
+
+.player-box.players-6.player-5 {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  top: 42.5%;
+  right: 3%;
+}
+
+@-webkit-keyframes spin {
+  to {
+    stroke-dashoffset: -175.9;
+  }
+}
+
+@keyframes spin {
+  to {
+    stroke-dashoffset: -175.9;
+  }
+}
+
+.avatar-image-border {
+  stroke: black;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.avatar-image-border.active {
+  stroke-width: 7;
+  stroke: salmon;
+  stroke-dasharray: 0, 0, 62.96, 25;
+  stroke-dashoffset: 0;
+  -webkit-animation: spin 5s infinite linear;
+          animation: spin 5s infinite linear;
 }
 
 body,

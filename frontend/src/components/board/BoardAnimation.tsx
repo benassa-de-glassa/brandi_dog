@@ -1,135 +1,103 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 
 import Tooltip from "./Tooltip";
 import Avatar from "./Avatar";
 import Card from "../card/Card";
+import AnimatedMarble from "./AnimatedMarble";
 
 import {
   BoardProps,
   BoardTooltipState,
-  BoardCoordinates,
-  Step,
+  BoardData,
 } from "../../models/board.model";
 
 import { Marble } from "../../models/marble.model";
 
-import boardDataJSON from "./boarddata4.json";
-import boardData6JSON from "./boarddata6.json";
-
 import { avatarPath } from "../../constants/constants";
 
-// Hook
-const usePrevious = (value) => {
-  // The ref object is a generic container whose current property is mutable
-  // and can hold any value, similar to an instance property on a class
-  const ref = useRef();
+// board properties
+const boardSize = { height: 800, width: 800 };
 
-  // Store current value in ref
-  useEffect(() => {
-    ref.current = value;
-  }, [value]); // Only re-run if value changes
-
-  // Return previous value (happens before update in useEffect above)
-  return ref.current;
-}
+// index of homes are negative numbers counting down from -1 ...
+// ... index of houses are positive starting at 1000
+const homeIndex = (id: number) => -id - 1;
+const houseIndex = (id: number) => id - 1000;
 
 const BoardAnimation = (props: BoardProps) => {
-  const height = 800;
-  const width = 800;
+  const [boardData, setBoardData] = useState({} as BoardData);
+  const [radius, setRadius] = useState({ inner: 12, outer: 18 });
 
-  const prevMarbles = usePrevious(props.marbleList);
+  // dynamically load relevant board data
+  useEffect(() => {
+    async function loadBoardData() {
+      const data = await import(
+        `./boarddata${props.numberOfPlayers}-numbers.json`
+      );
+      setBoardData(data);
 
-  const boardData =
-    props.numberOfPlayers === 4 ? boardDataJSON : boardData6JSON;
+      // make the steps smaller for more players
+      !(props.numberOfPlayers === 4) && setRadius({ inner: 10, outer: 15 });
+    }
+
+    loadBoardData();
+  }, [props.numberOfPlayers]);
+
+  // const boardData =
+  // props.numberOfPlayers === 4 ? boardDataJSON : boardData6JSON;
+
+  const getStepPosition = (id: number) => {
+    let step;
+    if (id < 0) step = boardData.homes[homeIndex(id)];
+    else if (id >= 1000) step = boardData.houses[houseIndex(id)];
+    else step = boardData.steps[id];
+    return {
+      x: step.x,
+      y: step.y,
+    };
+  };
 
   const [tooltip, setTooltip] = useState<BoardTooltipState>({
     stepPosition: null,
     visible: false,
     x: "0",
     y: "0",
-    anchor: { x: "left", y: "top" } as BoardCoordinates,
+    anchor: { x: "left", y: "top" },
     text: "",
   });
 
-  let homeOccupation = new Array(4 * props.numberOfPlayers);
-  let stepOccupation = new Array(16 * props.numberOfPlayers);
-  let houseOccupation = new Array(4 * props.numberOfPlayers);
-
-  useEffect(() => {
-    console.log("marble-list changed")
-    console.log(props.marbleList)
-    console.log(prevMarbles)
-    let change = props.marbleList.filter( el => el)
-  }, [props.marbleList, prevMarbles])
-
-  // place the marbles
-  props.marbleList.forEach((marble: Marble) => {
-    
-    if (marble.position < 0) {
-      // negative positions correspond to home
-      homeOccupation[marble.position] = marble;
-    } else if (marble.position >= 1000) {
-      // positions above 1000 correspond to houses
-      houseOccupation[marble.position] = marble;
-    } else {
-      stepOccupation[marble.position] = marble;
-    }
-  });
-
-  // make the step radius smaller for the 6 player board
-  const radius = props.numberOfPlayers === 4 ? 12 : 10;
-  const outerRadius = props.numberOfPlayers === 4 ? 18 : 15;
-
-  function onStepClick(data: Step) {
-    if (data.id == null) {
-      return;
-    }
-    let marble: Marble;
-    let homeClicked: boolean = false;
-    if (data?.id < 0) {
-      // get the marble from the home
-      homeClicked = true;
-      marble = homeOccupation[-data.id - 1];
-    } else if (data.id >= 1000) {
-      // need to be able to move the marbles in the house too
-      marble = houseOccupation[data.id - 1000];
-    } else {
-      marble = stepOccupation[data.id];
-    }
-    if (marble !== undefined) {
-      // homeClicked indicates if the player wants to go out or not
-      props.marbleClicked(marble, homeClicked);
-    }
+  const marbleClicked = (marble: Marble) => {
+    props.marbleClicked(marble, marble.position < 0);
 
     // show tooltip
-    if (props.tooltipActions && marble !== undefined && !homeClicked) {
-      let xPercent = parseFloat(data.x); // e.g. makes 35.3 out of '35.3%'
-      let yPercent = parseFloat(data.y);
+    if (props.tooltipActions) {
+      const { x, y } = getStepPosition(marble.position);
+      let xPercent = x / boardSize.width;
+      let yPercent = y / boardSize.height;
+
       // show the tooltip to the left (top) or the right (bottom) of the step
       // depending on the location, e.g. show it to the right if a step in the
       // left half of the board is clicked
       setTooltip({
         ...tooltip,
-        stepPosition: data.id,
+        stepPosition: marble.position,
         x:
           xPercent < 50
-            ? "calc(" + data.x + " + 10px)"
+            ? "calc(" + x + " + 10px)"
             : "calc(" + (100 - xPercent) + "% + 10px)",
         y:
           yPercent < 50
-            ? "calc(" + data.y + " + 10px)"
+            ? "calc(" + y + " + 10px)"
             : "calc(" + (100 - yPercent) + "% + 10px)",
+        // make sure the tooltip has enough space
         anchor: {
-          x: parseInt(data.x) < 50 ? "left" : "right",
-          y: parseInt(data.y) < 50 ? "top" : "bottom",
+          x: x < boardSize.width / 2 ? "left" : "right",
+          y: y < boardSize.height / 2 ? "top" : "bottom",
         },
       });
     }
-  }
+  };
 
   function playerBoxClicked(index: number) {
-    console.debug(`${index} clicked`);
-    // index is 0, 1, 2, or 3
     if (props.switchingSeats) {
       props.setNewPosition(index);
     }
@@ -164,28 +132,39 @@ const BoardAnimation = (props: BoardProps) => {
           onClick={boardClicked}
           id="board"
           className="svg-content-responsive"
-          viewBox={"0 0 " + width + " " + height}
+          viewBox={"0 0 " + boardSize.width + " " + boardSize.height}
         >
           {/* build steps for the path around the board */}
           {boardData.steps.map((data) => (
             <circle
               key={data.id}
-              className={[
-                "step",
-                stepOccupation[data.id]
-                  ? `occupied occupied-${stepOccupation[data.id].color}`
-                  : false,
-                tooltip.visible && data.id === tooltip.stepPosition
-                  ? "selected"
-                  : false,
-              ]
-                .filter((e) => e) // remove false entries
-                .join(" ")}
+              className="step"
               id={"step-" + data.id}
               cx={data.x}
               cy={data.y}
-              r={radius}
-              onClick={() => onStepClick(data)}
+              r={radius.inner}
+            />
+          ))}
+          {/* draw homes */}
+          {boardData.homes.map((data) => (
+            <circle
+              key={"home " + data.x + " " + data.y}
+              className="step"
+              id={"home" + data.color + "-" + data.id}
+              cx={data.x}
+              cy={data.y}
+              r={radius.inner}
+            />
+          ))}
+          {/* draw houses */}
+          {boardData.houses.map((data) => (
+            <circle
+              key={"house " + data.x + " " + data.y}
+              className="step"
+              id={"house" + data.color + "-" + data.id}
+              cx={data.x}
+              cy={data.y}
+              r={radius.inner}
             />
           ))}
           {/* draw outer circles */}
@@ -193,44 +172,18 @@ const BoardAnimation = (props: BoardProps) => {
             <circle
               key={"out " + data.x + " " + data.y}
               className={"out out-" + data.color}
-              // id={"step-" + data.id}
               cx={data.x}
               cy={data.y}
-              r={outerRadius}
+              r={radius.outer}
             />
           ))}
-          {/* draw homes */}
-          {boardData.homes.map((data) => (
-            <circle
-              key={"home " + data.x + " " + data.y}
-              className={
-                homeOccupation[data.id]
-                  ? "step occupied occupied-" +
-                    homeOccupation[data.id].color
-                  : "step"
-              }
-              id={"home" + data.color + "-" + data.id}
-              cx={data.x}
-              cy={data.y}
-              r={radius}
-              onClick={() => onStepClick(data)}
-            />
-          ))}
-          {/* draw houses */}
-          {boardData.houses.map((data) => (
-            <circle
-              key={"house " + data.x + " " + data.y}
-              className={
-                houseOccupation[data.id]
-                  ? "step occupied occupied-" +
-                    houseOccupation[data.id].color
-                  : "step"
-              }
-              id={"house" + data.color + "-" + data.id}
-              cx={data.x}
-              cy={data.y}
-              r={radius}
-              onClick={() => onStepClick(data)}
+
+          {Object.values(props.marbles).map((marble) => (
+            <AnimatedMarble
+              marble={marble}
+              radius={radius.inner}
+              position={getStepPosition(marble.position)}
+              marbleClicked={() => marbleClicked(marble)}
             />
           ))}
         </svg>
@@ -249,6 +202,6 @@ const BoardAnimation = (props: BoardProps) => {
       </div>
     </div>
   );
-}
+};
 
 export default BoardAnimation;

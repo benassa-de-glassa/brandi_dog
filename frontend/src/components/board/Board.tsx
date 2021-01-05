@@ -30,7 +30,7 @@ function Board(props: BoardProps) {
     visible: false,
     x: "0",
     y: "0",
-    anchor: { x: "left", y: "top" } as BoardCoordinates,
+    anchor: { x: "left", y: "top" },
     text: "",
   });
 

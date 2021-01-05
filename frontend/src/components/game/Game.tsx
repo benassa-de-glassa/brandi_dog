@@ -265,7 +265,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     }
   }
 
-  async performSwitch(card: CardIF, ownMarble: Marble, otherMarble: Marble) {
+  async performSwitch(card: CardIF, marble1: Marble, marble2: Marble) {
     // reset stored marble in case of errors
     this.setState({ marbleToSwitch: null });
 
@@ -277,8 +277,8 @@ class Game extends Component<GameComponentProps, GameComponentState> {
         actions: card.actions,
       },
       action: "switch",
-      mid: ownMarble.mid,
-      mid_2: otherMarble.mid,
+      mid: marble1.mid,
+      mid_2: marble2.mid,
     });
     if (response.code) {
       this.setState({ errorMessage: response.message });

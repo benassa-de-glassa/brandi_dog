@@ -39,7 +39,6 @@ const BoardAnimation = (props: BoardProps) => {
     loadBoardData();
   }, [props.numberOfPlayers]);
 
-
   const getStepPosition = (id: number) => {
     let step;
     if (id < 0) step = boardData.homes[homeIndex(id)];
@@ -67,8 +66,9 @@ const BoardAnimation = (props: BoardProps) => {
     // show tooltip
     if (props.tooltipActions) {
       const { x, y } = getStepPosition(marble.position);
-      let xPercent = x / boardSize.width;
-      let yPercent = y / boardSize.height;
+      
+      let xPercent = x * 100 / boardSize.width;
+      let yPercent = y * 100 / boardSize.height;
 
       // show the tooltip to the left (top) or the right (bottom) of the step
       // depending on the location, e.g. show it to the right if a step in the
@@ -78,12 +78,12 @@ const BoardAnimation = (props: BoardProps) => {
         stepPosition: marble.position,
         x:
           xPercent < 50
-            ? "calc(" + x + " + 10px)"
-            : "calc(" + (100 - xPercent) + "% + 10px)",
+            ? `calc(${xPercent}% + 10px)`
+            : `calc(${100 - xPercent}% + 10px)`,
         y:
           yPercent < 50
-            ? "calc(" + y + " + 10px)"
-            : "calc(" + (100 - yPercent) + "% + 10px)",
+            ? `calc(${yPercent}% + 10px)`
+            : `calc(${100-yPercent}% + 10px)`,
         // make sure the tooltip has enough space
         anchor: {
           x: x < boardSize.width / 2 ? "left" : "right",
@@ -109,9 +109,7 @@ const BoardAnimation = (props: BoardProps) => {
 
   return (
     <div id="board-container">
-      <div
-        className="svg-container"
-      >
+      <div className="svg-container">
         {props.playerList.map((player, i) => (
           <Avatar
             key={`avatar-${i}`}

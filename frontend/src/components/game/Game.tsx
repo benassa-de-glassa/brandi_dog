@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import Chat from "../chat/Chat";
 // import Board from "../board/Board";
-import BoardAnimation from "../board/BoardAnimation"
+import BoardAnimation from "../board/BoardAnimation";
 import Controls from "../controls/Controls";
 
 import { socket } from "../../api/socket";
@@ -326,31 +326,16 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       }
 
       if (selectedCardValue === "Ja") {
-        let myColor = this.state.marbles[0].color;
-        if (this.state.marbleToSwitch === null) {
-          // no other marble has been selected
-          this.setState({ marbleToSwitch: marble });
-
-          // check that one of my own and one not of my own is selected
-        } else if (
-          marble.color === myColor &&
-          this.state.marbleToSwitch.color !== myColor
-        ) {
-          // my own marble clicked second
-          this.performSwitch(selectedCard, marble, this.state.marbleToSwitch);
-        } else if (
-          marble.color !== myColor &&
-          this.state.marbleToSwitch.color === myColor
-        ) {
-          // other marble clicked second
+        if (this.state.marbleToSwitch !== null) {
+          // there is already another marble selected => (try to) swap those two
           this.performSwitch(selectedCard, this.state.marbleToSwitch, marble);
+          this.setState({ marbleToSwitch: null });
+        } else if (marble === this.state.marbleToSwitch) {
+          // deselect the currently selected marble if it is clicked twice
+          this.setState({ marbleToSwitch: null });
         } else {
-          console.debug("couldnt swap", marble, this.state.marbleToSwitch);
-          this.setState({
-            marbleToSwitch: null,
-            // the line below would otherwise take precedence over backend errors
-            //errorMessage: 'Choose one of your marbles, and one from another player.'
-          });
+          // no other marble has been selected, select this one
+          this.setState({ marbleToSwitch: marble });
         }
       } else if (playableActions.length === 1) {
         // clicked on a marble on the field while a card with only one

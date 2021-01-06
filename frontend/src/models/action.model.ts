@@ -1,23 +1,23 @@
 import { Player } from "./player.model";
 
 export type ActionNumber =
-  | 0
-  | 1
-  | 2
+  | 0 // go out
+  | 1 // move 1
+  | 2 // ...
   | 3
   | 4
-  | -4
+  | -4 // move 4 backwards
   | 5
   | 6
   | 7
-  | 71
-  | 72
+  | 71 // move 1 using a seven card
+  | 72 // ...
   | 73
   | 74
   | 75
   | 76
-  | 77
-  | 8
+  | 77 // move 7 using a seven card
+  | 8 // move 8
   | 9
   | 10
   | 11

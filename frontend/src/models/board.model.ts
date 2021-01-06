@@ -4,9 +4,11 @@ import { Marble } from "./marble.model";
 import { Player } from "./player.model";
 import { Tooltip } from "./tooltip.model";
 import { Move } from './action.model'
+import { GameStateNumber } from "./game.model";
 
 export interface BoardProps {
   numberOfPlayers: 4 | 6;
+  gameState: GameStateNumber | null;
   player: Player | null;
   playerList: Player[];
   marbles: {[key: number]: Marble};

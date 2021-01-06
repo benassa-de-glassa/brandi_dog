@@ -119,7 +119,7 @@ const Board = (props: BoardProps) => {
             textOnTop={i < 2}
             playerName={player.username}
             isMe={player.uid === props.player?.uid}
-            isActive={i === props.activePlayerIndex}
+            isActive={props.gameState === 2 && i === props.activePlayerIndex}
             clickable={props.switchingSeats}
             clickHandler={async () => playerBoxClicked(i)}
           />

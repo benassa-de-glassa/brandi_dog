@@ -374,6 +374,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
         <div id="game-content">
           <Board
             numberOfPlayers={this.state.numberOfPlayers}
+            gameState={this.state.gameState}
             player={this.props.player}
             playerList={this.state.players}
             activePlayerIndex={this.state.activePlayerIndex}

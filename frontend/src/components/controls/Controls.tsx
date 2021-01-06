@@ -1,3 +1,16 @@
+/*
+The Controls component handles the cards, and user input which is not handled
+by clicking on the board itself, i.e. 
+- starting the game
+- switching seats
+- swapping cards
+- selecting cards
+- folding
+
+Additionally it is the component where error messages and user information is
+displayed. 
+*/
+
 import React, { useState, Fragment } from "react";
 
 import { possibleActions } from "../../constants/constants";
@@ -6,26 +19,6 @@ import { CardValue } from "../../models/card.model";
 import Hand from "./Hand";
 
 const cards = Object.keys(possibleActions);
-
-/*
-action_options values can be the following:
-        0: get started
-        1: move up 1
-        2: move up 2
-        3: move up 3
-        4: move up 4
-        -4: move 4 back
-        5: move up 5
-        6: move up 6
-        7: move up 7 times 1
-        8: move up 8
-        9: move up 9
-        10: move up 10
-        11: move up 11
-        12: move up 12
-        13: move up 14
-        switch: switch marble position with opponents marble
-*/
 
 const possibleMoves = {
   A: "Click on a marble to go out, or move either one or eleven steps.",

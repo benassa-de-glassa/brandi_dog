@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 
 import Chat from "../chat/Chat";
-// import Board from "../board/Board";
-import BoardAnimation from "../board/BoardAnimation";
+import Board from "../board/Board";
 import Controls from "../controls/Controls";
 
 import { socket } from "../../api/socket";
@@ -16,6 +15,7 @@ import {
   GameState,
   PlayerState,
 } from "../../models/game.model";
+
 import { Marble } from "../../models/marble.model";
 import { CardIF } from "../../models/card.model";
 import { Action, ActionNumber } from "../../models/action.model";
@@ -372,13 +372,14 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     return (
       <div id="game-container" className="container">
         <div id="game-content">
-          <BoardAnimation
+          <Board
             numberOfPlayers={this.state.numberOfPlayers}
             player={this.props.player}
             playerList={this.state.players}
             activePlayerIndex={this.state.activePlayerIndex}
             marbles={this.state.marbles}
             selectedMarble={this.state.selectedMarble}
+            marbleToSwitch={this.state.marbleToSwitch}
             tooltipActions={this.state.tooltipActions}
             tooltipClicked={this.tooltipClicked}
             tooltipVisible={this.state.tooltipVisible}

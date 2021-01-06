@@ -12,6 +12,7 @@ export interface BoardProps {
   marbles: {[key: number]: Marble};
   selectedCard: CardIF | null; 
   selectedMarble: Marble | null;
+  marbleToSwitch: Marble | null;
   marbleClicked: (marble: Marble, homeClicked: boolean) => void;
   tooltipActions: ActionNumber[] // tooltip only has to display "number moves", i.e. no "switch"
   setNewPosition: (index: number) => Promise<void>;

@@ -5,12 +5,12 @@ import { BoardProps } from "../models/board.model";
 import { Move } from "../models/action.model";
 
 import "../css/main.css";
-import BoardAnimation from "../components/board/BoardAnimation";
+import Board from "../components/board/Board";
 import { Marble } from "../models/marble.model";
 
 const params = {
-  title: "BoardAnimation",
-  component: BoardAnimation,
+  title: "Board",
+  component: Board,
 };
 export default params;
 
@@ -30,7 +30,7 @@ const store = new Store({
 const Template: Story<BoardProps> = (args) => (
   <div style={{ width: "600px", display: "flex" }}>
     <State store={store}>
-      <BoardAnimation {...args} />
+      <Board {...args} />
     </State>
   </div>
 );

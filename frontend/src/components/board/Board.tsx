@@ -23,7 +23,7 @@ const boardSize = { height: 800, width: 800 };
 const homeIndex = (id: number) => -id - 1;
 const houseIndex = (id: number) => id - 1000;
 
-const BoardAnimation = (props: BoardProps) => {
+const Board = (props: BoardProps) => {
   const [boardData, setBoardData] = useState({} as BoardData);
   const [radius, setRadius] = useState({ inner: 12, outer: 18 });
 
@@ -66,9 +66,9 @@ const BoardAnimation = (props: BoardProps) => {
     // show tooltip
     if (props.tooltipActions) {
       const { x, y } = getStepPosition(marble.position);
-      
-      let xPercent = x * 100 / boardSize.width;
-      let yPercent = y * 100 / boardSize.height;
+
+      let xPercent = (x * 100) / boardSize.width;
+      let yPercent = (y * 100) / boardSize.height;
 
       // show the tooltip to the left (top) or the right (bottom) of the step
       // depending on the location, e.g. show it to the right if a step in the
@@ -83,7 +83,7 @@ const BoardAnimation = (props: BoardProps) => {
         y:
           yPercent < 50
             ? `calc(${yPercent}% + 10px)`
-            : `calc(${100-yPercent}% + 10px)`,
+            : `calc(${100 - yPercent}% + 10px)`,
         // make sure the tooltip has enough space
         anchor: {
           x: x < boardSize.width / 2 ? "left" : "right",
@@ -175,6 +175,7 @@ const BoardAnimation = (props: BoardProps) => {
             {Object.values(props.marbles).map((marble) => (
               <AnimatedMarble
                 key={marble.mid}
+                selected={marble.mid === props.selectedMarble?.mid || marble.mid === props.marbleToSwitch?.mid}
                 marble={marble}
                 radius={radius.inner}
                 position={getStepPosition(marble.position)}
@@ -200,4 +201,4 @@ const BoardAnimation = (props: BoardProps) => {
   );
 };
 
-export default BoardAnimation;
+export default Board;

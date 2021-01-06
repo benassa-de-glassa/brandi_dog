@@ -1,5 +1,13 @@
 #parent {
-    width: 300px;
-    height: 300px;
+    width: 500px;
+    height: 500px;
     background: red;
+}
+
+#parent circle {
+    stroke: black;
+    fill: black;
+    position: absolute;
+    left: 50%;
+    top: 50%;
 }

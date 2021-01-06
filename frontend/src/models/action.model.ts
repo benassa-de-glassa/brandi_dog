@@ -1,3 +1,5 @@
+import { Player } from "./player.model";
+
 export type ActionNumber =
   | 0
   | 1
@@ -22,5 +24,10 @@ export type ActionNumber =
   | 12
   | 13;
 
-
 export type Action = ActionNumber | "switch";
+
+export interface Move {
+  action: Action;
+  player: Player;
+  positions: { old: number; new: number };
+}

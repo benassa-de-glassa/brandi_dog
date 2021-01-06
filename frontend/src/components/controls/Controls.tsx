@@ -31,17 +31,18 @@ const possibleMoves = {
   A: "Click on a marble to go out, or move either one or eleven steps.",
   2: "Click on a marble to move two steps.",
   3: "Click on a marble to move three steps.",
-  4: "Click on a marble to select your move.",
+  4: "Click on a marble to move four steps forward or backward.",
   5: "Click on a marble to move five steps.",
   6: "Click on a marble to move six steps.",
-  7: "Click on a marble to move seven steps. Each step needs to be performed individually on your marbles.",
+  7: "Click on a marble to move seven steps. Each step can be performed individually on your different marbles.",
   8: "Click on a marble to move eight steps.",
   9: "Click on a marble to move nine steps.",
   10: "Click on a marble to move ten steps.",
-  Ja: "Choose an arbitrary marble to switch with one of yours. You cannot exchange locked marbles.",
+  Ja:
+    "Choose an arbitrary marble to switch with one of yours. You cannot exchange locked marbles.",
   Q: "Click on a marble to move 12 steps.",
   K: "Click on a marble to go out, or move 13 steps.",
-  Jo: "Choose a card that the joker imitates.",
+  Jo: "The joker can imitate any card. Select a card value below.",
 };
 
 /*
@@ -54,31 +55,20 @@ const possibleMoves = {
 */
 
 const roundStateText = [
-  "Round has not yet started. ",
-  "Round has started and cards have not yet been dealt.",
+  "Round has not yet started.",
+  "Round has started, dealing cards.",
   "Exchange a card with your partner.",
   "Waiting for card exchange.",
   "Game on.",
   "Wrapping up.",
 ];
 
-export default function Controls(props: ControlProps) {
+const Controls = (props: ControlProps) => {
   const [aboutToFold, setAboutToFold] = useState(false);
 
   let possibleMoveString = props.selectedCard
     ? possibleMoves[props.selectedCard.value]
     : "";
-
-  const handleClick = (event: React.MouseEvent) => {
-    event.preventDefault();
-    // successCallback, errorCallback
-    props.startGame();
-  };
-
-  const swapClicked = (event: React.MouseEvent) => {
-    event.preventDefault();
-    props.switchSeats();
-  };
 
   return (
     <div className="controls-box">
@@ -86,27 +76,43 @@ export default function Controls(props: ControlProps) {
         {props.errorMessage && (
           <div className="error">{props.errorMessage}</div>
         )}
-        {props.roundState && (
-          <span className="mb-1">{roundStateText[props.roundState]}</span>
-        )}
-        {props.players.length < 4 && <span>Waiting for players.</span>}
         {typeof props.gameState !== "undefined" &&
           props.gameState !== null &&
-          props.gameState < 2 && (
-            <div>
-              <button className="btn" onClick={swapClicked}>
+          props.gameState < 2 &&
+          props.players.length > 1 && (
+            <div className="mb-1">
+              <button
+                className="btn mb-1"
+                disabled={props.switchingSeats}
+                onClick={() => props.switchSeats(true)}
+              >
                 Change seat
               </button>
-              {props.players.length === props.numberOfPlayers && (
-                <button className="btn btn-green" onClick={handleClick}>
-                  Start game
+              {props.switchingSeats && (
+                <button
+                  className="btn btn-danger ml-1"
+                  onClick={() => props.switchSeats(false)}
+                >
+                  Cancel
                 </button>
               )}
               {props.switchingSeats && (
-                <p>Click on another player to change seats.</p>
+                <p className="mb-1">Click on another player to change seats.</p>
+              )}
+              {props.players.length === props.numberOfPlayers && (
+                <button
+                  className="btn btn-green"
+                  onClick={() => props.startGame()}
+                >
+                  Start game
+                </button>
               )}
             </div>
           )}
+        {props.roundState !== null && (
+          <div className="mb-1">{roundStateText[props.roundState]}</div>
+        )}
+        {props.players.length < 4 && <div>Waiting for players.</div>}
       </div>
       <div className="instruction-box">
         {props.roundState === 2 ? (
@@ -130,9 +136,7 @@ export default function Controls(props: ControlProps) {
           // joker is selected, and it's not to be swapped at the beginning of a round
           <select
             onChange={(event) =>
-              props.setJokerCardValue(
-                event.target.value as CardValue
-              )
+              props.setJokerCardValue(event.target.value as CardValue)
             }
           >
             {cards.map((card) => (
@@ -183,4 +187,6 @@ export default function Controls(props: ControlProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Controls;

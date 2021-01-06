@@ -1,0 +1,92 @@
+.player-box {
+  stroke: grey;
+  stroke-width: 2px;
+  fill: white;
+  fill-opacity: 0.5;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 1000;
+
+  height: 14.5%;
+  width: 11.8%;
+
+  .player-name {
+    padding: 3px 10px;
+    margin: 0px;
+    background: whitesmoke;
+
+    &.me {
+      background-color: lightskyblue;
+    }
+  }
+
+  &.players-4 {
+    &.player-0 {
+      align-items: flex-end; /* text right aligned */
+      top: 3%;
+      right: 3%;
+    }
+
+    &.player-1 {
+      align-items: flex-start; /* text left aligned */
+      top: 3%;
+      left: 3%;
+    }
+
+    &.player-2 {
+      align-items: flex-start; /* text left aligned */
+      flex-direction: column-reverse;
+      bottom: 3%;
+      left: 3%;
+    }
+
+    &.player-3 {
+      align-items: flex-end; /* text right aligned */
+      flex-direction: column-reverse;
+      bottom: 3%;
+      right: 3%;
+    }
+  }
+
+  &.players-6 {
+    &.player-0 {
+      align-items: flex-end; /* text right aligned */
+      top: 3%;
+      right: 3%;
+    }
+
+    &.player-1 {
+      align-items: flex-start; /* text left aligned */
+      top: 3%;
+      left: 3%;
+    }
+
+    &.player-2 {
+      align-items: flex-end;
+      flex-direction: column-reverse;
+      top: 42.5%;
+      left: 3%;
+    }
+
+    &.player-3 {
+      align-items: flex-start; /* text left aligned */
+      flex-direction: column-reverse;
+      bottom: 3%;
+      left: 3%;
+    }
+
+    &.player-4 {
+      align-items: flex-end; /* text right aligned */
+      flex-direction: column-reverse;
+      bottom: 3%;
+      right: 3%;
+    }
+
+    &.player-5 {
+      align-items: flex-start;
+      top: 42.5%;
+      right: 3%;
+    }
+  }
+}

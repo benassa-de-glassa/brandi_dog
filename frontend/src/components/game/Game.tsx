@@ -15,11 +15,10 @@ import {
   GameState,
   PlayerState,
 } from "../../models/game.model";
+
 import { Marble } from "../../models/marble.model";
 import { CardIF } from "../../models/card.model";
 import { Action, ActionNumber } from "../../models/action.model";
-
-const colors = ["red", "yellow", "green", "blue"];
 
 class Game extends Component<GameComponentProps, GameComponentState> {
   constructor(props: GameComponentProps) {
@@ -31,8 +30,8 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       players: [],
       activePlayerIndex: null,
       playerIsActive: false,
+      playerHasFinished: false,
       cards: [], // player cards
-      allMarbles: [],
       marbles: [], // player marbles
       gameState: null, // see backend for numbers
       roundState: null, // see backend for numbers
@@ -104,19 +103,21 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       this.setState({ cardSwapConfirmed: false });
     }
     const players = data.order.map((uid) => data.players[uid]);
-    let marbles: Marble[] = [];
-    players.forEach((playerState: PlayerState) => {
-      marbles.push(...playerState.marbles);
-    });
 
-    marbles = marbles.map((marble) => {
-      return { ...marble, color: colors[Math.floor(marble.mid / 4)] };
+    let marbles: { [key: number]: Marble } = {};
+    players.forEach((playerState: PlayerState) => {
+      playerState.marbles.forEach((marble) => {
+        marbles[marble.mid] = {
+          ...marble,
+          color: Math.floor(marble.mid / 4),
+        };
+      });
     });
 
     this.setState((prevState) => ({
       ...prevState,
       players: players,
-      allMarbles: marbles,
+      marbles: marbles,
       gameState: data.game_state,
       roundState: data.round_state,
       activePlayerIndex: data.active_player_index,
@@ -129,19 +130,15 @@ class Game extends Component<GameComponentProps, GameComponentState> {
   }
 
   handleNewPlayerState(data: PlayerState) {
-    const marbles = data.marbles.map((marble) => {
-      return { ...marble, color: colors[Math.floor(marble.mid / 4)] };
-    });
     this.setState({
       cards: data.hand,
-      marbles: marbles,
       remainingStepsOf7: data.steps_of_seven,
     });
   }
 
-  switchSeats() {
+  switchSeats(b: boolean) {
     // called by Controls component upon click
-    this.setState({ switchingSeats: true });
+    this.setState({ switchingSeats: b });
   }
 
   async setNewPosition(index: number) {
@@ -230,7 +227,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
 
   async tooltipClicked(action: Action) {
     if (this.state.selectedCardIndex === null || !this.state.selectedMarble) {
-      return
+      return;
     }
     let selectedCard = this.state.cards[this.state.selectedCardIndex];
 
@@ -254,7 +251,6 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       // something went wrong
       this.setState({ errorMessage: response.message });
       console.warn(`[${response.code}] ${response.message}`);
-     
     }
     // else
     this.setState({
@@ -269,7 +265,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     }
   }
 
-  async performSwitch(card: CardIF, ownMarble: Marble, otherMarble: Marble) {
+  async performSwitch(card: CardIF, marble1: Marble, marble2: Marble) {
     // reset stored marble in case of errors
     this.setState({ marbleToSwitch: null });
 
@@ -281,8 +277,8 @@ class Game extends Component<GameComponentProps, GameComponentState> {
         actions: card.actions,
       },
       action: "switch",
-      mid: ownMarble.mid,
-      mid_2: otherMarble.mid,
+      mid: marble1.mid,
+      mid_2: marble2.mid,
     });
     if (response.code) {
       this.setState({ errorMessage: response.message });
@@ -330,31 +326,16 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       }
 
       if (selectedCardValue === "Ja") {
-        let myColor = this.state.marbles[0].color;
-        if (this.state.marbleToSwitch === null) {
-          // no other marble has been selected
-          this.setState({ marbleToSwitch: marble });
-
-          // check that one of my own and one not of my own is selected
-        } else if (
-          marble.color === myColor &&
-          this.state.marbleToSwitch.color !== myColor
-        ) {
-          // my own marble clicked second
-          this.performSwitch(selectedCard, marble, this.state.marbleToSwitch);
-        } else if (
-          marble.color !== myColor &&
-          this.state.marbleToSwitch.color === myColor
-        ) {
-          // other marble clicked second
+        if (this.state.marbleToSwitch !== null) {
+          // there is already another marble selected => (try to) swap those two
           this.performSwitch(selectedCard, this.state.marbleToSwitch, marble);
+          this.setState({ marbleToSwitch: null });
+        } else if (marble === this.state.marbleToSwitch) {
+          // deselect the currently selected marble if it is clicked twice
+          this.setState({ marbleToSwitch: null });
         } else {
-          console.debug("couldnt swap", marble, this.state.marbleToSwitch);
-          this.setState({
-            marbleToSwitch: null,
-            // the line below would otherwise take precedence over backend errors
-            //errorMessage: 'Choose one of your marbles, and one from another player.'
-          });
+          // no other marble has been selected, select this one
+          this.setState({ marbleToSwitch: marble });
         }
       } else if (playableActions.length === 1) {
         // clicked on a marble on the field while a card with only one
@@ -396,12 +377,13 @@ class Game extends Component<GameComponentProps, GameComponentState> {
             player={this.props.player}
             playerList={this.state.players}
             activePlayerIndex={this.state.activePlayerIndex}
-            marbleList={this.state.allMarbles}
+            marbles={this.state.marbles}
             selectedMarble={this.state.selectedMarble}
+            marbleToSwitch={this.state.marbleToSwitch}
             tooltipActions={this.state.tooltipActions}
             tooltipClicked={this.tooltipClicked}
             tooltipVisible={this.state.tooltipVisible}
-            showTooltip={ b => this.setState({tooltipVisible: b})}
+            showTooltip={(b) => this.setState({ tooltipVisible: b })}
             marbleClicked={this.marbleClicked}
             selectedCard={
               this.state.selectedCardIndex !== null
@@ -411,6 +393,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
             topCard={this.state.topCard}
             switchingSeats={this.state.switchingSeats}
             setNewPosition={this.setNewPosition}
+            moves={[]}
           />
           <div id="right-container">
             <Controls

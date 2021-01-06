@@ -1,3 +1,10 @@
+$color-0: red;
+$color-1: yellow;
+$color-2: green;
+$color-3: blue;
+$color-4: purple;
+$color-5: orange;
+
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
 @import "layout/base";
 @import "layout/topbar";
@@ -8,6 +15,8 @@
 @import "layout/game";
 @import "layout/board";
 @import "layout/card";
+@import "layout/players";
+@import "layout/avatar";
 
 body,
 html {
@@ -31,7 +40,15 @@ html {
   }
 
   .ml-1 {
-    margin-left: .4em;
+    margin-left: .4rem;
+  }
+
+  .mb-1 {
+    margin-bottom: .4rem
+  }
+
+  .clickable {
+    cursor: pointer;
   }
 
   .btn {

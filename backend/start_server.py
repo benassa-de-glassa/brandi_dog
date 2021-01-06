@@ -2,12 +2,8 @@ import os
 
 import uvicorn
 
-from dotenv import load_dotenv
-
-load_dotenv()   # (try to) load environment variables from .env
-
 HOST = os.environ.get('HOST', '0.0.0.0')
-PORT = os.environ.get('PORT', 8000)
+PORT = int(os.environ.get('PORT', 8000))
 
 if __name__ == "__main__":
     uvicorn.run(
@@ -16,3 +12,6 @@ if __name__ == "__main__":
         port=PORT, 
         reload=True
     )
+
+# gunicorn 
+# gunicorn -w 1 -k uvicorn.workers.UvicornWorker app.main:sio_app -b '[2a04:ee41:3:b127:1ca6:b77:5ef0:48fe]:8000'

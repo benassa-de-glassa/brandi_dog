@@ -3,10 +3,9 @@ import { CardValue, CardIF } from "./card.model";
 import { Marble } from "./marble.model";
 import { ActionNumber } from "./action.model";
 
-
 export interface GameComponentProps {
-    player: Player | null;
-    gameID: string;
+  player: Player | null;
+  gameID: string;
 }
 
 export interface GameComponentState {
@@ -14,9 +13,9 @@ export interface GameComponentState {
   players: Player[];
   activePlayerIndex: number | null;
   playerIsActive: boolean;
+  playerHasFinished: boolean;
   cards: CardIF[];
-  allMarbles: Marble[];
-  marbles: Marble[];
+  marbles: { [key: number]: Marble };
   gameState: number | null;
   roundState: number | null;
   topCard: CardIF | null;
@@ -26,7 +25,7 @@ export interface GameComponentState {
   selectedCardRequiresTooltip: boolean;
   selectedMarble: Marble | null;
   tooltipActions: ActionNumber[];
-  tooltipVisible: boolean,
+  tooltipVisible: boolean;
   marbleToSwitch: Marble | null;
   marblesToSelect: number;
   cardSwapConfirmed: boolean;

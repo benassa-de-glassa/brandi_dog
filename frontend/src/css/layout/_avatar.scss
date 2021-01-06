@@ -6,26 +6,42 @@ $pathlength: 295.31; // 2 * pi * 47
   }
 }
 
-.avatar-image-border {
-  stroke-linecap: round;
+.player-box {
+  .avatar-image-border {
+    stroke-linecap: round;
 
-  &.active {
-    stroke: salmon;
-    stroke-dasharray: 0 0 $pathlength/4 $pathlength/12;
-    stroke-dashoffset: 0;
-    animation: spin 5s infinite linear;
+    &.active {
+      stroke-dasharray: 0 0 $pathlength/4 $pathlength/12;
+      stroke-dashoffset: 0;
+      animation: spin 5s infinite linear;
+
+      &.player-0 {
+        stroke: $color-0;
+      }
+      &.player-1 {
+        stroke: $color-1;
+      }
+      &.player-2 {
+        stroke: $color-2;
+      }
+      &.player-3 {
+        stroke: $color-3;
+      }
+      &.player-4 {
+        stroke: $color-4;
+      }
+      &.player-5 {
+        stroke: $color-5;
+      }
+    }
   }
-}
 
-.avatar {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 50%;
-  border: 3px solid black;
-  pointer-events: none;
-}
-
-.avatar.active {
-  border: 6px solid salmon;
+  .avatar {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 50%;
+    border: 3px solid black;
+    pointer-events: none;
+  }
 }

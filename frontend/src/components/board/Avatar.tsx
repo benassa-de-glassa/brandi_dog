@@ -7,11 +7,25 @@ export default function Avatar(props: AvatarProps) {
 
   const radius = size / 2 - strokeWidth;
 
+  const clickHandler = () => {
+    if (props.clickable) {
+      props.clickHandler();
+    }
+  };
+
   return (
-    <div className={props.className} onClick={props.clickHandler}>
+    <div
+      className={`player-box players-${props.numberOfPlayers} player-${props.playerIndex}`}
+    >
       <p
-        className={props.isMe ? "player-name me" : "player-name"}
-        onClick={props.clickHandler}
+        className={[
+          "player-name",
+          props.isMe && "me",
+          props.clickable && !props.isMe &&"clickable",
+        ]
+          .filter((e) => e)
+          .join(" ")}
+        onClick={clickHandler}
       >
         {props.isHost ? `! ${props.playerName}` : props.playerName}
       </p>
@@ -26,20 +40,22 @@ export default function Avatar(props: AvatarProps) {
           <circle
             className={
               props.isActive
-                ? "avatar-image-border active"
-                : "avatar-image-border"
+                ? `avatar-image-border player-${props.playerIndex} active`
+                : `avatar-image-border player-${props.playerIndex}`
             }
             stroke={"black"}
             strokeWidth={strokeWidth}
             cx={size / 2}
             cy={size / 2}
-            r={radius+strokeWidth/2}
+            r={radius + strokeWidth / 2}
           />
           <image
+            className={props.clickable && !props.isMe ? "clickable" : ""}
             width={size}
             height={size}
             href={props.image}
             clipPath="url(#circleView)" // make it round
+            onClick={clickHandler}
           />
         </svg>
       </div>

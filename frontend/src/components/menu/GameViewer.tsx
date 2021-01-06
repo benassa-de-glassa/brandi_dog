@@ -61,6 +61,8 @@ const GameViewer: FunctionComponent<GameViewerProps> = (props) => {
     socket.on("game-list", (games: any) => {
       setGameList(games);
     });
+    // return cleanup function
+    return (function() { socket.off("game-list"); });
   }, []);
 
   return (

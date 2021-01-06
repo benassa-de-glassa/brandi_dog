@@ -1,5 +1,7 @@
 export interface AvatarProps {
-  className: string;
+  numberOfPlayers: number;
+  playerIndex: number;
+  clickable: boolean;
   clickHandler: () => void;
   isMe: boolean;
   playerName: string;

@@ -136,9 +136,9 @@ class Game extends Component<GameComponentProps, GameComponentState> {
     });
   }
 
-  switchSeats() {
+  switchSeats(b: boolean) {
     // called by Controls component upon click
-    this.setState({ switchingSeats: true });
+    this.setState({ switchingSeats: b });
   }
 
   async setNewPosition(index: number) {

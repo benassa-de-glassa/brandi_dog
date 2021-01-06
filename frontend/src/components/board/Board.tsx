@@ -113,12 +113,14 @@ const Board = (props: BoardProps) => {
         {props.playerList.map((player, i) => (
           <Avatar
             key={`avatar-${i}`}
-            className={`player-box players-${props.numberOfPlayers} player-${i}`}
+            numberOfPlayers={props.numberOfPlayers}
+            playerIndex={i}
             image={`${avatarPath}/${player.avatar}.png`}
             textOnTop={i < 2}
             playerName={player.username}
             isMe={player.uid === props.player?.uid}
             isActive={i === props.activePlayerIndex}
+            clickable={props.switchingSeats}
             clickHandler={async () => playerBoxClicked(i)}
           />
         ))}

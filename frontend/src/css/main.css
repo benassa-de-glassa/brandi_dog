@@ -852,19 +852,42 @@ header #connection-lost {
   }
 }
 
-.avatar-image-border {
+.player-box .avatar-image-border {
   stroke-linecap: round;
 }
 
-.avatar-image-border.active {
-  stroke: salmon;
+.player-box .avatar-image-border.active {
   stroke-dasharray: 0 0 73.8275 24.60917;
   stroke-dashoffset: 0;
   -webkit-animation: spin 5s infinite linear;
           animation: spin 5s infinite linear;
 }
 
-.avatar {
+.player-box .avatar-image-border.active.player-0 {
+  stroke: red;
+}
+
+.player-box .avatar-image-border.active.player-1 {
+  stroke: yellow;
+}
+
+.player-box .avatar-image-border.active.player-2 {
+  stroke: green;
+}
+
+.player-box .avatar-image-border.active.player-3 {
+  stroke: blue;
+}
+
+.player-box .avatar-image-border.active.player-4 {
+  stroke: purple;
+}
+
+.player-box .avatar-image-border.active.player-5 {
+  stroke: orange;
+}
+
+.player-box .avatar {
   display: block;
   width: 100%;
   -webkit-box-sizing: border-box;
@@ -872,10 +895,6 @@ header #connection-lost {
   border-radius: 50%;
   border: 3px solid black;
   pointer-events: none;
-}
-
-.avatar.active {
-  border: 6px solid salmon;
 }
 
 body,
@@ -911,7 +930,17 @@ html p {
 
 body .ml-1,
 html .ml-1 {
-  margin-left: .4em;
+  margin-left: .4rem;
+}
+
+body .mb-1,
+html .mb-1 {
+  margin-bottom: .4rem;
+}
+
+body .clickable,
+html .clickable {
+  cursor: pointer;
 }
 
 body .btn,

@@ -13,7 +13,7 @@ export interface ControlProps extends HandProps {
   gameState: number | null;
 
   startGame: () => void;
-  switchSeats: () => void;
+  switchSeats: (b: boolean) => void;
   errorMessage: string | undefined;
 
 

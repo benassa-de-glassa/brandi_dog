@@ -58,18 +58,18 @@ class Player:
         self.hand.fold()
         self.has_folded = True
 
-    def has_finished_cards(self):
-        return self.has_folded or self.hand.cards == {}
+    def has_finished_cards(self) -> bool:
+        return self.has_folded or self.hand.cards
 
-    def has_finished_marbles(self):
+    def has_finished_marbles(self) -> bool:
         if any(marble.currentNode == None for marble in self.marbles.values()):
             return False
+
+        # if all marbles have reached their goal, each id is greater than 1000
         return sum([marble.currentNode.position for marble in self.marbles.values()]) > 4000
 
     """
     Player State
-
-
     """
 
     def private_state(self):

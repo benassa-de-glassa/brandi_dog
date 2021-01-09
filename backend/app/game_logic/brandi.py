@@ -26,7 +26,7 @@ class Brandi:
         - 3: finished
     Brandi.round_state can take values between 0 and 2 indicating one of the
     following round states:
-        - 0: round has not yet started # should only be the case for the very first round of a game
+        - 0: round has not yet started (only possible for the very first round of a game)
         - 1: round has started and cards have not yet been dealt
         - 2: round has started and cards have been dealt but not yet
             exchanged within the team
@@ -68,7 +68,8 @@ class Brandi:
         self.game_name: str = game_name
         self.n_players: int = n_players
 
-        self.players: Dict[str, Player] = {}  # initialize a new player list
+        # store players as a dictionary { uid(str) : Player }
+        self.players: Dict[str, Player] = {}
         self.order: List[Player] = []
 
         self.field: Field = None
@@ -81,7 +82,7 @@ class Brandi:
         self.round_state: int = 0
 
         self.deck: Deck = Deck(seed)  # initialize a deck instance
-        # keep track of whos players turn it is to make a move
+        # keep track of whose players turn it is to make a move
         self.active_player_index: int = 0
 
         # number of cards dealt at the beginning of a round
@@ -285,7 +286,10 @@ class Brandi:
                 "note": f"The round is not in the card swapping state.",
             }
         if not self.players[user.uid].may_swap_cards:
-            return {"requestValid": False, "note": f"You have already swapped a card."}
+            return {
+                "requestValid": False,
+                "note": f"You have already swapped a card."
+            }
 
         player = self.players.get(user.uid)
         team_member = self.get_player_by_position(
@@ -320,44 +324,44 @@ class Brandi:
 
     def increment_active_player_index(self):
         """
-        increment the active player index until a player is found who has not yet folded
+        Move to the next player that still has cards. If no player has any
+        cards left, start the next round. 
         """
 
-        victory_dict: Dict[int, bool] = {}
-        for i in range(self.n_players // 2):
-            team_member_1 = self.get_player_by_position(i)
-            team_member_2 = self.get_player_by_position(
-                i + self.n_players // 2)
-            victory_dict[i] = team_member_1.has_finished_marbles() \
-                and team_member_2.has_finished_marbles()
+        """ check if a team won """
 
-        for team_number, victory in victory_dict.items():
-            if victory is True:
-                self.game_state = 3
+        # iterate through teams
+        for i in range(self.n_players // 2):
+            # define the two team members
+            member_1 = self.get_player_by_position(i)
+            member_2 = self.get_player_by_position(i + self.n_players // 2)
+
+            if member_1.has_finished_marbles() and member_2.has_finished_marbles():
+                self.game_state = 3  # game is finished 🏁
                 return {
-                    "requestValid": True,
-                    "note": f"Team 1 of players {self.get_player_by_position(team_number).username} and {self.get_player_by_position((team_number + self.n_players//2)).username} have won.",
+                    "note": f"Players {member_1.username} and {member_2.username} have won.",
                     "gameOver": True,
                 }
 
+        # increase the active player index
         self.active_player_index = (
             self.active_player_index + 1) % self.n_players
 
-        skipped_player_count: int = 0
-        while self.players[self.order[self.active_player_index]].has_finished_cards():
+        """ check if all players have no cards left """
+
+        if all([player.has_finished_cards() for player in self.players]):
+            self.round_state = 5
+            self.start_round()
+            return {
+                "note": f"Round #{self.round_turn} has started due to all players having no cards left.",
+                "new_round": True,
+            }
+
+        """ move to the next player until a player that still has cards is reached """
+
+        while get_active_player().has_finished_cards():
             self.active_player_index = (
                 self.active_player_index + 1) % self.n_players
-            # if all players have been skipped then the round has finished and a new round starts
-            if skipped_player_count == self.n_players:
-                self.round_state = 5
-                self.start_round()
-                return {
-                    "requestValid": True,
-                    "note": f"Round #{self.round_turn} has started due to all players having no cards left.",
-                    "new_round": True,
-                }
-
-            skipped_player_count += 1
 
     """
     Game play events: 
@@ -378,9 +382,14 @@ class Brandi:
         """
 
         self.players[user.uid].fold()
-        res = self.increment_active_player_index()
-        if res is not None:
-            return res
+
+        response = self.increment_active_player_index()
+
+        if response:
+            response["requestValid"] = True
+            return response
+
+        # default response
         return {
             "requestValid": True,
             "note": f"Player {user.username} has folded for this round.",
@@ -842,7 +851,6 @@ class Brandi:
     def to_json(self):
         """
         Return game state as a JSON object
-
         """
         return {
             "game_id": self.game_id,
@@ -861,7 +869,6 @@ class Brandi:
     def from_json(self, file):
         """
         Set game state from a JSON object
-
         """
         # state = json.load(file)
         pass

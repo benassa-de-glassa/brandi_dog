@@ -18,13 +18,12 @@ class Brandi:
     """
     Brandi Dog game instance handling the game logic.
 
-    Brandi.game_state can take values between 0 and 4, indicating one of the
+    Brandi.game_state can take values between 0 and 3, indicating one of the
     following game states:
         - 0: initialized, waiting for players
         - 1: ready to be started
         - 2: running
-        - 3: finished, ready to be purged
-        - 4: purged # should never be seen
+        - 3: finished
     Brandi.round_state can take values between 0 and 2 indicating one of the
     following round states:
         - 0: round has not yet started # should only be the case for the very first round of a game
@@ -61,7 +60,7 @@ class Brandi:
         game_id: str,
         host: User,
         n_players: int = 4,
-        seed=None,
+        seed: int = None,
         game_name: str = None,
         debug: bool = False,
     ):

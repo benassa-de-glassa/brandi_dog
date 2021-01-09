@@ -14,7 +14,6 @@ from typing import List, Dict
 from app.game_logic.brandi import Brandi
 
 # models
-# from app.models.player import Player, PlayerPublic, PlayerPrivate
 from app.models.action import Action, PossibleActions
 from app.models.card import Card, CardBase
 from app.models.game import GameToken, GamePublic, GamePrivate
@@ -242,7 +241,7 @@ async def initialize_new_game(
 
 
 @router.get('/games/{game_id}', response_model=GamePublic, tags=["game maintenance"])
-def get_game_state(game_id: str, player: Player):
+def get_game_state(game_id: str, user: User):
     """
     get the state of a game
     """
@@ -250,7 +249,7 @@ def get_game_state(game_id: str, player: Player):
 
     if not game:
         raise GAME_NOT_FOUND
-    if player.uid not in games[game_id].players:
+    if user.uid not in games[game_id].players:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST, detail="Player not in Game."
         )
@@ -275,10 +274,9 @@ async def join_game(game_id: str, user: User = Depends(get_current_user)):
     # ensure only four players can join
     if len(games[game_id].players) >= games[game_id].n_players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"The game is already full, there is no more room.")
+                            detail=f"The game is already full.")
 
-    player = Player(**user.dict(), current_game=game_id)
-    games[game_id].player_join(player)
+    games[game_id].player_join(user)
 
     token = create_game_token(game_id)
 

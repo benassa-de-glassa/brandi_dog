@@ -307,12 +307,12 @@ class Brandi:
         self.players[user.uid].may_swap_cards = False
         # when all players have sent their card to swap
         if self.card_swap_count % self.n_players == 0:
-            self.round_state += 1
+            self.round_state = 3
 
             # reset swapping ability for next round
             for player in self.players.values():
                 player.may_swap_cards = True
-            self.round_state += 1
+            self.round_state = 4
             return {
                 "requestValid": True,
                 "taskFinished": True,

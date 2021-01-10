@@ -241,7 +241,7 @@ async def initialize_new_game(
 
 
 @router.get('/games/{game_id}', response_model=GamePublic, tags=["game maintenance"])
-def get_game_state(game_id: str, user: User):
+def get_game_state(game_id: str, user: User = Depends(get_current_user)):
     """
     get the state of a game
     """
@@ -338,7 +338,7 @@ async def start_game(game_id: str, user:  User = Depends(get_current_user)):
     return game.public_state()
 
 
-@router.get('/games/{game_id}/cards', tags=["game action"], response_model=PlayerPublic)
+@router.get('/games/{game_id}/cards', tags=["game action"], response_model=PlayerPrivate)
 def get_cards(game_id: str, player: User = Depends(get_current_user)):
     """
     start an existing game
@@ -351,6 +351,7 @@ def get_cards(game_id: str, player: User = Depends(get_current_user)):
     if player.uid not in games[game_id].players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"Player {player.uid} not in Game.")
+
     return games[game_id].get_cards(player)
 
 

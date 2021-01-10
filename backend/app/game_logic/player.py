@@ -59,7 +59,7 @@ class Player:
         self.has_folded = True
 
     def has_finished_cards(self) -> bool:
-        return self.has_folded or self.hand.cards
+        return self.has_folded or not self.hand.cards
 
     def has_finished_marbles(self) -> bool:
         if any(marble.currentNode == None for marble in self.marbles.values()):

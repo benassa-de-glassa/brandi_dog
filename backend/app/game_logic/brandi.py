@@ -106,6 +106,9 @@ class Brandi:
     def get_player_by_marble_id(self, marbleid: int) -> Player:
         return self.get_player_by_position(marbleid // 4)
 
+    def get_active_player(self) -> Player:
+        return self.players.get(self.order[self.active_player_index])
+
     def player_join(self, user: UserModel):
         # have a player join the game
         if user.uid in self.players:
@@ -353,7 +356,7 @@ class Brandi:
 
         if all([player.has_finished_cards() for player in self.players.values()]):
             self.round_state = 5
-            self.start_round()
+            self.start_round() # sets round_state to 1
             return {
                 "note": f"Round #{self.round_turn} has started due to all players having no cards left.",
                 "new_round": True,
@@ -361,7 +364,7 @@ class Brandi:
 
         """ move to the next player until a player that still has cards is reached """
 
-        while get_active_player().has_finished_cards():
+        while self.get_active_player().has_finished_cards():
             self.active_player_index = (
                 self.active_player_index + 1) % self.n_players
 

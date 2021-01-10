@@ -7,7 +7,9 @@ from app.models.marble import Marble
 
 class UserBase(BaseModel):
     username: constr(min_length=3, max_length=14)
-    avatar: str
+
+    # only relevant for the frontend, default picture is a cute lama
+    avatar: str = "lama" 
 
 class UserCreate(UserBase):
     # different class to never have the plain-text password accessible
@@ -22,14 +24,14 @@ class User(UserBase):
 class UserInDB(User):
     hashed_password: str
 
-class Player(User):
-    current_game: str = None
-    game_token: Optional[str]
-
 class PlayerPublic(UserBase):
-    # username from UserBase
     marbles: List[Marble]
     steps_of_seven: int
 
-class PlayerPrivate(Player):
+class PlayerPrivate(User):
     hand: List[Card]
+
+class Player(User):
+    # Returned by the "/users/me" path only
+    current_game: str = None
+    game_token: Optional[str]

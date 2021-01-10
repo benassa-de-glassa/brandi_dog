@@ -24,6 +24,7 @@ def create_user(db: Session, new_user: user.UserCreate):
 
     # refreshes the instance such that it contains the generated ID
     db.refresh(db_user)
+    
     return db_user
 
 def update_avatar(db: Session, uid: int, avatar: str):
@@ -35,3 +36,14 @@ def update_password(db: Session, uid: int, new_hashed_password: str):
     user = get_user(db, uid)
     user.hashed_password = new_hashed_password
     db.commit()
+
+def remove_user(db: Session, uid: int):
+    user = get_user(db, uid)
+
+    if not user:
+        return False
+
+    db.delete(user)
+    db.commit()
+
+    return True

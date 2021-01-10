@@ -13,32 +13,36 @@ class TestRequests:
         ]
         self.players = [
             {
-                "username": "Thilo",
-                "password": "AAAA",
+                "username": "111",
+                "password": "1",
+                "avatar": "lama",
             },
             {
-                "username": "Lara",
-                "password": "BBBB",
+                "username": "222",
+                "password": "2",
+                "avatar": "lama",
             },
             {
-                "username": "Bibi",
-                "password": "CCCC",
+                "username": "333",
+                "password": "3",
+                "avatar": "lama",
             },
             {
-                "username": "Bene",
-                "password": "DDDD",
+                "username": "444",
+                "password": "4",
+                "avatar": "lama",
             },
         ]
         self.game_ids = []
         self.cards = []
 
-    def test_create_users(self):
-        for player in self.players:
-            res = self.clients[0].post("v1/create_user", json=player)
-            assert res.status_code == 200
-            assert "uid" in res.json()
-            assert res.json()["username"] == player["username"]
-            player["uid"] = res.json()["uid"]
+    # def test_create_users(self):
+    #     for player in self.players:
+    #         res = self.clients[0].post("v1/create_user", json=player)
+    #         assert res.status_code == 200
+    #         assert "uid" in res.json()
+    #         assert res.json()["username"] == player["username"]
+    #         player["uid"] = res.json()["uid"]
 
     def test_login_users(self):
         for i, client in enumerate(self.clients):
@@ -53,7 +57,9 @@ class TestRequests:
                 {"Authorization": f"Bearer {token}"})
 
     def test_request_initialize_game(self):
-        res = self.clients[0].post("v1/games?seed=1", json="test_game")
+        res = self.clients[0].post("v1/games?seed=1",
+                                   json={"game_name": "test_game", "n_players": 4})
+
         assert res.status_code == 200
         assert type(res.json()["game_token"]) == str
         self.game_token = res.json()["game_token"]
@@ -74,6 +80,7 @@ class TestRequests:
             assert game_id == res.json()[idx]["game_id"]
 
     def test_get_individual_game_data(self):
+        print(self.game_ids)
         res = self.clients[0].get(
             f"v1/games/{self.game_ids[0]}", json=self.players[0])
         assert res.status_code == 200
@@ -83,14 +90,19 @@ class TestRequests:
         assert res.json()["active_player_index"] == 0
 
     def test_change_team(self):
+        res = self.clients[0].get(
+            f"v1/games/{self.game_ids[0]}", json=self.players[0])
+
+        old_order = res.json()["order"]
+
         res = self.clients[2].post(
             f"v1/games/{self.game_ids[0]}/player_position",
             json=1,
         )
         print(res.json())
         assert res.status_code == 200
-        assert res.json()["order"] == [self.players[i]["uid"]
-                                       for i in [0, 2, 1, 3]]
+        assert res.json()["order"] == [old_order[0],
+                                       old_order[2], old_order[1], old_order[3]]
 
         # reset the game order
         res = self.clients[1].post(
@@ -99,28 +111,27 @@ class TestRequests:
         )
 
         assert res.status_code == 200
-        assert res.json()["order"] == [self.players[i]["uid"]
-                                       for i in [0, 1, 2, 3]]
+        assert res.json()["order"] == old_order
 
     def test_start_game_and_check_cards(self):
         res = self.clients[0].post(f"v1/games/{self.game_ids[0]}/start")
 
         assert res.status_code == 200
 
+        players = res.json()["player_list"]
+
         for i in range(4):
             for j in range(4):
-                assert (
-                    res.json()["players"][self.players[i]["uid"]]["marbles"][j][
-                        "position"
-                    ]
-                    == -i * 4 - j - 1
-                )
-
+                # the j-th marble of the i-th player should have the position below
+                marble_j = players[i]["marbles"][j]
+                assert marble_j["position"] == -i * 4 - j - 1
+                
         res = self.clients[0].get(
             f"v1/games/{self.game_ids[0]}/cards",
         )
         assert res.status_code == 200
-        assert res.json()["uid"] == "2"
+
+        print(res.json())
         assert res.json()["hand"][0]["uid"] == 99
         self.cards.append(res.json()["hand"])
 

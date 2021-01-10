@@ -29,8 +29,8 @@ class TestGame():
         assert self.game.players['lara'].username == 'Lara'
 
     def test_change_teams(self):
-        self.game.change_postion(self.player_1, 2)
-
+        self.game.change_position(self.player_1, 2)
+        
         assert self.game.players['thilo'].position == 0
         assert self.game.players['lara'].position == 1
         assert self.game.players['bene'].position == 2
@@ -40,3 +40,6 @@ class TestGame():
 
         assert hasattr(self.game.players['bene'], 'starting_node')
         assert isinstance(self.game.players['bene'].starting_node, GameNode)
+
+    def test_auto_fold(self):
+        pass

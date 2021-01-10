@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
-# 1. sqlite
+# 1. local sqlite database
 SQLITE_DATABASE_URL = 'sqlite:///./users.db' 
 
 # 2. try to obtain heroku database (postgreSQL)

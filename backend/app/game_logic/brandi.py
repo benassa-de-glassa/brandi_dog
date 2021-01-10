@@ -9,25 +9,24 @@ from app.game_logic.field import Field, GameNode
 from app.game_logic.player import Player
 from app.game_logic.marble import Marble
 from app.game_logic.card import Card
-from app.models.action import Action
 
-from app.models.user import User
+from app.models.action import Action as ActionModel
+from app.models.user import User as UserModel
 
 
 class Brandi:
     """
     Brandi Dog game instance handling the game logic.
 
-    Brandi.game_state can take values between 0 and 4, indicating one of the
+    Brandi.game_state can take values between 0 and 3, indicating one of the
     following game states:
         - 0: initialized, waiting for players
-        - 1: ready to be started
+        - 1: ready to be started TODO: game_state can never take value 1?
         - 2: running
-        - 3: finished, ready to be purged
-        - 4: purged # should never be seen
+        - 3: finished
     Brandi.round_state can take values between 0 and 2 indicating one of the
     following round states:
-        - 0: round has not yet started # should only be the case for the very first round of a game
+        - 0: round has not yet started (only possible for the very first round of a game)
         - 1: round has started and cards have not yet been dealt
         - 2: round has started and cards have been dealt but not yet
             exchanged within the team
@@ -59,9 +58,9 @@ class Brandi:
     def __init__(
         self,
         game_id: str,
-        host: User,
+        host: UserModel,
         n_players: int = 4,
-        seed=None,
+        seed: int = None,
         game_name: str = None,
         debug: bool = False,
     ):
@@ -69,8 +68,9 @@ class Brandi:
         self.game_name: str = game_name
         self.n_players: int = n_players
 
-        self.players: Dict[str, Player] = {}  # initialize a new player list
-        self.order: List[Player] = []
+        # store players as a dictionary { uid(str) : Player }
+        self.players: Dict[str, Player] = {}
+        self.order: List[int] = []
 
         self.field: Field = None
 
@@ -82,7 +82,7 @@ class Brandi:
         self.round_state: int = 0
 
         self.deck: Deck = Deck(seed)  # initialize a deck instance
-        # keep track of whos players turn it is to make a move
+        # keep track of whose players turn it is to make a move
         self.active_player_index: int = 0
 
         # number of cards dealt at the beginning of a round
@@ -106,7 +106,10 @@ class Brandi:
     def get_player_by_marble_id(self, marbleid: int) -> Player:
         return self.get_player_by_position(marbleid // 4)
 
-    def player_join(self, user: User):
+    def get_active_player(self) -> Player:
+        return self.players.get(self.order[self.active_player_index])
+
+    def player_join(self, user: UserModel):
         # have a player join the game
         if user.uid in self.players:
             return {
@@ -154,7 +157,7 @@ class Brandi:
         self.order = [self.get_player_by_position(
             position).uid for position in range(len(self.players.keys()))]
 
-    def change_position(self, user: User, position: int):
+    def change_position(self, user: UserModel, position: int):
         """
         allow for the teams to be chosen by the players before the game has
         started
@@ -170,6 +173,7 @@ class Brandi:
                 "requestValid": False,
                 "note": "game has already started, you can no longer switch teams",
             }
+
         if user.uid not in self.players:
             return {
                 "requestValid": False,
@@ -183,6 +187,7 @@ class Brandi:
             }
 
         player_requesting_new_position: Player = self.players.get(user.uid)
+
         if player_requesting_new_position == None:
             return {
                 "requestValid": False,
@@ -279,14 +284,17 @@ class Brandi:
 
         self.round_state = 2
 
-    def swap_card(self, user: User, card: Card):
+    def swap_card(self, user: UserModel, card: Card):
         if not self.round_state == 2:
             return {
                 "requestValid": False,
                 "note": f"The round is not in the card swapping state.",
             }
         if not self.players[user.uid].may_swap_cards:
-            return {"requestValid": False, "note": f"You have already swapped a card."}
+            return {
+                "requestValid": False,
+                "note": f"You have already swapped a card."
+            }
 
         player = self.players.get(user.uid)
         team_member = self.get_player_by_position(
@@ -302,12 +310,12 @@ class Brandi:
         self.players[user.uid].may_swap_cards = False
         # when all players have sent their card to swap
         if self.card_swap_count % self.n_players == 0:
-            self.round_state += 1
+            self.round_state = 3
 
             # reset swapping ability for next round
             for player in self.players.values():
                 player.may_swap_cards = True
-            self.round_state += 1
+            self.round_state = 4
             return {
                 "requestValid": True,
                 "taskFinished": True,
@@ -321,51 +329,51 @@ class Brandi:
 
     def increment_active_player_index(self):
         """
-        increment the active player index until a player is found who has not yet folded
+        Move to the next player that still has cards. If no player has any
+        cards left, start the next round. 
         """
 
-        victory_dict: Dict[int, bool] = {}
-        for i in range(self.n_players // 2):
-            team_member_1 = self.get_player_by_position(i)
-            team_member_2 = self.get_player_by_position(
-                i + self.n_players // 2)
-            victory_dict[i] = team_member_1.has_finished_marbles() \
-                and team_member_2.has_finished_marbles()
+        """ check if a team won """
 
-        for team_number, victory in victory_dict.items():
-            if victory is True:
-                self.game_state = 3
+        # iterate through teams
+        for i in range(self.n_players // 2):
+            # define the two team members
+            member_1 = self.get_player_by_position(i)
+            member_2 = self.get_player_by_position(i + self.n_players // 2)
+
+            if member_1.has_finished_marbles() and member_2.has_finished_marbles():
+                self.game_state = 3  # game is finished 🏁
                 return {
-                    "requestValid": True,
-                    "note": f"Team 1 of players {self.get_player_by_position(team_number).username} and {self.get_player_by_position((team_number + self.n_players//2)).username} have won.",
+                    "note": f"Players {member_1.username} and {member_2.username} have won.",
                     "gameOver": True,
                 }
 
+        # increase the active player index
         self.active_player_index = (
             self.active_player_index + 1) % self.n_players
 
-        skipped_player_count: int = 0
-        while self.players[self.order[self.active_player_index]].has_finished_cards():
+        """ check if all players have no cards left """
+
+        if all([player.has_finished_cards() for player in self.players.values()]):
+            self.round_state = 5
+            self.start_round() # sets round_state to 1
+            return {
+                "note": f"Round #{self.round_turn} has started due to all players having no cards left.",
+                "new_round": True,
+            }
+
+        """ move to the next player until a player that still has cards is reached """
+
+        while self.get_active_player().has_finished_cards():
             self.active_player_index = (
                 self.active_player_index + 1) % self.n_players
-            # if all players have been skipped then the round has finished and a new round starts
-            if skipped_player_count == self.n_players:
-                self.round_state = 5
-                self.start_round()
-                return {
-                    "requestValid": True,
-                    "note": f"Round #{self.round_turn} has started due to all players having no cards left.",
-                    "new_round": True,
-                }
-
-            skipped_player_count += 1
 
     """
     Game play events: 
 
     """
 
-    def event_player_fold(self, user: User):
+    def event_player_fold(self, user: UserModel):
         """"""
 
         # for self.check_card_marble_action
@@ -379,15 +387,20 @@ class Brandi:
         """
 
         self.players[user.uid].fold()
-        res = self.increment_active_player_index()
-        if res is not None:
-            return res
+
+        response = self.increment_active_player_index()
+
+        if response:
+            response["requestValid"] = True
+            return response
+
+        # default response
         return {
             "requestValid": True,
             "note": f"Player {user.username} has folded for this round.",
         }
 
-    def event_move_marble(self, user: User, action: Action):
+    def event_move_marble(self, user: UserModel, action: ActionModel):
 
         current_player: Player = self.players[self.order[self.active_player_index]]
 
@@ -750,7 +763,7 @@ class Brandi:
         marbles = self.players[player.uid].marbles
     """
 
-    def check_card_marble_action(self, user: User, action: Action, marble: Marble):
+    def check_card_marble_action(self, user: UserModel, action: ActionModel, marble: Marble):
         """
         function to test if a marble can perform a certain action
         should be executed on a copy of marbles such that the marble positions are not
@@ -840,10 +853,9 @@ class Brandi:
             "top_card": self.top_card.to_json() if self.top_card is not None else None,
         }
 
-    def to_json(self):
+    def to_dict(self):
         """
         Return game state as a JSON object
-
         """
         return {
             "game_id": self.game_id,
@@ -853,16 +865,54 @@ class Brandi:
             "round_state": self.round_state,
             "round_turn": self.round_turn,
             "deck": self.deck.to_json(),
-            "players": [player.to_json() for player in self.players],
+            "players": [self.players[uid].to_json() for uid in self.order],
             "order": self.order,
             "active_player_index": self.active_player_index,
             "top_card": self.top_card.to_json() if self.top_card is not None else None,
         }
 
-    def from_json(self, file):
-        """
-        Set game state from a JSON object
-
-        """
-        # state = json.load(file)
+    def to_json(self, filename):
+        """ TODO: dump dict into json file """
         pass
+
+#==============================================================================
+# Alternative constructors
+
+    @classmethod
+    def from_dict(cls, args):
+        """
+        Create a brandi instance from a dictionary. 
+        """
+        init_args = args["init_args"]
+
+        # make the host argument a valid User model
+        host = UserModel(**init_args["host"])
+        init_args["host"] = host
+        
+        Game = cls(**init_args)
+
+        players = args.get("players")
+        if players:
+            for player in players:
+                # skip host as he is already part of the game
+                if not player["uid"] == host.uid:
+                    Game.player_join(UserModel(**player))
+        
+        # TODO:
+        marbles = args.get("marbles")
+        if marbles:
+            for marble in marbles:
+                pass
+
+        cards = args.get("cards")
+        if cards:
+            for card in cards:
+                pass
+
+        return Game
+
+    @classmethod
+    def from_json(cls, filename):
+        """ TODO: parse json and construct the class from the resulting dict """
+        pass
+

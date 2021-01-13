@@ -897,7 +897,7 @@ class Brandi:
             return filename
 
         # return the json as a string instead with " escaped as \"
-        elif return_dumps:
+        else:
             return json.dumps(game_state)
 
 # ==============================================================================

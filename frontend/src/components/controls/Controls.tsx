@@ -94,7 +94,7 @@ const Controls = (props: ControlProps) => {
               )}
               {props.players.length === props.numberOfPlayers && (
                 <button
-                  className="btn btn-green mb-1"
+                  className="btn btn-green ml-1"
                   onClick={() => props.startGame()}
                 >
                   Start game

@@ -876,7 +876,7 @@ class Brandi:
             "top_card": self.top_card.to_json() if self.top_card is not None else None
         }
 
-    def to_json(self, write_to_file=False, filename=None, return_dumps=True):
+    def to_json(self, write_to_file=False, filename=None):
         """ dump dict into json file or return a parsable string """
         game_state = self.to_dict()
 
@@ -899,10 +899,6 @@ class Brandi:
         # return the json as a string instead with " escaped as \"
         elif return_dumps:
             return json.dumps(game_state)
-
-        # return the json
-        else:
-            return game_state
 
 # ==============================================================================
 # Alternative constructors

@@ -59,6 +59,7 @@ class Player:
         self.has_folded = True
 
     def has_finished_cards(self) -> bool:
+        # or is required as at the end of a round, the next cards will already be present
         return self.has_folded or not self.hand.cards
 
     def has_finished_marbles(self) -> bool:

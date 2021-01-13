@@ -28,3 +28,5 @@ class GameToken(BaseModel):
 class GamePrivate(BaseModel):
     game_token: str
     game_id: str
+
+

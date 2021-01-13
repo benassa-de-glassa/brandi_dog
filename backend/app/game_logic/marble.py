@@ -1,5 +1,5 @@
 
-from app.game_logic.field import Node
+from app.game_logic.node import Node
 
 
 class Marble:

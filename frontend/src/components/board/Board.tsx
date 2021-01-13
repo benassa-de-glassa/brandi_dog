@@ -21,7 +21,6 @@ const boardSize = { height: 800, width: 800 };
 // index of homes are negative numbers counting down from -1 ...
 // ... index of houses are positive starting at 1000
 const homeIndex = (id: number) => -id - 1;
-const houseIndex = (id: number) => id - 1000;
 
 const Board = (props: BoardProps) => {
   const [boardData, setBoardData] = useState({} as BoardData);
@@ -40,9 +39,10 @@ const Board = (props: BoardProps) => {
   }, [props.numberOfPlayers]);
 
   const getStepPosition = (id: number) => {
+    console.log(id)
     let step;
     if (id < 0) step = boardData.homes[homeIndex(id)];
-    else if (id >= 1000) step = boardData.houses[houseIndex(id)];
+    else if (id >= 1000) step = boardData.houses.filter(house => house.id === id)[0];
     else step = boardData.steps[id];
     return {
       x: step.x,

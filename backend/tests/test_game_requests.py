@@ -69,7 +69,7 @@ class TestRequests:
         for i, client in enumerate(self.clients[1:]):
 
             res = client.post(f"v1/games/{self.game_ids[0]}/join")
-            assert res.status_code == 200
+            assert res.status_code == 200, res.json()
 
     def test_request_get_game_list(self):
         res = self.clients[0].get("v1/games")

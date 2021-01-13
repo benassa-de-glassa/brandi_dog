@@ -34,8 +34,23 @@ router = APIRouter()
 # dictionary of game_id: game instance
 games: Dict[str, Brandi] = {}
 
-GAME_NOT_FOUND = HTTPException(
-    status_code=HTTP_400_BAD_REQUEST, detail=f"Game does not exist.")
+
+def get_game(game_id: str):
+    """ checks if the game exists """
+    game = games.get(game_id)
+
+    if not game:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST, detail=f"Game does not exist.")
+
+    return game
+
+
+def verify_user_in_game(user: User, game: Brandi):
+    """ raise an exception if the user is not in the game """
+    if user.uid not in game.players:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                            detail=f"Player {user.uid} not in game.")
 
 
 async def emit_error(sid, msg: str):
@@ -76,7 +91,7 @@ async def sio_emit_player_state(game_id, player_id):
 async def sio_emit_move(game_id: str, player_id: str, move, positions=None):
     """
     Emit an action (only if it is valid). 
-    
+
     move: str
         either "move", "fold", or "switch".
     """
@@ -179,7 +194,7 @@ async def leave_game(sid, data):
         await emit_error(sid, response['note'])
 
     # clear empty games
-    if not games[game_id].players:
+    if not game.players:
         removed_game = games.pop(game_id, None)
         if not removed_game:
             logger.warning('Could not delete game')
@@ -245,16 +260,10 @@ def get_game_state(game_id: str, user: User = Depends(get_current_user)):
     """
     get the state of a game
     """
-    game = games.get(game_id)
+    game = get_game(game_id)
+    verify_user_in_game(user, game)
 
-    if not game:
-        raise GAME_NOT_FOUND
-    if user.uid not in games[game_id].players:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST, detail="Player not in Game."
-        )
-
-    return games[game_id].public_state()
+    return game.public_state()
 
 
 # response_model=GamePublic)
@@ -264,19 +273,18 @@ async def join_game(game_id: str, user: User = Depends(get_current_user)):
     join an existing game. The user is injected as a dependency from the 
     required JWT cookie in the request. 
     """
-    # ensure the game exists
-    if game_id not in games:
-        raise GAME_NOT_FOUND
+    game = get_game(game_id)
+
     # ensure no user joins twice
-    if user.uid in games[game_id].players:
+    if user.uid in game.players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"Player {user.username} has already joined.")
     # ensure only four players can join
-    if len(games[game_id].players) >= games[game_id].n_players:
+    if len(game.players) >= game.n_players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"The game is already full.")
 
-    games[game_id].player_join(user)
+    game.player_join(user)
 
     token = create_game_token(game_id)
 
@@ -290,22 +298,15 @@ async def player_position(game_id: str,  position: int = Body(...),  user: User 
     """
     Changes the position on the board of the player to choose new teams.
     """
-    # verify game_id
-    if not game_id in games:
-        raise GAME_NOT_FOUND
+    game = get_game(game_id)
 
-    # verify that the user is in said game
-    if user.uid not in games[game_id].players:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {user.uid} not in game.")
-
-    res = games[game_id].change_position(user, position)
+    res = game.change_position(user, position)
     if res['requestValid']:
         await sio_emit_game_state(game_id)
     else:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST, detail=res["note"])
-    return games[game_id].public_state()
+    return game.public_state()
 
 
 @router.post('/games/{game_id}/start', tags=["game action"])
@@ -313,15 +314,9 @@ async def start_game(game_id: str, user:  User = Depends(get_current_user)):
     """
     start an existing game
     """
-    game = games.get(game_id)
+    game = get_game(game_id)
+    verify_user_in_game(user, game)
 
-    if not game:
-        raise GAME_NOT_FOUND
-
-    # check if the player is in the right game id
-    if user.uid not in game.players:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {user.uid} not in Game.")
     # check if there are four players in the game
     if len(game.players) != game.n_players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
@@ -343,16 +338,13 @@ def get_cards(game_id: str, player: User = Depends(get_current_user)):
     """
     start an existing game
     """
-    game = games.get(game_id)
+    game = get_game(game_id)
 
-    if not game:  # ensure the game exists
-        raise GAME_NOT_FOUND
-
-    if player.uid not in games[game_id].players:
+    if player.uid not in game.players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"Player {player.uid} not in Game.")
 
-    return games[game_id].get_cards(player)
+    return game.get_cards(player)
 
 
 @router.post('/games/{game_id}/swap_cards', tags=["game action"])
@@ -360,10 +352,7 @@ async def swap_card(game_id: str,  card: CardBase, user: User = Depends(get_curr
     """
     make the card swap before starting the round
     """
-    game = games.get(game_id)
-
-    if not game:  # ensure the game exists
-        raise GAME_NOT_FOUND
+    game = get_game(game_id)
 
     if user.uid not in game.players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
@@ -388,10 +377,9 @@ async def fold_round(game_id: str, user: User = Depends(get_current_user)):
     make the card swap before starting the round
 
     """
-    game = games.get(game_id)
+    game = get_game(game_id)
 
-    if not game:  # ensure the game exists
-        raise GAME_NOT_FOUND
+    verify_user_in_game(user, game)
 
     if user.uid not in game.players:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
@@ -413,14 +401,8 @@ async def perform_action(game_id: str, action: Action, user: User = Depends(get_
     """
 
     """
-    game = games.get(game_id)
-
-    if not game:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Game {game_id} does not exist (anymore).")
-    if user.uid not in game.players:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
-                            detail=f"Player {user.uid} not in Game.")
+    game = get_game(game_id)
+    verify_user_in_game(user, game)
 
     if action.card.uid not in game.players[user.uid].hand.cards:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
@@ -444,7 +426,13 @@ async def possible_actions(game_id: str, card: Card, marble: Marble, user: User 
     pass
 
 
-# TODO:
-# restart_game()
-# end_game()
-# player_leave()
+@router.get('/games/{game_id}/dump-json', response_model=str, tags=["debug"])
+def dump_json(game_id: str, write_to_file: bool = False, filename: str = None):
+    game = get_game(game_id)
+
+    return game.to_json(write_to_file, filename)
+
+    # TODO:
+    # restart_game()
+    # end_game()
+    # player_leave()

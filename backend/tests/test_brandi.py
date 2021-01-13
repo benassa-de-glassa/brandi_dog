@@ -1,6 +1,6 @@
+from app.game_logic.field import GameNode
 from app.game_logic.brandi import Brandi
 from app.game_logic.player import Player
-from app.game_logic.field import GameNode
 
 from app.models.user import User
 
@@ -120,3 +120,6 @@ class TestBrandi():
 
         # now the next round should start with state 2
         assert self.Game.round_state == 2
+
+    def test_dump_json(self):
+        self.Game.to_json(write_to_file=True, filename="test")

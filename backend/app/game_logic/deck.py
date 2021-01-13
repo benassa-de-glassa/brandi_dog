@@ -49,4 +49,5 @@ class Deck():
         return [card.uid for card in self.cards]
 
     def from_json(self):
+        """ takes a dictionary {"color": str, "value": str} and returns a card object """ 
         pass

@@ -1,8 +1,9 @@
+import json
+import os
+
 from typing import Dict, List, Union
 
 from itertools import count, filterfalse
-
-import logging
 
 from app.game_logic.deck import Deck
 from app.game_logic.field import Field, GameNode
@@ -12,6 +13,12 @@ from app.game_logic.card import Card
 
 from app.models.action import Action as ActionModel
 from app.models.user import User as UserModel
+
+# number of cards dealt at the beginning of a round
+N_CARDS_ORDER: List[int] = [6, 5, 4, 3, 2]
+
+# try to load json dump path
+TMP_FOLDER_PATH = os.environ.get("TMP_FOLDER_PATH", "../.tmp")
 
 
 class Brandi:
@@ -66,13 +73,20 @@ class Brandi:
     ):
         self.game_id: str = game_id
         self.game_name: str = game_name
+        self.seed: int = seed
         self.n_players: int = n_players
 
         # store players as a dictionary { uid(str) : Player }
         self.players: Dict[str, Player] = {}
-        self.order: List[int] = []
 
-        self.field: Field = None
+        # the uids in the right order
+        self.order: List[str] = []
+
+        # the index of the currently active player in the order list above
+        self.active_player_index: int = 0
+
+        # create a new field instance for the game
+        self.field: Field = Field(self.n_players)  # field of players
 
         # add the host to the game
         self.host: Player = Player(host.uid, host.username, host.avatar)
@@ -82,11 +96,7 @@ class Brandi:
         self.round_state: int = 0
 
         self.deck: Deck = Deck(seed)  # initialize a deck instance
-        # keep track of whose players turn it is to make a move
-        self.active_player_index: int = 0
 
-        # number of cards dealt at the beginning of a round
-        self.round_cards: List[int] = [6, 5, 4, 3, 2]
         # beginning of each round
         self.round_turn = 0  # count which turn is reached
 
@@ -216,27 +226,18 @@ class Brandi:
             - players are assigned their starting position based on self.order
             - first round is started
         """
-        if len(self.players.values()) != self.n_players:
+        if len(self.players) != self.n_players:
             return {"requestValid": False, "note": "Not all players are present."}
         if not self.game_state == 0:
             return {"requestValid": False, "note": "Game has already started."}
 
-        # create a new field instance for the game
-        self.field: Field = Field(self.n_players)  # field of players
-
-        self.assign_starting_positions()
-        self.start_round()
-        return {"requestValid": True, "note": "Game is started."}
-
-    def assign_starting_positions(self):
-        """
-        assign starting positions for the game based on self.order
-
-        """
-        for player_id in self.players.keys():
+        # assign starting positions
+        for player_id in self.players:
             self.players[player_id].set_starting_node(self.field)
 
         self.calculate_order()
+        self.start_round()
+        return {"requestValid": True, "note": "Game is started."}
 
     def start_round(self):
         """
@@ -276,7 +277,7 @@ class Brandi:
             shifted_order.append(shifted_order.pop(0))
 
         for uid in shifted_order:
-            for _ in range(self.round_cards[self.round_turn % len(self.round_cards)]):
+            for _ in range(N_CARDS_ORDER[self.round_turn % len(N_CARDS_ORDER)]):
                 if self.deck.deck_size() == 0:
                     self.deck.reshuffle_cards(self.discarded_cards)
                     self.discarded_cards = []
@@ -356,7 +357,7 @@ class Brandi:
 
         if all([player.has_finished_cards() for player in self.players.values()]):
             self.round_state = 5
-            self.start_round() # sets round_state to 1
+            self.start_round()  # sets round_state to 1
             return {
                 "note": f"Round #{self.round_turn} has started due to all players having no cards left.",
                 "new_round": True,
@@ -806,8 +807,6 @@ class Brandi:
                 return False
             return True
         elif action == 7:
-
-            logging.info("marble = " + str(marble))
             assert isinstance(marble, list)
             total_distance_to_blockade = 0
             for m in marble:  # for all the players marbles check how far they can be moved to the next blocking marble
@@ -860,22 +859,52 @@ class Brandi:
         return {
             "game_id": self.game_id,
             "game_name": self.game_name,
+            "n_players": self.n_players,
+            "seed": self.seed,
             "host": self.host.to_json(),
+            "players": {key: value.to_json() for key, value in self.players.items()},
+            "order": self.order,
+            "active_player_index": self.active_player_index,
+
             "game_state": self.game_state,
             "round_state": self.round_state,
             "round_turn": self.round_turn,
+            "card_swap_count": self.card_swap_count,
+
             "deck": self.deck.to_json(),
-            "players": [self.players[uid].to_json() for uid in self.order],
-            "order": self.order,
-            "active_player_index": self.active_player_index,
-            "top_card": self.top_card.to_json() if self.top_card is not None else None,
+            "discarded_cards": self.discarded_cards,
+            "top_card": self.top_card.to_json() if self.top_card is not None else None
         }
 
-    def to_json(self, filename):
-        """ TODO: dump dict into json file """
-        pass
+    def to_json(self, write_to_file=False, filename=None, return_dumps=True):
+        """ dump dict into json file or return a parsable string """
+        game_state = self.to_dict()
 
-#==============================================================================
+        if write_to_file:
+            if not filename:
+                # find a unique filename, label it by game_id-i where i is an integer
+                i = 1
+                while os.path.exists(f"{TMP_FOLDER_PATH}/{self.game_id}-{i}.json"):
+                    i+1
+
+                filename = f"{self.game_id}-{i}.json"
+            elif not filename.endswith(".json"):
+                filename = f"{filename}.json"
+
+            with open(f"{TMP_FOLDER_PATH}/{filename}", "w") as fp:
+                json.dump(game_state, fp)
+
+            return filename
+
+        # return the json as a string instead with " escaped as \"
+        elif return_dumps:
+            return json.dumps(game_state)
+
+        # return the json
+        else:
+            return game_state
+
+# ==============================================================================
 # Alternative constructors
 
     @classmethod
@@ -888,7 +917,7 @@ class Brandi:
         # make the host argument a valid User model
         host = UserModel(**init_args["host"])
         init_args["host"] = host
-        
+
         Game = cls(**init_args)
 
         players = args.get("players")
@@ -897,7 +926,7 @@ class Brandi:
                 # skip host as he is already part of the game
                 if not player["uid"] == host.uid:
                     Game.player_join(UserModel(**player))
-        
+
         # TODO:
         marbles = args.get("marbles")
         if marbles:
@@ -915,4 +944,3 @@ class Brandi:
     def from_json(cls, filename):
         """ TODO: parse json and construct the class from the resulting dict """
         pass
-

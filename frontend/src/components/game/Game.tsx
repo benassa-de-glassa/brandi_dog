@@ -257,6 +257,7 @@ class Game extends Component<GameComponentProps, GameComponentState> {
       tooltipActions: [],
       tooltipVisible: false,
       errorMessage: "",
+      selectedMarble: null,
     });
 
     // don't deselect the selected card if there are still sevens to be played

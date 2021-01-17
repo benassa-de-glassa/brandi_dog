@@ -35,9 +35,9 @@ class Marble:
         self.is_blocking = False
         self.can_enter_goal = False
 
-    def set_new_position(self, node) -> None:
+    def set_new_position(self, node: Node, do_unset_existing_marble: bool = True) -> None:
         # remove the marble from the previous position
-        if self.currentNode is not None:
+        if self.currentNode is not None and do_unset_existing_marble:
             self._currentNode.unset_marble()
 
         self._currentNode = node.curr

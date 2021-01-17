@@ -622,21 +622,21 @@ class Brandi:
             marble_1_node = self.players[user.uid].marbles[action.mid].currentNode
             marble_2_node = self.players[action.pid_2].marbles[action.mid_2].currentNode
 
-            if marble_1_node.curr.is_blocking():
+            # if marble_1_node.curr.is_blocking():
+            if marble_1_node.marble.is_blocking:
                 return {
                     "requestValid": False,
                     "note": f"Marble {action.mid} is blocking.",
                 }
-            if marble_2_node.curr.is_blocking():
+            if marble_2_node.marble.is_blocking:
                 return {
                     "requestValid": False,
                     "note": f"Marble {action.mid_2} is blocking.",
                 }
             self.players[user.uid].marbles[action.mid].set_new_position(
-                marble_2_node)
+                marble_2_node, False)
             self.players[action.pid_2].marbles[action.mid_2].set_new_position(
-                marble_1_node
-            )
+                marble_1_node, False)
             self.increment_active_player_index()
             self.top_card = self.players[user.uid].hand.play_card(action.card)
 

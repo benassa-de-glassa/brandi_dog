@@ -5,7 +5,9 @@ class TestBrandi():
     
         self.Game = Brandi.from_json("test.json")
 
-        # assert set(self.Game.players) == {1, 2, 3, 4}
+        print(self.Game.players)
+
+        assert set(self.Game.players) == {"1", "2", "3", "4"}
         # assert self.Game.order == [4, 2, 1, 3]
         # assert self.Game.game_state == 2
         # assert self.Game.round_state == 1

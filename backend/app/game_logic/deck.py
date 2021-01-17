@@ -59,6 +59,6 @@ class Deck():
     @classmethod
     def from_dict(cls, args):
         NewDeck = cls(args["seed"])
-        NewDeck.cards = [Card.from_dict(**card) for card in args["cards"]]
+        NewDeck.cards = [Card.from_dict(card) for card in args["cards"]]
 
         return NewDeck

@@ -24,7 +24,7 @@ class Player:
         self.hand: Hand = Hand()
 
         # store the marbles as { marble_id(str): Marble }
-        self.marbles: dict[str, Marble] = {}
+        self.marbles: dict[int, Marble] = {}
 
         # keep track of actions
         self.may_swap_cards: bool = True
@@ -125,7 +125,7 @@ class Player:
             position=args["position"]
         )
 
-        NewPlayer.marbles = {marble_id: Marble.from_dict(**marble) for marble_id, marble in args["marbles"].items()}
+        NewPlayer.marbles = {marble_id: Marble.from_dict(marble) for marble_id, marble in args["marbles"].items()}
         NewPlayer.hand = Hand.from_dict(args["hand"])
         NewPlayer.may_swap_cards = args["may_swap_cards"]
         NewPlayer.has_folded = args["has_folded"]

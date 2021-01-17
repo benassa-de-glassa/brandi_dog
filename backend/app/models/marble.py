@@ -2,5 +2,5 @@ from pydantic import BaseModel
 
 
 class Marble(BaseModel):
-    mid: int
+    mid: str
     position: int

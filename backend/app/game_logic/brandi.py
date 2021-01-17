@@ -20,8 +20,8 @@ N_CARDS_ORDER: List[int] = [6, 5, 4, 3, 2]
 # try to load json dump path, otherwise choose .tmp folder
 TMP_FOLDER_PATH = \
     os.path.normpath(
-    os.path.join(__file__,
-                 os.environ.get("TMP_FOLDER_PATH", "../../.tmp")))
+        os.path.join(__file__,
+                     os.environ.get("TMP_FOLDER_PATH", "../../.tmp")))
 
 
 class Brandi:
@@ -94,7 +94,8 @@ class Brandi:
 
         # add the host to the game
         self.host = host
-        self.player_join(Player(host.uid, host.username, host.avatar))  # add the host as the first player
+        # add the host as the first player
+        self.player_join(Player(host.uid, host.username, host.avatar))
 
         self.game_state: int = 0  # start in the initialized state
         self.round_state: int = 0
@@ -905,8 +906,9 @@ class Brandi:
             full_path = os.path.join(TMP_FOLDER_PATH, f"{filename}.json")
             while os.path.exists(full_path):
                 i += 1
-                full_path = os.path.join(TMP_FOLDER_PATH, f"{filename}-{i}.json")
-                
+                full_path = os.path.join(
+                    TMP_FOLDER_PATH, f"{filename}-{i}.json")
+
             with open(full_path, "w") as fp:
                 json.dump(game_dict, fp)
 
@@ -942,21 +944,17 @@ class Brandi:
         Game.round_state = args["round_state"]
         Game.round_turn = args["round_turn"]
         Game.card_swap_count = args["card_swap_count"]
-        Game.deck = Deck.from_dict(**args["deck"])
+        Game.deck = Deck.from_dict(args["deck"])
         Game.discarded_cards = [Card.from_dict(
-            **card) for card in args["discarded_cards"]]
-        Game.top_card = Card.from_dict(**args["top_card"])
-
-        # except KeyError:
-        #     return False, "invalid file"
-        # except:
-        #     return False, "unknown error"
+            card) for card in args["discarded_cards"]]
+        Game.top_card = Card.from_dict(args["top_card"])
 
         return Game
 
     @classmethod
     def from_json(cls, filename):
-        """ TODO: parse json and construct the class from the resulting dict """
+        """ parse json file and construct the class from the resulting dict """
+
         # test if filename is an absolute path
         if os.path.exists(filename):
             path = filename

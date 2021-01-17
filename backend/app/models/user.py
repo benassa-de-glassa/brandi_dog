@@ -16,7 +16,7 @@ class UserCreate(UserBase):
     password: constr(min_length=1, max_length=64)
 
 class User(UserBase):
-    uid: int
+    uid: str
 
     class Config:
         orm_mode = True

@@ -79,4 +79,7 @@ class Card():
         This method exists for consistency with other classes, there is no
         difference to the constructor. 
         """
-        return cls(**args)
+        NewCard = cls(args["value"], args["color"], args["uid"])
+        NewCard.action_options = args["actions"]
+        
+        return NewCard

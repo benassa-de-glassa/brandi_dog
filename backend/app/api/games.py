@@ -79,7 +79,7 @@ async def sio_emit_player_state(game_id, player_id):
     """
     Emit the player state to the player only.
     """
-    room = socket_connections.get(int(player_id))
+    room = socket_connections.get(player_id)
     if room is not None:
         await sio.emit(
             'player-state',
@@ -136,7 +136,7 @@ async def join_game_socket(sid, data):
     game_token
         JSON web token encoding the game
     """
-    player_id = data['player']['uid']
+    player_id = str(data['player']['uid'])
     game_token = data['game_token']
 
     # Verify game token
@@ -171,7 +171,7 @@ async def join_game_socket(sid, data):
 @sio.event
 async def leave_game(sid, data):
     game_id = data['game_id']
-    user_id = data['player_id']
+    user_id = str(data['player_id'])
 
     sio.leave_room(sid, game_id)
 
@@ -434,6 +434,29 @@ def dump_json(game_id: str, write_to_file: bool = False, filename: str = None):
     game = get_game(game_id)
 
     return game.to_json(write_to_file, filename)
+
+
+@router.get('/games/new/load-json', response_model=str, tags=["debug"])
+async def load_json(filename: str = "test.json"):
+    # load the game from the json file
+    Game = Brandi.from_json(filename)
+
+    # enter the game into the games dictionary
+    games[Game.game_id] = Game
+
+    # check if any of the players belong to another game
+    if any([pid in playing_users for pid in Game.players]):
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
+                            detail=f"At least one player is currently in another game.")
+    
+    await sio_emit_game_list()
+
+    # add them to the game
+    for pid in Game.players:
+        playing_users[pid] = Game.game_id
+
+    return "Created game"
+
 
     # TODO:
     # restart_game()

@@ -1,14 +1,14 @@
 {
-  "game_id": "ICHQ",
-  "game_name": "SEED",
+  "game_id": "NNYD",
+  "game_name": "test",
   "n_players": 4,
-  "seed": 2,
+  "seed": null,
   "debug": false,
-  "host": { "uid": 4, "username": "444", "avatar": "lama" },
+  "host": { "uid": "1", "username": "111", "avatar": "lama" },
   "players": {
-    "4": {
-      "uid": 4,
-      "username": "444",
+    "1": {
+      "uid": "1",
+      "username": "111",
       "avatar": "lama",
       "marbles": {
         "0": {
@@ -20,10 +20,10 @@
         },
         "1": {
           "marble_id": 1,
-          "current_node": { "position": 28 },
+          "current_node": null,
           "starting_node": { "position": 0 },
-          "is_blocking": 0,
-          "can_enter_goal": true
+          "is_blocking": false,
+          "can_enter_goal": false
         },
         "2": {
           "marble_id": 2,
@@ -41,22 +41,22 @@
         }
       },
       "position": 0,
-      "hand": null,
+      "hand": { "cards": {} },
       "may_swap_cards": true,
-      "has_folded": false,
+      "has_folded": true,
       "steps_of_seven_remaining": -1
     },
     "2": {
-      "uid": 2,
+      "uid": "2",
       "username": "222",
       "avatar": "lama",
       "marbles": {
         "4": {
           "marble_id": 4,
-          "current_node": null,
+          "current_node": { "position": 12 },
           "starting_node": { "position": 16 },
           "is_blocking": false,
-          "can_enter_goal": false
+          "can_enter_goal": true
         },
         "5": {
           "marble_id": 5,
@@ -81,19 +81,31 @@
         }
       },
       "position": 1,
-      "hand": null,
+      "hand": {
+        "cards": {
+          "36": {
+            "uid": 36,
+            "value": "10",
+            "color": "hearts",
+            "actions": [10]
+          },
+          "9": { "uid": 9, "value": "K", "color": "clubs", "actions": [0, 13] },
+          "41": { "uid": 41, "value": "9", "color": "clubs", "actions": [9] },
+          "78": { "uid": 78, "value": "5", "color": "spades", "actions": [5] }
+        }
+      },
       "may_swap_cards": true,
-      "has_folded": true,
+      "has_folded": false,
       "steps_of_seven_remaining": -1
     },
-    "1": {
-      "uid": 1,
-      "username": "111",
+    "3": {
+      "uid": "3",
+      "username": "333",
       "avatar": "lama",
       "marbles": {
         "8": {
           "marble_id": 8,
-          "current_node": { "position": 6 },
+          "current_node": { "position": 42 },
           "starting_node": { "position": 32 },
           "is_blocking": 0,
           "can_enter_goal": true
@@ -121,22 +133,44 @@
         }
       },
       "position": 2,
-      "hand": null,
+      "hand": {
+        "cards": {
+          "90": {
+            "uid": 90,
+            "value": "3",
+            "color": "diamonds",
+            "actions": [3]
+          },
+          "82": {
+            "uid": 82,
+            "value": "4",
+            "color": "diamonds",
+            "actions": [-4, 4]
+          },
+          "26": {
+            "uid": 26,
+            "value": "Ja",
+            "color": "diamonds",
+            "actions": ["switch"]
+          },
+          "72": { "uid": 72, "value": "5", "color": "clubs", "actions": [5] }
+        }
+      },
       "may_swap_cards": true,
       "has_folded": false,
       "steps_of_seven_remaining": -1
     },
-    "3": {
-      "uid": 3,
-      "username": "333",
+    "4": {
+      "uid": "4",
+      "username": "444",
       "avatar": "lama",
       "marbles": {
         "12": {
           "marble_id": 12,
-          "current_node": null,
+          "current_node": { "position": 58 },
           "starting_node": { "position": 48 },
-          "is_blocking": false,
-          "can_enter_goal": false
+          "is_blocking": 0,
+          "can_enter_goal": true
         },
         "13": {
           "marble_id": 13,
@@ -161,27 +195,102 @@
         }
       },
       "position": 3,
-      "hand": null,
+      "hand": {
+        "cards": {
+          "13": {
+            "uid": 13,
+            "value": "K",
+            "color": "hearts",
+            "actions": [0, 13]
+          },
+          "3": {
+            "uid": 3,
+            "value": "A",
+            "color": "diamonds",
+            "actions": [0, 1, 11]
+          },
+          "31": {
+            "uid": 31,
+            "value": "Ja",
+            "color": "spades",
+            "actions": ["switch"]
+          },
+          "102": { "uid": 102, "value": "2", "color": "spades", "actions": [2] }
+        }
+      },
       "may_swap_cards": true,
-      "has_folded": true,
+      "has_folded": false,
       "steps_of_seven_remaining": -1
     }
   },
-  "order": [4, 2, 1, 3],
-  "active_player_index": 0,
+  "order": ["1", "2", "3", "4"],
+  "active_player_index": 1,
   "game_state": 2,
   "round_state": 4,
   "round_turn": 1,
   "card_swap_count": 4,
   "deck": {
     "cards": [
-      { "uid": 19, "value": "Q", "color": "diamonds", "actions": [12] },
-      { "uid": 5, "value": "A", "color": "hearts", "actions": [0, 1, 11] },
-      { "uid": 43, "value": "9", "color": "diamonds", "actions": [9] },
-      { "uid": 80, "value": "4", "color": "clubs", "actions": [-4, 4] },
+      { "uid": 14, "value": "K", "color": "spades", "actions": [0, 13] },
+      { "uid": 51, "value": "8", "color": "diamonds", "actions": [8] },
+      { "uid": 98, "value": "2", "color": "diamonds", "actions": [2] },
+      { "uid": 69, "value": "6", "color": "hearts", "actions": [6] },
+      { "uid": 99, "value": "2", "color": "diamonds", "actions": [2] },
+      { "uid": 94, "value": "3", "color": "spades", "actions": [3] },
       { "uid": 49, "value": "8", "color": "clubs", "actions": [8] },
+      { "uid": 1, "value": "A", "color": "clubs", "actions": [0, 1, 11] },
+      { "uid": 100, "value": "2", "color": "hearts", "actions": [2] },
+      { "uid": 85, "value": "4", "color": "hearts", "actions": [-4, 4] },
+      { "uid": 54, "value": "8", "color": "spades", "actions": [8] },
+      { "uid": 15, "value": "K", "color": "spades", "actions": [0, 13] },
+      { "uid": 81, "value": "4", "color": "clubs", "actions": [-4, 4] },
+      { "uid": 55, "value": "8", "color": "spades", "actions": [8] },
+      { "uid": 43, "value": "9", "color": "diamonds", "actions": [9] },
+      { "uid": 30, "value": "Ja", "color": "spades", "actions": ["switch"] },
       {
-        "uid": 109,
+        "uid": 56,
+        "value": "7",
+        "color": "clubs",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      {
+        "uid": 61,
+        "value": "7",
+        "color": "hearts",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 10, "value": "K", "color": "diamonds", "actions": [0, 13] },
+      { "uid": 0, "value": "A", "color": "clubs", "actions": [0, 1, 11] },
+      { "uid": 39, "value": "10", "color": "spades", "actions": [10] },
+      {
+        "uid": 60,
+        "value": "7",
+        "color": "hearts",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 93, "value": "3", "color": "hearts", "actions": [3] },
+      { "uid": 73, "value": "5", "color": "clubs", "actions": [5] },
+      {
+        "uid": 63,
+        "value": "7",
+        "color": "spades",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 44, "value": "9", "color": "hearts", "actions": [9] },
+      { "uid": 48, "value": "8", "color": "clubs", "actions": [8] },
+      { "uid": 5, "value": "A", "color": "hearts", "actions": [0, 1, 11] },
+      { "uid": 53, "value": "8", "color": "hearts", "actions": [8] },
+      { "uid": 95, "value": "3", "color": "spades", "actions": [3] },
+      { "uid": 76, "value": "5", "color": "hearts", "actions": [5] },
+      { "uid": 27, "value": "Ja", "color": "diamonds", "actions": ["switch"] },
+      { "uid": 24, "value": "Ja", "color": "clubs", "actions": ["switch"] },
+      { "uid": 16, "value": "Q", "color": "clubs", "actions": [12] },
+      { "uid": 101, "value": "2", "color": "hearts", "actions": [2] },
+      { "uid": 22, "value": "Q", "color": "spades", "actions": [12] },
+      { "uid": 91, "value": "3", "color": "diamonds", "actions": [3] },
+      { "uid": 79, "value": "5", "color": "spades", "actions": [5] },
+      {
+        "uid": 107,
         "value": "Jo",
         "color": "Jo",
         "actions": [
@@ -208,30 +317,15 @@
           77
         ]
       },
-      { "uid": 75, "value": "5", "color": "diamonds", "actions": [5] },
-      { "uid": 101, "value": "2", "color": "hearts", "actions": [2] },
-      { "uid": 84, "value": "4", "color": "hearts", "actions": [-4, 4] },
-      { "uid": 36, "value": "10", "color": "hearts", "actions": [10] },
-      { "uid": 35, "value": "10", "color": "diamonds", "actions": [10] },
-      { "uid": 102, "value": "2", "color": "spades", "actions": [2] },
-      { "uid": 52, "value": "8", "color": "hearts", "actions": [8] },
-      { "uid": 38, "value": "10", "color": "spades", "actions": [10] },
-      { "uid": 100, "value": "2", "color": "hearts", "actions": [2] },
-      { "uid": 44, "value": "9", "color": "hearts", "actions": [9] },
-      { "uid": 66, "value": "6", "color": "diamonds", "actions": [6] },
-      { "uid": 31, "value": "Ja", "color": "spades", "actions": ["switch"] },
-      { "uid": 15, "value": "K", "color": "spades", "actions": [0, 13] },
+      { "uid": 37, "value": "10", "color": "hearts", "actions": [10] },
       {
-        "uid": 62,
+        "uid": 57,
         "value": "7",
-        "color": "spades",
+        "color": "clubs",
         "actions": [71, 72, 73, 74, 75, 76, 77]
       },
-      { "uid": 68, "value": "6", "color": "hearts", "actions": [6] },
-      { "uid": 95, "value": "3", "color": "spades", "actions": [3] },
-      { "uid": 45, "value": "9", "color": "hearts", "actions": [9] },
-      { "uid": 25, "value": "Ja", "color": "clubs", "actions": ["switch"] },
-      { "uid": 86, "value": "4", "color": "spades", "actions": [-4, 4] },
+      { "uid": 74, "value": "5", "color": "diamonds", "actions": [5] },
+      { "uid": 77, "value": "5", "color": "hearts", "actions": [5] },
       {
         "uid": 106,
         "value": "Jo",
@@ -261,90 +355,29 @@
         ]
       },
       {
-        "uid": 61,
-        "value": "7",
-        "color": "hearts",
-        "actions": [71, 72, 73, 74, 75, 76, 77]
-      },
-      { "uid": 92, "value": "3", "color": "hearts", "actions": [3] },
-      { "uid": 76, "value": "5", "color": "hearts", "actions": [5] },
-      { "uid": 37, "value": "10", "color": "hearts", "actions": [10] },
-      {
-        "uid": 60,
-        "value": "7",
-        "color": "hearts",
-        "actions": [71, 72, 73, 74, 75, 76, 77]
-      },
-      {
-        "uid": 63,
-        "value": "7",
-        "color": "spades",
-        "actions": [71, 72, 73, 74, 75, 76, 77]
-      },
-      { "uid": 78, "value": "5", "color": "spades", "actions": [5] },
-      { "uid": 33, "value": "10", "color": "clubs", "actions": [10] },
-      { "uid": 88, "value": "3", "color": "clubs", "actions": [3] },
-      { "uid": 26, "value": "Ja", "color": "diamonds", "actions": ["switch"] },
-      { "uid": 90, "value": "3", "color": "diamonds", "actions": [3] },
-      { "uid": 28, "value": "Ja", "color": "hearts", "actions": ["switch"] },
-      {
-        "uid": 57,
-        "value": "7",
-        "color": "clubs",
-        "actions": [71, 72, 73, 74, 75, 76, 77]
-      },
-      { "uid": 23, "value": "Q", "color": "spades", "actions": [12] },
-      { "uid": 91, "value": "3", "color": "diamonds", "actions": [3] },
-      { "uid": 89, "value": "3", "color": "clubs", "actions": [3] },
-      { "uid": 17, "value": "Q", "color": "clubs", "actions": [12] },
-      { "uid": 103, "value": "2", "color": "spades", "actions": [2] },
-      { "uid": 41, "value": "9", "color": "clubs", "actions": [9] },
-      { "uid": 73, "value": "5", "color": "clubs", "actions": [5] },
-      { "uid": 82, "value": "4", "color": "diamonds", "actions": [-4, 4] },
-      { "uid": 29, "value": "Ja", "color": "hearts", "actions": ["switch"] },
-      { "uid": 30, "value": "Ja", "color": "spades", "actions": ["switch"] },
-      { "uid": 22, "value": "Q", "color": "spades", "actions": [12] },
-      { "uid": 71, "value": "6", "color": "spades", "actions": [6] },
-      {
-        "uid": 104,
-        "value": "Jo",
-        "color": "Jo",
-        "actions": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          8,
-          9,
-          10,
-          11,
-          12,
-          "switch",
-          -4,
-          71,
-          72,
-          73,
-          74,
-          75,
-          76,
-          77
-        ]
-      },
-      { "uid": 67, "value": "6", "color": "diamonds", "actions": [6] },
-      { "uid": 54, "value": "8", "color": "spades", "actions": [8] },
-      { "uid": 48, "value": "8", "color": "clubs", "actions": [8] },
-      { "uid": 40, "value": "9", "color": "clubs", "actions": [9] },
-      {
-        "uid": 59,
+        "uid": 58,
         "value": "7",
         "color": "diamonds",
         "actions": [71, 72, 73, 74, 75, 76, 77]
       },
+      { "uid": 23, "value": "Q", "color": "spades", "actions": [12] },
       {
-        "uid": 105,
+        "uid": 62,
+        "value": "7",
+        "color": "spades",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 71, "value": "6", "color": "spades", "actions": [6] },
+      { "uid": 96, "value": "2", "color": "clubs", "actions": [2] },
+      { "uid": 7, "value": "A", "color": "spades", "actions": [0, 1, 11] },
+      { "uid": 8, "value": "K", "color": "clubs", "actions": [0, 13] },
+      { "uid": 103, "value": "2", "color": "spades", "actions": [2] },
+      { "uid": 28, "value": "Ja", "color": "hearts", "actions": ["switch"] },
+      { "uid": 19, "value": "Q", "color": "diamonds", "actions": [12] },
+      { "uid": 40, "value": "9", "color": "clubs", "actions": [9] },
+      { "uid": 92, "value": "3", "color": "hearts", "actions": [3] },
+      {
+        "uid": 109,
         "value": "Jo",
         "color": "Jo",
         "actions": [
@@ -371,38 +404,10 @@
           77
         ]
       },
-      { "uid": 3, "value": "A", "color": "diamonds", "actions": [0, 1, 11] },
-      { "uid": 96, "value": "2", "color": "clubs", "actions": [2] },
-      { "uid": 34, "value": "10", "color": "diamonds", "actions": [10] },
-      { "uid": 64, "value": "6", "color": "clubs", "actions": [6] },
-      {
-        "uid": 56,
-        "value": "7",
-        "color": "clubs",
-        "actions": [71, 72, 73, 74, 75, 76, 77]
-      },
-      { "uid": 69, "value": "6", "color": "hearts", "actions": [6] },
-      { "uid": 47, "value": "9", "color": "spades", "actions": [9] },
-      { "uid": 65, "value": "6", "color": "clubs", "actions": [6] },
-      { "uid": 50, "value": "8", "color": "diamonds", "actions": [8] },
-      { "uid": 81, "value": "4", "color": "clubs", "actions": [-4, 4] },
-      { "uid": 55, "value": "8", "color": "spades", "actions": [8] },
-      { "uid": 20, "value": "Q", "color": "hearts", "actions": [12] },
-      { "uid": 87, "value": "4", "color": "spades", "actions": [-4, 4] },
-      { "uid": 74, "value": "5", "color": "diamonds", "actions": [5] },
+      { "uid": 2, "value": "A", "color": "diamonds", "actions": [0, 1, 11] },
+      { "uid": 66, "value": "6", "color": "diamonds", "actions": [6] },
       { "uid": 4, "value": "A", "color": "hearts", "actions": [0, 1, 11] },
-      { "uid": 99, "value": "2", "color": "diamonds", "actions": [2] },
-      { "uid": 27, "value": "Ja", "color": "diamonds", "actions": ["switch"] },
-      { "uid": 77, "value": "5", "color": "hearts", "actions": [5] },
-      { "uid": 32, "value": "10", "color": "clubs", "actions": [10] },
-      { "uid": 39, "value": "10", "color": "spades", "actions": [10] },
-      { "uid": 85, "value": "4", "color": "hearts", "actions": [-4, 4] },
-      { "uid": 94, "value": "3", "color": "spades", "actions": [3] },
-      { "uid": 21, "value": "Q", "color": "hearts", "actions": [12] },
-      { "uid": 46, "value": "9", "color": "spades", "actions": [9] },
-      { "uid": 10, "value": "K", "color": "diamonds", "actions": [0, 13] },
-      { "uid": 11, "value": "K", "color": "diamonds", "actions": [0, 13] },
-      { "uid": 7, "value": "A", "color": "spades", "actions": [0, 1, 11] },
+      { "uid": 64, "value": "6", "color": "clubs", "actions": [6] },
       {
         "uid": 108,
         "value": "Jo",
@@ -430,22 +435,43 @@
           76,
           77
         ]
-      }
+      },
+      { "uid": 32, "value": "10", "color": "clubs", "actions": [10] },
+      { "uid": 89, "value": "3", "color": "clubs", "actions": [3] },
+      { "uid": 87, "value": "4", "color": "spades", "actions": [-4, 4] },
+      { "uid": 20, "value": "Q", "color": "hearts", "actions": [12] },
+      { "uid": 75, "value": "5", "color": "diamonds", "actions": [5] },
+      { "uid": 47, "value": "9", "color": "spades", "actions": [9] },
+      { "uid": 84, "value": "4", "color": "hearts", "actions": [-4, 4] },
+      {
+        "uid": 59,
+        "value": "7",
+        "color": "diamonds",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 86, "value": "4", "color": "spades", "actions": [-4, 4] },
+      { "uid": 46, "value": "9", "color": "spades", "actions": [9] },
+      { "uid": 17, "value": "Q", "color": "clubs", "actions": [12] },
+      { "uid": 11, "value": "K", "color": "diamonds", "actions": [0, 13] },
+      { "uid": 52, "value": "8", "color": "hearts", "actions": [8] },
+      { "uid": 50, "value": "8", "color": "diamonds", "actions": [8] },
+      { "uid": 45, "value": "9", "color": "hearts", "actions": [9] },
+      { "uid": 83, "value": "4", "color": "diamonds", "actions": [-4, 4] },
+      { "uid": 25, "value": "Ja", "color": "clubs", "actions": ["switch"] },
+      { "uid": 88, "value": "3", "color": "clubs", "actions": [3] },
+      { "uid": 18, "value": "Q", "color": "diamonds", "actions": [12] },
+      { "uid": 34, "value": "10", "color": "diamonds", "actions": [10] },
+      { "uid": 68, "value": "6", "color": "hearts", "actions": [6] },
+      { "uid": 70, "value": "6", "color": "spades", "actions": [6] },
+      { "uid": 65, "value": "6", "color": "clubs", "actions": [6] },
+      { "uid": 80, "value": "4", "color": "clubs", "actions": [-4, 4] }
     ],
-    "seed": 2
+    "seed": null
   },
   "discarded_cards": [
-    { "uid": 2, "value": "A", "color": "diamonds", "actions": [0, 1, 11] },
-    { "uid": 13, "value": "K", "color": "hearts", "actions": [0, 13] },
-    { "uid": 12, "value": "K", "color": "hearts", "actions": [0, 13] },
-    { "uid": 83, "value": "4", "color": "diamonds", "actions": [-4, 4] },
-    { "uid": 97, "value": "2", "color": "clubs", "actions": [2] },
-    { "uid": 24, "value": "Ja", "color": "clubs", "actions": ["switch"] },
-    { "uid": 0, "value": "A", "color": "clubs", "actions": [0, 1, 11] },
-    { "uid": 14, "value": "K", "color": "spades", "actions": [0, 13] },
-    { "uid": 70, "value": "6", "color": "spades", "actions": [6] },
+    { "uid": 6, "value": "A", "color": "spades", "actions": [0, 1, 11] },
     {
-      "uid": 107,
+      "uid": 105,
       "value": "Jo",
       "color": "Jo",
       "actions": [
@@ -471,34 +497,38 @@
         76,
         77
       ]
-    }
+    },
+    { "uid": 12, "value": "K", "color": "hearts", "actions": [0, 13] },
+    {
+      "uid": 104,
+      "value": "Jo",
+      "color": "Jo",
+      "actions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        "switch",
+        -4,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77
+      ]
+    },
+    { "uid": 38, "value": "10", "color": "spades", "actions": [10] },
+    { "uid": 35, "value": "10", "color": "diamonds", "actions": [10] }
   ],
-  "top_card": {
-    "uid": 107,
-    "value": "Jo",
-    "color": "Jo",
-    "actions": [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      8,
-      9,
-      10,
-      11,
-      12,
-      "switch",
-      -4,
-      71,
-      72,
-      73,
-      74,
-      75,
-      76,
-      77
-    ]
-  }
+  "top_card": { "uid": 35, "value": "10", "color": "diamonds", "actions": [10] }
 }

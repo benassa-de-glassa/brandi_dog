@@ -174,7 +174,7 @@ def get_user(db, username: str) -> models.user.UserInDB:
         return None
     # translate from sql orm to pydantic, otherwise there is no dict() method
     return models.user.UserInDB(
-        uid=user.uid,
+        uid=str(user.uid),
         username=user.username,
         hashed_password=user.hashed_password,
         avatar=user.avatar

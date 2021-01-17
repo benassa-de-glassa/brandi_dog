@@ -1,21 +1,18 @@
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from app.game_logic.node import GameNode
-
-from loguru import logger
+from app.game_logic.node import GameNode
 
 class Marble:
     """
     Marble Object
     """
 
-    def __init__(self, marble_id: int, starting_node: "GameNode") -> None:
+    def __init__(self, marble_id: str, starting_node: "GameNode") -> None:
         self._current_node: "GameNode" = None  # start in the starting area
 
         # store the starting position separately for a reset
         self._starting_node: "GameNode" = starting_node
-        self._marble_id: int = marble_id
+        self._marble_id: str = marble_id
         self.is_blocking: bool = False
         self.can_enter_goal: bool = False
 
@@ -33,6 +30,9 @@ class Marble:
     @property
     def current_node(self):
         return self._current_node
+
+    def set_current_node(self, node):
+        self._current_node = node
 
     def reset_to_starting_position(self) -> None:
         self._current_node.unset_marble()
@@ -74,11 +74,13 @@ class Marble:
     def from_dict(cls, args):
         NewMarble = cls(
             marble_id=args["marble_id"],
-            starting_node=GameNode.from_dict(**args["starting_node"]),
+            starting_node=GameNode.from_dict(args["starting_node"]),
         )
 
         NewMarble.is_blocking = args["is_blocking"]
         NewMarble.can_enter_goal = args["can_enter_goal"]
-        NewMarble.current_node = GameNode.from_dict(**args["current_node"])
+
+        if args["current_node"]:
+            NewMarble.set_current_node = GameNode.from_dict(args["current_node"])
 
         return NewMarble

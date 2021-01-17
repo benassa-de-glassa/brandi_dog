@@ -14,8 +14,6 @@ from app.game_logic.card import Card
 from app.models.action import Action as ActionModel
 from app.models.user import User as UserModel
 
-from loguru import logger
-
 # number of cards dealt at the beginning of a round
 N_CARDS_ORDER: List[int] = [6, 5, 4, 3, 2]
 

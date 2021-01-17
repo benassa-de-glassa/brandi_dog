@@ -18,3 +18,15 @@ class Hand():
     def to_json(self):
 
         return [card.to_json() for card in self.cards.values()]
+
+    def to_dict(self):
+        {
+        "cards": {card_id: card.to_dict() for card_id, card in self.cards.items()}
+        }
+
+    @classmethod 
+    def from_dict(cls, args):
+        NewHand = cls()
+        NewHand.cards = {card_id: Card.from_dict(**card) for card_id, card in args["cards"]}
+
+        return NewHand

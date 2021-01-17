@@ -17,8 +17,9 @@ from app.models.user import User as UserModel
 # number of cards dealt at the beginning of a round
 N_CARDS_ORDER: List[int] = [6, 5, 4, 3, 2]
 
-# try to load json dump path
-TMP_FOLDER_PATH = os.environ.get("TMP_FOLDER_PATH", "../.tmp")
+# try to load json dump path, otherwise choose .tmp folder
+TMP_FOLDER_PATH = os.path.join(
+    __file__, os.environ.get("TMP_FOLDER_PATH", "../../.tmp"))
 
 
 class Brandi:
@@ -65,15 +66,16 @@ class Brandi:
     def __init__(
         self,
         game_id: str,
+        game_name: str,
         host: UserModel,
         n_players: int = 4,
         seed: int = None,
-        game_name: str = None,
         debug: bool = False,
     ):
         self.game_id: str = game_id
         self.game_name: str = game_name
         self.seed: int = seed
+        self.debug: bool = debug
         self.n_players: int = n_players
 
         # store players as a dictionary { uid(str) : Player }
@@ -98,14 +100,14 @@ class Brandi:
         self.deck: Deck = Deck(seed)  # initialize a deck instance
 
         # beginning of each round
-        self.round_turn = 0  # count which turn is reached
+        self.round_turn: int = 0  # count which turn is reached
 
         # keep track of how many cards have been swapped so that cards are revealed to the players correctly
-        self.card_swap_count = 0
+        self.card_swap_count: int = 0
 
-        self.top_card = None
+        self.top_card: Union[Card, None] = None
 
-        self.discarded_cards = []
+        self.discarded_cards: List[Card] = []
 
     def get_player_by_position(self, position: int) -> Union[Player, None]:
         for player in self.players.values():
@@ -454,7 +456,7 @@ class Brandi:
                 "note": "Marble does not seem to belong to you.",
             }
 
-        pointer_to_node: GameNode = marble.currentNode
+        pointer_to_node: GameNode = marble.current_node
 
         #  get out of the start
         if action.action == 0:
@@ -483,8 +485,8 @@ class Brandi:
                 self.discarded_cards.append(self.top_card)
                 return {
                     "requestValid": True,
-                    "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
-                    # "positions": {"old": old_position, "new": marble.currentNode.position}
+                    "note": f"Marble {action.mid} moved to {marble.current_node.position}.",
+                    # "positions": {"old": old_position, "new": marble.current_node.position}
                 }
 
         # normal actions
@@ -557,8 +559,8 @@ class Brandi:
 
             return {
                 "requestValid": True,
-                "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
-                # "positions": {"old": old_position, "new": marble.currentNode.position}
+                "note": f"Marble {action.mid} moved to {marble.current_node.position}.",
+                # "positions": {"old": old_position, "new": marble.current_node.position}
             }
 
         elif action.action == -4:  # go backwards 4
@@ -566,7 +568,7 @@ class Brandi:
 
             # use pnt variable to check the path along the action of the marble i.e. whether it
             # is blocked or it may enter its goal
-            pointer_to_node = marble.currentNode
+            pointer_to_node = marble.current_node
             for i in range(abs(action.action)):
                 pointer_to_node = pointer_to_node.prev
                 # check whether a marble is blocking along the way
@@ -599,8 +601,8 @@ class Brandi:
 
             return {
                 "requestValid": True,
-                "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
-                # "positions": {"old": old_position, "new": marble.currentNode.position}
+                "note": f"Marble {action.mid} moved to {marble.current_node.position}.",
+                # "positions": {"old": old_position, "new": marble.current_node.position}
             }
 
         elif action.action == "switch":
@@ -619,8 +621,8 @@ class Brandi:
                     "note": f"You can not swap two of your own marbles.",
                 }
 
-            marble_1_node = self.players[user.uid].marbles[action.mid].currentNode
-            marble_2_node = self.players[action.pid_2].marbles[action.mid_2].currentNode
+            marble_1_node = self.players[user.uid].marbles[action.mid].current_node
+            marble_2_node = self.players[action.pid_2].marbles[action.mid_2].current_node
 
             if marble_1_node.curr.is_blocking():
                 return {
@@ -646,7 +648,7 @@ class Brandi:
                 "note": f"switched {action.mid} and {action.mid_2} successfully",
                 # "positions": {
                 #     "old": old_position,
-                #     "new": marble.currentNode.position,
+                #     "new": marble.current_node.position,
                 # }
             }
 
@@ -750,8 +752,8 @@ class Brandi:
 
             return {
                 "requestValid": True,
-                "note": f"Marble {action.mid} moved to {marble.currentNode.position}.",
-                # "positions": {"old": old_position, "new": marble.currentNode.position}
+                "note": f"Marble {action.mid} moved to {marble.current_node.position}.",
+                # "positions": {"old": old_position, "new": marble.current_node.position}
             }
 
     """
@@ -772,7 +774,7 @@ class Brandi:
         """
         print(marble)
         if action == 0:
-            pnt = marble.currentNode
+            pnt = marble.current_node
             if pnt is not None:
                 return False
             if pnt.next.is_blocking():
@@ -780,7 +782,7 @@ class Brandi:
             return True
         elif action in [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]:
             # check you are not in the starting position
-            pnt = marble.currentNode
+            pnt = marble.current_node
             if pnt is None:
                 return False
 
@@ -796,7 +798,7 @@ class Brandi:
                     return False
             return True
         elif action == "switch":
-            pnt = marble.currentNode
+            pnt = marble.current_node
             if pnt is None:
                 return False
             if pnt.is_blocking():
@@ -810,7 +812,7 @@ class Brandi:
             assert isinstance(marble, list)
             total_distance_to_blockade = 0
             for m in marble:  # for all the players marbles check how far they can be moved to the next blocking marble
-                pnt = m.currentNode
+                pnt = m.current_node
                 # move until the current marble m is blocked
                 while (
                     pnt is not None
@@ -854,15 +856,18 @@ class Brandi:
 
     def to_dict(self):
         """
-        Return game state as a JSON object
+        Return game state as a JSON object. This is intended as a way of 
+        transcribing the current game state into an object, not to communicate
+        a certain game state to players. 
         """
         return {
             "game_id": self.game_id,
             "game_name": self.game_name,
             "n_players": self.n_players,
             "seed": self.seed,
-            "host": self.host.to_json(),
-            "players": {key: value.to_json() for key, value in self.players.items()},
+            "debug": self.debug,
+            "host": self.host.to_dict(),
+            "players": {player_id: player.to_dict() for player_id, player in self.players.items()},
             "order": self.order,
             "active_player_index": self.active_player_index,
 
@@ -871,16 +876,19 @@ class Brandi:
             "round_turn": self.round_turn,
             "card_swap_count": self.card_swap_count,
 
-            "deck": self.deck.to_json(),
-            "discarded_cards": self.discarded_cards,
-            "top_card": self.top_card.to_json() if self.top_card is not None else None
+            "deck": self.deck.to_dict(),
+            "discarded_cards": [card.to_dict() for card in self.discarded_cards],
+            "top_card": self.top_card.to_dict() if self.top_card is not None else None
         }
 
     def to_json(self, write_to_file=False, filename=None):
         """ dump dict into json file or return a parsable string """
-        game_state = self.to_dict()
+        game_dict = self.to_dict()
 
         if write_to_file:
+            if not os.path.exists(TMP_FOLDER_PATH):
+                os.mkdir(TMP_FOLDER_PATH)
+
             if not filename:
                 # find a unique filename, label it by game_id-i where i is an integer
                 i = 1
@@ -892,13 +900,13 @@ class Brandi:
                 filename = f"{filename}.json"
 
             with open(f"{TMP_FOLDER_PATH}/{filename}", "w") as fp:
-                json.dump(game_state, fp)
+                json.dump(game_dict, fp)
 
             return filename
 
         # return the json as a string instead with " escaped as \"
         else:
-            return json.dumps(game_state)
+            return json.dumps(game_dict)
 
 # ==============================================================================
 # Alternative constructors
@@ -906,37 +914,52 @@ class Brandi:
     @classmethod
     def from_dict(cls, args):
         """
-        Create a brandi instance from a dictionary. 
+        Create a brandi instance from a dictionary. The dictionary has to be of
+        the same shape as the one created by the method above. 
         """
-        init_args = args["init_args"]
+        Game = cls(
+            game_id=args["game_id"],
+            game_name=args["game_name"],
+            host=UserModel(**args["host"]),
+            n_players=args["n_players"],
+            seed=args["seed"],
+            debug=args["debug"]
+        )
 
-        # make the host argument a valid User model
-        host = UserModel(**init_args["host"])
-        init_args["host"] = host
+        Game.players = {player_id: Player.from_dict(
+            player) for player_id, player in args["players"].items()}
+        Game.order = args["order"]
+        Game.active_player_index = args["active_player_index"]
+        Game.game_state = args["game_state"]
+        Game.round_state = args["round_state"]
+        Game.round_turn = args["round_turn"]
+        Game.card_swap_count = args["card_swap_count"]
+        Game.deck = Deck.from_dict(**args["deck"])
+        Game.discarded_cards = [Card.from_dict(
+            **card) for card in args["discarded_cards"]]
+        Game.top_card = Card.from_dict(**args["top_card"])
 
-        Game = cls(**init_args)
-
-        players = args.get("players")
-        if players:
-            for player in players:
-                # skip host as he is already part of the game
-                if not player["uid"] == host.uid:
-                    Game.player_join(UserModel(**player))
-
-        # TODO:
-        marbles = args.get("marbles")
-        if marbles:
-            for marble in marbles:
-                pass
-
-        cards = args.get("cards")
-        if cards:
-            for card in cards:
-                pass
+        # except KeyError:
+        #     return False, "invalid file"
+        # except:
+        #     return False, "unknown error"
 
         return Game
 
     @classmethod
     def from_json(cls, filename):
         """ TODO: parse json and construct the class from the resulting dict """
-        pass
+        # test if filename is an absolute path
+        if os.path.exists(filename):
+            path = filename
+        else:
+            path = os.path.join(TMP_FOLDER_PATH, filename)
+            path = os.path.normpath(path)
+
+            if not os.path.exists(path):
+                raise ValueError(f"Invalid filename: {path}")
+
+        with open(path, "r") as fp:
+            game_dict = json.load(fp)
+
+        return cls.from_dict(game_dict)

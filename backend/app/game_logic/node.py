@@ -1,3 +1,8 @@
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.game_logic.marble import Marble
+
 NODES_BETWEEN_PLAYERS = 16
 
 class Node(object):
@@ -64,3 +69,17 @@ class GameNode(Node):
     def get_is_entry_node_for_player_at_position(self, player_position: int) -> bool:
         return self.position % NODES_BETWEEN_PLAYERS == 0 \
             and self.position // NODES_BETWEEN_PLAYERS == player_position
+
+    def to_dict(self):
+        return {
+            "position": self._position,
+            "marble": self._marble.to_dict(),
+        }
+
+    @classmethod
+    def from_dict(cls, args):
+        NewGameNode = cls(args["position"])
+        NewGameNode.set_marble(Marble.from_dict(**args["marble"]))
+
+        return NewGameNode
+

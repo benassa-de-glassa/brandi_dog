@@ -1,5 +1,3 @@
-from typing import Dict
-
 from app.game_logic.hand import Hand
 from app.game_logic.marble import Marble
 from app.game_logic.field import Field
@@ -19,8 +17,12 @@ class Player:
         self.username: str = username
         self.avatar: str = avatar
         self._position: int = position
+
+        # the players cards
         self.hand: Hand = Hand()
-        self.marbles: Dict[str, Marble] = {}
+
+        # store the marbles as { marble_id(str): Marble }
+        self.marbles: dict[str, Marble] = {}
 
         # keep track of actions
         self.may_swap_cards: bool = True
@@ -63,11 +65,11 @@ class Player:
         return self.has_folded or not self.hand.cards
 
     def has_finished_marbles(self) -> bool:
-        if any(marble.currentNode == None for marble in self.marbles.values()):
+        if any(marble.current_node == None for marble in self.marbles.values()):
             return False
 
         # if all marbles have reached their goal, each id is greater than 1000
-        return sum([marble.currentNode.position for marble in self.marbles.values()]) > 4000
+        return sum([marble.current_node.position for marble in self.marbles.values()]) > 4000
 
     """
     Player State
@@ -90,3 +92,34 @@ class Player:
             "avatar": self.avatar,
             "marbles": [marble.to_json() for marble in self.marbles.values()],
         }
+
+    def to_dict(self):
+        return {
+            "uid": self._uid,
+            "username": self.username,
+            "avatar": self.avatar,
+            "marbles": {marble_id: marble.to_dict() for marble_id, marble in self.marbles.items()},
+            "position": self.position,
+            "hand": self.hand.to_dict(),
+            "may_swap_cards": self.may_swap_cards,
+            "has_folded": self.has_folded,
+            "steps_of_seven_remaining": self.steps_of_seven_remaining,
+        }
+
+    @classmethod
+    def from_dict(cls, args):
+        NewPlayer = cls(
+            uid=args["uid"],
+            username=args["username"],
+            avatar=args["avatar"],
+            position=args["position"]
+        )
+
+        NewPlayer.marbles = {marble_id: Marble.from_dict(**marble) for marble_id, marble in args["marbles"].items()}
+        NewPlayer.hand = Hand.from_dict(args["hand"])
+        NewPlayer.may_swap_cards = args["may_swap_cards"]
+        NewPlayer.has_folded = args["has_folded"]
+        NewPlayer.steps_of_seven_remaining = args["steps_of_seven_remaining"]
+
+        return NewPlayer
+

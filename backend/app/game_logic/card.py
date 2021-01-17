@@ -64,3 +64,19 @@ class Card():
             'color': self.color,
             'actions': self.action_options
         }
+
+    def to_dict(self):
+        return {
+            'uid': self.uid,
+            'value': self.value,
+            'color': self.color,
+            'actions': self.action_options
+        }
+
+    @classmethod
+    def from_dict(cls, args):
+        """ 
+        This method exists for consistency with other classes, there is no
+        difference to the constructor. 
+        """
+        return cls(**args)

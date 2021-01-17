@@ -7,6 +7,9 @@ Only authenticated users are granted access to the socket, so in order to
 connect to the socket a valid bearer token cookie has to be present. This is
 asserted by the authenticate_user function. 
 """
+from app.models.user import User as UserModel
+from app.api.api_globals import socket_connections
+from app.database import database, crud
 import os
 from http import cookies
 
@@ -26,8 +29,6 @@ SECRET_KEY = os.environ['SECRET_KEY']
 JWT_ALGORITHM = os.environ['JWT_ALGORITHM']
 # ------------------------------------------------
 
-from app.database import database, crud
-from app.api.api_globals import socket_connections
 
 # create the socket.io server
 sio = socketio.AsyncServer(
@@ -72,13 +73,19 @@ async def authenticate_user(token: str):
 
     if user is None:
         raise credentials_exception
-    return user
+
+    # convert from the database model to the pydantic model
+    return UserModel(
+        uid=str(user.uid),
+        username=user.username,
+        avatar=user.avatar
+    )
 
 
 @sio.event
 async def connect(sid, environ):
     """Called if a user tries to connect to the socketio server.
-    
+
     Tries to authenticate the user. Environ contains HTTP headers which enables
     looking for the authorization header. In case the authentication fails, a
     socketio exception is raised.
@@ -107,13 +114,13 @@ async def connect(sid, environ):
         raise sio_exception
 
     # connection successful
-    if int(user.uid) in socket_connections:
+    if user.uid in socket_connections:
         logger.info('Prevented multiple connections to same user.')
         raise socketio.exceptions.ConnectionRefusedError(
             'Only a single connection is allowed')
 
     # user is not already connected
-    socket_connections[int(user.uid)] = sid
+    socket_connections[user.uid] = sid
 
     logger.info(f'SIO connection: {user.username} [{sid}]')
 
@@ -121,7 +128,7 @@ async def connect(sid, environ):
 @sio.event
 async def disconnect(sid):
     """Called if a user disconnects from the socketio server.
-    
+
     Tries to remove the disconnected user from the socket connection dict
 
     """

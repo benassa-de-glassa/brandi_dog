@@ -79,6 +79,7 @@ async def sio_emit_player_state(game_id: str, player_id: str):
     """
     Emit the player state to the player only.
     """
+    logger.debug(socket_connections)
     room = socket_connections.get(player_id)
     if room is not None:
         await sio.emit(
@@ -162,7 +163,7 @@ async def join_game_socket(sid, data):
         'response': f'successfully joined game {game_id}',
         'game_id': game_id
     },
-        room=socket_connections[int(player_id)]
+        room=socket_connections[player_id]
     )
     await sio_emit_game_state(game_id)
     await sio_emit_player_state(game_id, player_id)
@@ -177,14 +178,14 @@ async def leave_game(sid, data):
 
     logger.info(f'#{user_id} [{sid}] tries to leave the game')
 
-    curr_game = games.get(game_id)
+    current_game = games.get(game_id)
 
-    if not curr_game:
+    if not current_game:
         logger.warning(f'Game [{game_id}] does not exist')
         await emit_error(sid, 'Game not found')
         return
 
-    response = curr_game.remove_player(user_id)
+    response = current_game.remove_player(user_id)
 
     if response['requestValid']:
         if not playing_users.pop(user_id, None):
@@ -194,7 +195,7 @@ async def leave_game(sid, data):
         await emit_error(sid, response['note'])
 
     # clear empty games
-    if not game.players:
+    if not current_game.players:
         removed_game = games.pop(game_id, None)
         if not removed_game:
             logger.warning('Could not delete game')

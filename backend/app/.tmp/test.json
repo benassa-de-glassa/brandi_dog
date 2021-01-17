@@ -228,7 +228,7 @@
   "game_state": 2,
   "round_state": 4,
   "round_turn": 1,
-  "card_swap_count": 4,
+  "swaps": [],
   "deck": {
     "cards": [
       { "uid": 14, "value": "K", "color": "spades", "actions": [0, 13] },

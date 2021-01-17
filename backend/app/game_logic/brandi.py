@@ -1,7 +1,7 @@
 import json
 import os
 
-from typing import Dict, List, Union
+from typing import Union, Tuple, List, Dict
 
 from itertools import count, filterfalse
 
@@ -15,7 +15,7 @@ from app.models.action import Action as ActionModel
 from app.models.user import User as UserModel
 
 # number of cards dealt at the beginning of a round
-N_CARDS_ORDER: List[int] = [6, 5, 4, 3, 2]
+N_CARDS_ORDER = [6, 5, 4, 3, 2]
 
 # try to load json dump path, otherwise choose .tmp folder
 TMP_FOLDER_PATH = \
@@ -105,8 +105,10 @@ class Brandi:
         # beginning of each round
         self.round_turn: int = 0  # count which turn is reached
 
-        # keep track of how many cards have been swapped so that cards are revealed to the players correctly
-        self.card_swap_count: int = 0
+        # this will eventually contain tuples of (player, team_member, card) indicating
+        # which card will go to which player
+        # Note: this replaces card_swap_count which is simply the length of this attribute
+        self.swaps: List[Tuple[int, int, Card]] = []
 
         self.top_card: Union[Card, None] = None
 
@@ -179,7 +181,7 @@ class Brandi:
 
         Parameters:
 
-        position int: List of player_ids, players with index 0 and 2 play
+        position int: list of player_ids, players with index 0 and 2 play
             together
         """
 
@@ -277,7 +279,7 @@ class Brandi:
             }
 
         # shift the order to start dealing cards to the correct player
-        shifted_order: List[str] = self.order.copy()
+        shifted_order: list[str] = self.order.copy()
         for _ in range(self.round_turn):
             shifted_order.append(shifted_order.pop(0))
 
@@ -303,30 +305,42 @@ class Brandi:
             }
 
         player = self.players.get(user.uid)
+
+        # select the player's team member
         team_member = self.get_player_by_position(
             (player.position + self.n_players // 2) % self.n_players
         )
 
-        swapped_card = self.players[user.uid].hand.play_card(card)
-        self.players[team_member.uid].hand.set_card(swapped_card)
+        uid_1 = player.uid
+        uid_2 = team_member.uid
 
-        self.card_swap_count += 1
+        # store the swap to perform them all together
+        self.swaps.append((uid_1, uid_2, card))
 
         # make sure the players only swap one card
         self.players[user.uid].may_swap_cards = False
+
         # when all players have sent their card to swap
-        if self.card_swap_count % self.n_players == 0:
+        if len(self.swaps) == self.n_players:
+            for uid_1, uid_2, card in self.swaps:
+                swapped_card = self.players[uid_1].hand.play_card(card)
+                self.players[uid_2].hand.set_card(swapped_card)
+
             self.round_state = 3
 
             # reset swapping ability for next round
             for player in self.players.values():
                 player.may_swap_cards = True
+
+            self.swaps = []
+
             self.round_state = 4
             return {
                 "requestValid": True,
                 "taskFinished": True,
                 "note": "Cards have been swapped.",
             }
+
         return {
             "requestValid": True,
             "taskFinished": False,
@@ -878,8 +892,9 @@ class Brandi:
             "game_state": self.game_state,
             "round_state": self.round_state,
             "round_turn": self.round_turn,
-            "card_swap_count": self.card_swap_count,
-
+            "swaps": [
+                (uid_1, uid_2, card.to_dict())
+                for uid_1, uid_2, card in self.swaps],
             "deck": self.deck.to_dict(),
             "discarded_cards": [card.to_dict() for card in self.discarded_cards],
             "top_card": self.top_card.to_dict() if self.top_card is not None else None
@@ -943,7 +958,9 @@ class Brandi:
         Game.game_state = args["game_state"]
         Game.round_state = args["round_state"]
         Game.round_turn = args["round_turn"]
-        Game.card_swap_count = args["card_swap_count"]
+        Game.swaps = [
+            (uid_1, uid_2, Card.from_dict(card))
+            for uid_1, uid_2, card in args["swaps"]]
         Game.deck = Deck.from_dict(args["deck"])
         Game.discarded_cards = [Card.from_dict(
             card) for card in args["discarded_cards"]]

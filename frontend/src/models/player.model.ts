@@ -1,6 +1,6 @@
 export interface Player {
   username: string;
-  uid: number;
+  uid: string;
   avatar: string;
 }
 

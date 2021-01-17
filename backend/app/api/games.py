@@ -75,7 +75,7 @@ async def sio_emit_game_state(game_id: str):
     )
 
 
-async def sio_emit_player_state(game_id, player_id):
+async def sio_emit_player_state(game_id: str, player_id: str):
     """
     Emit the player state to the player only.
     """

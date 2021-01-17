@@ -28,10 +28,10 @@ export const g2r4 = Template.bind({});
 g2r1.args = {
   numberOfPlayers: 4,
   players: [
-    { username: "Bene", uid: 0, avatar: "dolphin" },
-    { username: "Lara", uid: 1, avatar: "lama" },
-    { username: "Thilo", uid: 2, avatar: "tiger" },
-    { username: "Alex", uid: 3, avatar: "eagle" },
+    { username: "Bene", uid: "0", avatar: "dolphin" },
+    { username: "Lara", uid: "1", avatar: "lama" },
+    { username: "Thilo", uid: "2", avatar: "tiger" },
+    { username: "Alex", uid: "3", avatar: "eagle" },
   ],
   selectedCard: {uid: 0, color: "hearts", value: "Ja", actions: ["switch"]},
 

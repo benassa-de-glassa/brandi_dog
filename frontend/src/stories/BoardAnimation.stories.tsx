@@ -39,12 +39,12 @@ export const Primary = Template.bind({});
 
 Primary.args = {
   numberOfPlayers: 4,
-  player: { username: "bene", uid: 0, avatar: "dolphin" },
+  player: { username: "bene", uid: "0", avatar: "dolphin" },
   playerList: [
-    { username: "Bene", uid: 0, avatar: "dolphin" },
-    { username: "Lara", uid: 1, avatar: "seal" },
-    { username: "Thilo", uid: 2, avatar: "tiger" },
-    { username: "Alex", uid: 3, avatar: "eagle" },
+    { username: "Bene", uid: "0", avatar: "dolphin" },
+    { username: "Lara", uid: "1", avatar: "seal" },
+    { username: "Thilo", uid: "2", avatar: "tiger" },
+    { username: "Alex", uid: "3", avatar: "eagle" },
   ],
   marbles: store.get("marbles"),
   selectedCard: null,
@@ -60,7 +60,7 @@ Primary.args = {
         ...store.get("moves"), 
         {
           action: 4,
-          player: { username: "Bene", uid: 0, avatar: "dolphin" },
+          player: { username: "Bene", uid: "0", avatar: "dolphin" },
           positions: {
             old: marble.position,
             new: (marble.position + 4) % 64,

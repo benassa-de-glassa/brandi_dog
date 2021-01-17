@@ -238,6 +238,9 @@ async def initialize_new_game(
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail='A game with this name already exists.')
 
+    if game_name.startswith("SEED"):
+        seed = 2
+
     game_id = ''.join(random.choice(string.ascii_uppercase) for i in range(4))
     while game_id in games:
         # generate new game ids until a new id is found

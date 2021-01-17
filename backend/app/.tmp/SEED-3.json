@@ -1,0 +1,446 @@
+{
+  "game_id": "OOUO",
+  "game_name": "SEED",
+  "n_players": 4,
+  "seed": 2,
+  "debug": false,
+  "host": { "uid": 4, "username": "444", "avatar": "lama" },
+  "players": {
+    "4": {
+      "uid": 4,
+      "username": "444",
+      "avatar": "lama",
+      "marbles": {
+        "0": {
+          "marble_id": 0,
+          "current_node": { "position": 15 },
+          "starting_node": { "position": 0 },
+          "is_blocking": 0,
+          "can_enter_goal": true
+        },
+        "1": {
+          "marble_id": 1,
+          "current_node": null,
+          "starting_node": { "position": 0 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        },
+        "2": {
+          "marble_id": 2,
+          "current_node": null,
+          "starting_node": { "position": 0 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        },
+        "3": {
+          "marble_id": 3,
+          "current_node": null,
+          "starting_node": { "position": 0 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        }
+      },
+      "position": 0,
+      "hand": null,
+      "may_swap_cards": true,
+      "has_folded": false,
+      "steps_of_seven_remaining": -1
+    },
+    "2": {
+      "uid": 2,
+      "username": "222",
+      "avatar": "lama",
+      "marbles": {
+        "4": {
+          "marble_id": 4,
+          "current_node": { "position": 16 },
+          "starting_node": { "position": 16 },
+          "is_blocking": true,
+          "can_enter_goal": false
+        },
+        "5": {
+          "marble_id": 5,
+          "current_node": null,
+          "starting_node": { "position": 16 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        },
+        "6": {
+          "marble_id": 6,
+          "current_node": null,
+          "starting_node": { "position": 16 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        },
+        "7": {
+          "marble_id": 7,
+          "current_node": null,
+          "starting_node": { "position": 16 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        }
+      },
+      "position": 1,
+      "hand": null,
+      "may_swap_cards": true,
+      "has_folded": true,
+      "steps_of_seven_remaining": -1
+    },
+    "1": {
+      "uid": 1,
+      "username": "111",
+      "avatar": "lama",
+      "marbles": {
+        "8": {
+          "marble_id": 8,
+          "current_node": { "position": 28 },
+          "starting_node": { "position": 32 },
+          "is_blocking": false,
+          "can_enter_goal": true
+        },
+        "9": {
+          "marble_id": 9,
+          "current_node": null,
+          "starting_node": { "position": 32 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        },
+        "10": {
+          "marble_id": 10,
+          "current_node": null,
+          "starting_node": { "position": 32 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        },
+        "11": {
+          "marble_id": 11,
+          "current_node": null,
+          "starting_node": { "position": 32 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        }
+      },
+      "position": 2,
+      "hand": null,
+      "may_swap_cards": true,
+      "has_folded": false,
+      "steps_of_seven_remaining": -1
+    },
+    "3": {
+      "uid": 3,
+      "username": "333",
+      "avatar": "lama",
+      "marbles": {
+        "12": {
+          "marble_id": 12,
+          "current_node": null,
+          "starting_node": { "position": 48 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        },
+        "13": {
+          "marble_id": 13,
+          "current_node": null,
+          "starting_node": { "position": 48 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        },
+        "14": {
+          "marble_id": 14,
+          "current_node": null,
+          "starting_node": { "position": 48 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        },
+        "15": {
+          "marble_id": 15,
+          "current_node": null,
+          "starting_node": { "position": 48 },
+          "is_blocking": false,
+          "can_enter_goal": false
+        }
+      },
+      "position": 3,
+      "hand": null,
+      "may_swap_cards": true,
+      "has_folded": true,
+      "steps_of_seven_remaining": -1
+    }
+  },
+  "order": [4, 2, 1, 3],
+  "active_player_index": 2,
+  "game_state": 2,
+  "round_state": 4,
+  "round_turn": 1,
+  "card_swap_count": 4,
+  "deck": {
+    "cards": [
+      { "uid": 19, "value": "Q", "color": "diamonds", "actions": [12] },
+      { "uid": 5, "value": "A", "color": "hearts", "actions": [0, 1, 11] },
+      { "uid": 43, "value": "9", "color": "diamonds", "actions": [9] },
+      { "uid": 80, "value": "4", "color": "clubs", "actions": [-4, 4] },
+      { "uid": 49, "value": "8", "color": "clubs", "actions": [8] },
+      {
+        "uid": 109,
+        "value": "Jo",
+        "color": "Jo",
+        "actions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          12,
+          "switch",
+          -4,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77
+        ]
+      },
+      { "uid": 75, "value": "5", "color": "diamonds", "actions": [5] },
+      { "uid": 101, "value": "2", "color": "hearts", "actions": [2] },
+      { "uid": 84, "value": "4", "color": "hearts", "actions": [-4, 4] },
+      { "uid": 36, "value": "10", "color": "hearts", "actions": [10] },
+      { "uid": 35, "value": "10", "color": "diamonds", "actions": [10] },
+      { "uid": 102, "value": "2", "color": "spades", "actions": [2] },
+      { "uid": 52, "value": "8", "color": "hearts", "actions": [8] },
+      { "uid": 38, "value": "10", "color": "spades", "actions": [10] },
+      { "uid": 100, "value": "2", "color": "hearts", "actions": [2] },
+      { "uid": 44, "value": "9", "color": "hearts", "actions": [9] },
+      { "uid": 66, "value": "6", "color": "diamonds", "actions": [6] },
+      { "uid": 31, "value": "Ja", "color": "spades", "actions": ["switch"] },
+      { "uid": 15, "value": "K", "color": "spades", "actions": [0, 13] },
+      {
+        "uid": 62,
+        "value": "7",
+        "color": "spades",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 68, "value": "6", "color": "hearts", "actions": [6] },
+      { "uid": 95, "value": "3", "color": "spades", "actions": [3] },
+      { "uid": 45, "value": "9", "color": "hearts", "actions": [9] },
+      { "uid": 25, "value": "Ja", "color": "clubs", "actions": ["switch"] },
+      { "uid": 86, "value": "4", "color": "spades", "actions": [-4, 4] },
+      {
+        "uid": 106,
+        "value": "Jo",
+        "color": "Jo",
+        "actions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          12,
+          "switch",
+          -4,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77
+        ]
+      },
+      {
+        "uid": 61,
+        "value": "7",
+        "color": "hearts",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 92, "value": "3", "color": "hearts", "actions": [3] },
+      { "uid": 76, "value": "5", "color": "hearts", "actions": [5] },
+      { "uid": 37, "value": "10", "color": "hearts", "actions": [10] },
+      {
+        "uid": 60,
+        "value": "7",
+        "color": "hearts",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      {
+        "uid": 63,
+        "value": "7",
+        "color": "spades",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 78, "value": "5", "color": "spades", "actions": [5] },
+      { "uid": 33, "value": "10", "color": "clubs", "actions": [10] },
+      { "uid": 88, "value": "3", "color": "clubs", "actions": [3] },
+      { "uid": 26, "value": "Ja", "color": "diamonds", "actions": ["switch"] },
+      { "uid": 90, "value": "3", "color": "diamonds", "actions": [3] },
+      { "uid": 28, "value": "Ja", "color": "hearts", "actions": ["switch"] },
+      {
+        "uid": 57,
+        "value": "7",
+        "color": "clubs",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 23, "value": "Q", "color": "spades", "actions": [12] },
+      { "uid": 91, "value": "3", "color": "diamonds", "actions": [3] },
+      { "uid": 89, "value": "3", "color": "clubs", "actions": [3] },
+      { "uid": 17, "value": "Q", "color": "clubs", "actions": [12] },
+      { "uid": 103, "value": "2", "color": "spades", "actions": [2] },
+      { "uid": 41, "value": "9", "color": "clubs", "actions": [9] },
+      { "uid": 73, "value": "5", "color": "clubs", "actions": [5] },
+      { "uid": 82, "value": "4", "color": "diamonds", "actions": [-4, 4] },
+      { "uid": 29, "value": "Ja", "color": "hearts", "actions": ["switch"] },
+      { "uid": 30, "value": "Ja", "color": "spades", "actions": ["switch"] },
+      { "uid": 22, "value": "Q", "color": "spades", "actions": [12] },
+      { "uid": 71, "value": "6", "color": "spades", "actions": [6] },
+      {
+        "uid": 104,
+        "value": "Jo",
+        "color": "Jo",
+        "actions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          12,
+          "switch",
+          -4,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77
+        ]
+      },
+      { "uid": 67, "value": "6", "color": "diamonds", "actions": [6] },
+      { "uid": 54, "value": "8", "color": "spades", "actions": [8] },
+      { "uid": 48, "value": "8", "color": "clubs", "actions": [8] },
+      { "uid": 40, "value": "9", "color": "clubs", "actions": [9] },
+      {
+        "uid": 59,
+        "value": "7",
+        "color": "diamonds",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      {
+        "uid": 105,
+        "value": "Jo",
+        "color": "Jo",
+        "actions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          12,
+          "switch",
+          -4,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77
+        ]
+      },
+      { "uid": 3, "value": "A", "color": "diamonds", "actions": [0, 1, 11] },
+      { "uid": 96, "value": "2", "color": "clubs", "actions": [2] },
+      { "uid": 34, "value": "10", "color": "diamonds", "actions": [10] },
+      { "uid": 64, "value": "6", "color": "clubs", "actions": [6] },
+      {
+        "uid": 56,
+        "value": "7",
+        "color": "clubs",
+        "actions": [71, 72, 73, 74, 75, 76, 77]
+      },
+      { "uid": 69, "value": "6", "color": "hearts", "actions": [6] },
+      { "uid": 47, "value": "9", "color": "spades", "actions": [9] },
+      { "uid": 65, "value": "6", "color": "clubs", "actions": [6] },
+      { "uid": 50, "value": "8", "color": "diamonds", "actions": [8] },
+      { "uid": 81, "value": "4", "color": "clubs", "actions": [-4, 4] },
+      { "uid": 55, "value": "8", "color": "spades", "actions": [8] },
+      { "uid": 20, "value": "Q", "color": "hearts", "actions": [12] },
+      { "uid": 87, "value": "4", "color": "spades", "actions": [-4, 4] },
+      { "uid": 74, "value": "5", "color": "diamonds", "actions": [5] },
+      { "uid": 4, "value": "A", "color": "hearts", "actions": [0, 1, 11] },
+      { "uid": 99, "value": "2", "color": "diamonds", "actions": [2] },
+      { "uid": 27, "value": "Ja", "color": "diamonds", "actions": ["switch"] },
+      { "uid": 77, "value": "5", "color": "hearts", "actions": [5] },
+      { "uid": 32, "value": "10", "color": "clubs", "actions": [10] },
+      { "uid": 39, "value": "10", "color": "spades", "actions": [10] },
+      { "uid": 85, "value": "4", "color": "hearts", "actions": [-4, 4] },
+      { "uid": 94, "value": "3", "color": "spades", "actions": [3] },
+      { "uid": 21, "value": "Q", "color": "hearts", "actions": [12] },
+      { "uid": 46, "value": "9", "color": "spades", "actions": [9] },
+      { "uid": 10, "value": "K", "color": "diamonds", "actions": [0, 13] },
+      { "uid": 11, "value": "K", "color": "diamonds", "actions": [0, 13] },
+      { "uid": 7, "value": "A", "color": "spades", "actions": [0, 1, 11] },
+      {
+        "uid": 108,
+        "value": "Jo",
+        "color": "Jo",
+        "actions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          12,
+          "switch",
+          -4,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77
+        ]
+      }
+    ],
+    "seed": 2
+  },
+  "discarded_cards": [
+    { "uid": 2, "value": "A", "color": "diamonds", "actions": [0, 1, 11] },
+    { "uid": 1, "value": "A", "color": "clubs", "actions": [0, 1, 11] },
+    { "uid": 13, "value": "K", "color": "hearts", "actions": [0, 13] },
+    { "uid": 12, "value": "K", "color": "hearts", "actions": [0, 13] },
+    { "uid": 83, "value": "4", "color": "diamonds", "actions": [-4, 4] },
+    { "uid": 97, "value": "2", "color": "clubs", "actions": [2] }
+  ],
+  "top_card": { "uid": 97, "value": "2", "color": "clubs", "actions": [2] }
+}

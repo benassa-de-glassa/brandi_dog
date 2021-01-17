@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from app.game_logic.node import GameNode
 
+from loguru import logger
 
 class Marble:
     """
@@ -17,6 +18,9 @@ class Marble:
         self._marble_id: int = marble_id
         self.is_blocking: bool = False
         self.can_enter_goal: bool = False
+
+    def __repr__(self):
+        return self.to_json().__repr__()
 
     @property
     def starting_node(self):
@@ -39,8 +43,8 @@ class Marble:
 
     def set_new_position(self, node: "GameNode", do_unset_existing_marble: bool = True) -> None:
         # remove the marble from the previous position
-        if self.currentNode is not None and do_unset_existing_marble:
-            self._currentNode.unset_marble()
+        if self.current_node is not None and do_unset_existing_marble:
+            self._current_node.unset_marble()
 
         self._current_node = node.curr
 
@@ -57,10 +61,10 @@ class Marble:
             "position": position,
         }
 
-    def to_dict(self):
+    def to_dict(self):      
         return {
             "marble_id": self.marble_id,
-            "current_node": self._current_node.to_dict(),
+            "current_node": self._current_node.to_dict() if self._current_node else None,
             "starting_node": self._starting_node.to_dict(),
             "is_blocking": self.is_blocking,
             "can_enter_goal": self.can_enter_goal,

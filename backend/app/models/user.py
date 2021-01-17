@@ -20,6 +20,13 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+    
+    def to_dict(self):
+        return {
+            "uid": self.uid,
+            "username": self.username,
+            "avatar": self.avatar
+        }
 
 class UserInDB(User):
     hashed_password: str

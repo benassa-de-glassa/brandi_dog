@@ -2,6 +2,8 @@ from app.game_logic.hand import Hand
 from app.game_logic.marble import Marble
 from app.game_logic.field import Field
 
+from loguru import logger
+
 
 class Player:
     """
@@ -94,11 +96,19 @@ class Player:
         }
 
     def to_dict(self):
+        try:
+            marble_dict =  {marble_id: marble.to_dict() for marble_id, marble in self.marbles.items()}
+
+        except AttributeError as Error:
+            logger.error(Error)
+            logger.debug(self.marbles)
+            marble_dict = {"error": "Encountered AttributeError"}
+
         return {
             "uid": self._uid,
             "username": self.username,
             "avatar": self.avatar,
-            "marbles": {marble_id: marble.to_dict() for marble_id, marble in self.marbles.items()},
+            "marbles": marble_dict,
             "position": self.position,
             "hand": self.hand.to_dict(),
             "may_swap_cards": self.may_swap_cards,

@@ -14,12 +14,16 @@ from app.game_logic.card import Card
 from app.models.action import Action as ActionModel
 from app.models.user import User as UserModel
 
+from loguru import logger
+
 # number of cards dealt at the beginning of a round
 N_CARDS_ORDER: List[int] = [6, 5, 4, 3, 2]
 
 # try to load json dump path, otherwise choose .tmp folder
-TMP_FOLDER_PATH = os.path.join(
-    __file__, os.environ.get("TMP_FOLDER_PATH", "../../.tmp"))
+TMP_FOLDER_PATH = \
+    os.path.normpath(
+    os.path.join(__file__,
+                 os.environ.get("TMP_FOLDER_PATH", "../../.tmp")))
 
 
 class Brandi:
@@ -91,8 +95,8 @@ class Brandi:
         self.field: Field = Field(self.n_players)  # field of players
 
         # add the host to the game
-        self.host: Player = Player(host.uid, host.username, host.avatar)
-        self.player_join(self.host)  # add the host as the first player
+        self.host = host
+        self.player_join(Player(host.uid, host.username, host.avatar))  # add the host as the first player
 
         self.game_state: int = 0  # start in the initialized state
         self.round_state: int = 0
@@ -843,7 +847,7 @@ class Brandi:
             "game_id": self.game_id,
             "game_name": self.game_name,
             "n_players": self.n_players,
-            "host": self.host.to_json(),
+            "host": self.host.to_dict(),
             "game_state": self.game_state,
             "round_state": self.round_state,
             "round_turn": self.round_turn,
@@ -860,6 +864,7 @@ class Brandi:
         transcribing the current game state into an object, not to communicate
         a certain game state to players. 
         """
+
         return {
             "game_id": self.game_id,
             "game_name": self.game_name,
@@ -886,23 +891,28 @@ class Brandi:
         game_dict = self.to_dict()
 
         if write_to_file:
+            # create a tmp folder if it does not exist
             if not os.path.exists(TMP_FOLDER_PATH):
                 os.mkdir(TMP_FOLDER_PATH)
 
+            # default filename is the game_name
             if not filename:
-                # find a unique filename, label it by game_id-i where i is an integer
-                i = 1
-                while os.path.exists(f"{TMP_FOLDER_PATH}/{self.game_id}-{i}.json"):
-                    i+1
+                filename = self.game_name
 
-                filename = f"{self.game_id}-{i}.json"
-            elif not filename.endswith(".json"):
-                filename = f"{filename}.json"
+            # strip file ending if there is a .json
+            elif filename.split(".")[-1] == "json":
+                filename = ".".join(filename.split(".")[:-1])
 
-            with open(f"{TMP_FOLDER_PATH}/{filename}", "w") as fp:
+            i = 0
+            full_path = os.path.join(TMP_FOLDER_PATH, f"{filename}.json")
+            while os.path.exists(full_path):
+                i += 1
+                full_path = os.path.join(TMP_FOLDER_PATH, f"{filename}-{i}.json")
+                
+            with open(full_path, "w") as fp:
                 json.dump(game_dict, fp)
 
-            return filename
+            return full_path
 
         # return the json as a string instead with " escaped as \"
         else:

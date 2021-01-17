@@ -73,13 +73,13 @@ class GameNode(Node):
     def to_dict(self):
         return {
             "position": self._position,
-            "marble": self._marble.to_dict(),
+            # "marble": self._marble.to_dict(),
         }
 
     @classmethod
     def from_dict(cls, args):
         NewGameNode = cls(args["position"])
-        NewGameNode.set_marble(Marble.from_dict(**args["marble"]))
+        # NewGameNode.set_marble(Marble.from_dict(**args["marble"]))
 
         return NewGameNode
 
